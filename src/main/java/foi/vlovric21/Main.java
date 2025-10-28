@@ -20,6 +20,7 @@ public class Main {
     static void ucitajPodatke(String aranzmaniDatoteka, String rezervacijeDatoteka){
         CsvParser csvParser = new CsvParser();
         csvParser.parsirajCsv(aranzmaniDatoteka, CsvTip.ARANZMAN);
+        csvParser.parsirajCsv(rezervacijeDatoteka, CsvTip.REZERVACIJA);
     }
     static void interaktivniNacinRada(){
 

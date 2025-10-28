@@ -30,7 +30,7 @@ public class CsvParser {
             "Ime",
             "Prezime",
             "Oznaka aranžmana",
-            "Datum i  vrijeme"
+            "Datum i vrijeme"
     );
     private static final List<Integer> obaveznaZaglavljaAranzman = List.of(0,1,2,3,4,7,8,9,10);
     private static final List<Integer> obaveznaZaglavljaRezervacija = List.of(0,1,2,3);
@@ -67,7 +67,7 @@ public class CsvParser {
 
     private boolean validirajRed(List<String> red, CsvTip tip){
         String regexDatum = "\\d{1,2}\\.\\d{1,2}\\.\\d{4}\\.?";
-        String regexDatumVrijeme = "\\d{1,2}\\.\\d{1,2}\\.\\d{4}\\.? \\d{1,2}:\\d{2}";
+        String regexDatumVrijeme = "\\d{1,2}\\.\\d{1,2}\\.\\d{4}\\.? \\d{1,2}:\\d{2}(:\\d{2})?";
         if(tip == CsvTip.ARANZMAN){
             if(red.size() != zaglavljeAranzman.size()){
                 System.out.println("Red nema polja koliko zaglavlje stupaca"); //TODO uklonit ispis
@@ -125,6 +125,9 @@ public class CsvParser {
 
             String red;
             red = br.readLine();
+            if(red != null && red.startsWith("\uFEFF")){
+                red = red.substring(1);
+            }
 
             if(red == null){
                 System.out.println("Datoteka je prazna: " + datoteka);
