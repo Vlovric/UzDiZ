@@ -42,9 +42,10 @@ public class CsvParser {
     public boolean parsirajCsv(String datoteka, CsvTip tip){
         List<String> zaglavlje = tip == CsvTip.ARANZMAN ? zaglavljeAranzman : zaglavljeRezervacija;
         List<String> polja;
+        boolean imaZaglavlje;
 
         try(BufferedReader br = new BufferedReader(new FileReader(datoteka))){
-
+            //ovdje utvrdit postoji li zaglavlje kako bi dolje znao citat od 0. ili 1. reda
             String red;
             red = br.readLine();
             if(red != null && red.startsWith("\uFEFF")){
@@ -55,10 +56,20 @@ public class CsvParser {
                 System.out.println("Datoteka je prazna: " + datoteka);
                 return false;
             }
+
             if(!validirajZaglavlje(zaglavlje, red)){
                 System.out.println("Neispravno zaglavlje u datoteci: " + datoteka);
             }
 
+
+        }catch(IOException ex){
+            System.out.println("Greška kod čitanja datoteke: " + datoteka);
+            return false;
+        }
+
+        try(BufferedReader br = new BufferedReader(new FileReader(datoteka))){
+
+            String red;
             int redniBroj = 0;
             while((red = br.readLine()) != null){
                 redniBroj++;

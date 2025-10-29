@@ -3,10 +3,6 @@ package foi.vlovric21;
 import foi.vlovric21.parser.ArgumentParser;
 import foi.vlovric21.parser.CsvParser;
 import foi.vlovric21.parser.CsvTip;
-import foi.vlovric21.singleton.RepozitorijPodataka;
-import foi.vlovric21.objekti.Aranzman;
-
-import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
