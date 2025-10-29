@@ -1,0 +1,40 @@
+package foi.vlovric21.builder;
+
+import foi.vlovric21.objekti.Aranzman;
+
+public class AranzmanDirector {
+    private AranzmanBuilder builder;
+
+    public AranzmanDirector() {
+        this.builder = new AranzmanBuilderConcrete();
+    }
+
+    public Aranzman stvoriAranzman(
+            int oznaka,
+            String naziv,
+            String program,
+            String pocetniDatum,
+            String zavrsniDatum,
+            int cijena,
+            int minBrojPutnika,
+            int maxBrojPutnika,
+            int brojNocenja,
+            String vrijemeKretanja,
+            String vrijemePovratka,
+            int doplataZaJednokrevetnuSobu,
+            String prijevoz,
+            int brojDorucka,
+            int brojRuckova,
+            int brojVecera
+    ) {
+        builder.stvoriAranzman(oznaka, naziv, program, pocetniDatum, zavrsniDatum, cijena, minBrojPutnika, maxBrojPutnika, brojNocenja)
+               .postaviVrijemeKretanja(vrijemeKretanja)
+               .postaviVrijemePovratka(vrijemePovratka)
+               .postaviDoplataZaJednokrevetnuSobu(doplataZaJednokrevetnuSobu)
+               .postaviPrijevoz(prijevoz)
+               .postaviBrojDorucka(brojDorucka)
+               .postaviBrojRuckova(brojRuckova)
+               .postaviBrojVecera(brojVecera);
+        return builder.dohvatiAranzman();
+    }
+}

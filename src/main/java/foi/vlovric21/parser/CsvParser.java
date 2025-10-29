@@ -35,7 +35,48 @@ public class CsvParser {
     private static final List<Integer> obaveznaZaglavljaAranzman = List.of(0,1,2,3,4,7,8,9,10);
     private static final List<Integer> obaveznaZaglavljaRezervacija = List.of(0,1,2,3);
 
-    public boolean validirajZaglavlje(List<String> ocekivanoZaglavlje, String redZaglavlja){
+    public boolean parsirajCsv(String datoteka, CsvTip tip){
+        List<String> zaglavlje = tip == CsvTip.ARANZMAN ? zaglavljeAranzman : zaglavljeRezervacija;
+        List<String> polja;
+
+        try(BufferedReader br = new BufferedReader(new FileReader(datoteka))){
+
+            String red;
+            red = br.readLine();
+            if(red != null && red.startsWith("\uFEFF")){
+                red = red.substring(1);
+            }
+
+            if(red == null){
+                System.out.println("Datoteka je prazna: " + datoteka);
+                return false;
+            }
+            if(!validirajZaglavlje(zaglavlje, red)){
+                System.out.println("Neispravno zaglavlje u datoteci: " + datoteka);
+            }
+
+            int redniBroj = 0;
+            while((red = br.readLine()) != null){
+                redniBroj++;
+                red = red.trim();
+                if(red.isEmpty() || red.startsWith("#")){
+                    continue;
+                }
+                polja = parsirajRed(red);
+                if(!validirajRed(polja, tip)){
+                    System.out.println("Neispravan red " + redniBroj + " u datoteci: " + datoteka);
+                    continue;
+                }
+                stvoriObjekt(polja, tip);
+            }
+        }catch(IOException ex){
+            System.out.println("Greška kod čitanja datoteke: " + datoteka);
+            return false;
+        }
+        return true;
+    }
+
+    private boolean validirajZaglavlje(List<String> ocekivanoZaglavlje, String redZaglavlja){
         List<String> dobivenoZaglavlje = Arrays.stream(redZaglavlja.split(","))
                 .map(String::trim)
                 .toList();
@@ -43,7 +84,7 @@ public class CsvParser {
         return dobivenoZaglavlje.containsAll(ocekivanoZaglavlje);
     }
 
-    public List<String> parsirajRed(String red){
+    private List<String> parsirajRed(String red){
         List<String> polja = new ArrayList<>();
         StringBuilder sb = new StringBuilder();
         boolean unutarNavodnika = false;
@@ -118,51 +159,11 @@ public class CsvParser {
         return true;
     }
 
-    public boolean parsirajCsv(String datoteka, CsvTip tip){
-        List<String> zaglavlje = tip == CsvTip.ARANZMAN ? zaglavljeAranzman : zaglavljeRezervacija;
-
-        try(BufferedReader br = new BufferedReader(new FileReader(datoteka))){
-
-            String red;
-            red = br.readLine();
-            if(red != null && red.startsWith("\uFEFF")){
-                red = red.substring(1);
-            }
-
-            if(red == null){
-                System.out.println("Datoteka je prazna: " + datoteka);
-                return false;
-            }
-            if(!validirajZaglavlje(zaglavlje, red)){
-                System.out.println("Neispravno zaglavlje u datoteci: " + datoteka);
-                return false;
-            }
-
-            int redniBroj = 0;
-            while((red = br.readLine()) != null){
-                redniBroj++;
-                red = red.trim();
-                if(red.isEmpty() || red.startsWith("#")){
-                    continue;
-                }
-                List<String> polja = parsirajRed(red);
-                if(!validirajRed(polja, tip)){
-                    System.out.println("Neispravan red " + redniBroj + " u datoteci: " + datoteka);
-                    continue;
-                }
-                //System.out.println("Redak " + redniBroj + ":" + "\n");
-                /*
-                for(int i=0; i<polja.size(); i++){
-                    System.out.println(zaglavlje.get(i) + ": " + polja.get(i));
-                    System.out.println("\n");
-                }
-                */
-                //kreirat objekt i dodat u Repozitorij
-            }
-        }catch(IOException ex){
-            System.out.println("Greška kod čitanja datoteke: " + datoteka);
-            return false;
+    private void stvoriObjekt(List<String> polja, CsvTip tip){
+        if(tip == CsvTip.ARANZMAN){
+            //TODO implementirati stvaranje objekta aranžmana
+        }else{
+            //TODO implementirati stvaranje objekta rezervacije
         }
-        return true;
     }
 }
