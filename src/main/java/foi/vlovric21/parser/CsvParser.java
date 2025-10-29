@@ -8,7 +8,6 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class CsvParser {
@@ -40,12 +39,10 @@ public class CsvParser {
     private static final List<Integer> obaveznaZaglavljaRezervacija = List.of(0,1,2,3);
 
     public boolean parsirajCsv(String datoteka, CsvTip tip){
-        List<String> zaglavlje = tip == CsvTip.ARANZMAN ? zaglavljeAranzman : zaglavljeRezervacija;
         List<String> polja;
-        boolean imaZaglavlje;
+        boolean imaZaglavlje = false;
 
         try(BufferedReader br = new BufferedReader(new FileReader(datoteka))){
-            //ovdje utvrdit postoji li zaglavlje kako bi dolje znao citat od 0. ili 1. reda
             String red;
             red = br.readLine();
             if(red != null && red.startsWith("\uFEFF")){
@@ -57,11 +54,10 @@ public class CsvParser {
                 return false;
             }
 
-            if(!validirajZaglavlje(zaglavlje, red)){
-                System.out.println("Neispravno zaglavlje u datoteci: " + datoteka);
+            if(provjeriZaglavlje(red, tip)){
+                imaZaglavlje = true;
+                System.out.println("Datoteka sadrži zaglavlje: " + datoteka); //TODO uklonit ispis
             }
-
-
         }catch(IOException ex){
             System.out.println("Greška kod čitanja datoteke: " + datoteka);
             return false;
@@ -72,6 +68,10 @@ public class CsvParser {
             String red;
             int redniBroj = 0;
             while((red = br.readLine()) != null){
+                if(imaZaglavlje){
+                    imaZaglavlje = false;
+                    continue;
+                }
                 redniBroj++;
                 red = red.trim();
                 if(red.isEmpty() || red.startsWith("#")){
@@ -91,12 +91,16 @@ public class CsvParser {
         return true;
     }
 
-    private boolean validirajZaglavlje(List<String> ocekivanoZaglavlje, String redZaglavlja){
-        List<String> dobivenoZaglavlje = Arrays.stream(redZaglavlja.split(","))
-                .map(String::trim)
-                .toList();
+    private boolean provjeriZaglavlje(String red, CsvTip tip){
+        List<String> polja = parsirajRed(red);
+        List<String> ocekivanoZaglavlje = (tip == CsvTip.ARANZMAN) ? zaglavljeAranzman : zaglavljeRezervacija;
+        List<Integer> obavezniIndeksi = (tip == CsvTip.ARANZMAN) ? obaveznaZaglavljaAranzman : obaveznaZaglavljaRezervacija;
+        Integer prviObavezniIndeks = obavezniIndeksi.getFirst();
 
-        return dobivenoZaglavlje.containsAll(ocekivanoZaglavlje);
+        if(polja.isEmpty()){
+            return false;
+        }
+        return polja.get(prviObavezniIndeks).equals(ocekivanoZaglavlje.get(prviObavezniIndeks));
     }
 
     private List<String> parsirajRed(String red){
@@ -124,6 +128,7 @@ public class CsvParser {
     private boolean validirajRed(List<String> red, CsvTip tip){
         String regexDatum = "\\d{1,2}\\.\\d{1,2}\\.\\d{4}\\.?";
         String regexDatumVrijeme = "\\d{1,2}\\.\\d{1,2}\\.\\d{4}\\.? \\d{1,2}:\\d{2}(:\\d{2})?";
+
         if(tip == CsvTip.ARANZMAN){
             if(red.size() != zaglavljeAranzman.size()){
                 System.out.println("Red nema polja koliko zaglavlje stupaca"); //TODO uklonit ispis
@@ -141,6 +146,19 @@ public class CsvParser {
                 Integer.parseInt(red.get(8)); //Min broj putnika
                 Integer.parseInt(red.get(9)); //Maks broj putnika
                 Integer.parseInt(red.get(10)); //Broj noćenja
+
+                if(!red.get(11).isEmpty()){
+                    Integer.parseInt(red.get(11)); //Doplata za jednokrevetnu sobu
+                }
+                if(!red.get(13).isEmpty()){
+                    Integer.parseInt(red.get(13)); //Broj doručka
+                }
+                if(!red.get(14).isEmpty()){
+                    Integer.parseInt(red.get(14)); //Broj ručkova
+                }
+                if(!red.get(15).isEmpty()){
+                    Integer.parseInt(red.get(15)); //Broj večera
+                }
             }catch(NumberFormatException ex){
                 System.out.println("Neispravan broj u jednom od obaveznih polja"); //TODO uklonit ispis
                 return false;
@@ -188,7 +206,7 @@ public class CsvParser {
             int maxBrojPutnika = Integer.parseInt(polja.get(9));
             int brojNocenja = Integer.parseInt(polja.get(10));
 
-            String prijevoz = polja.get(12).trim();
+            String prijevoz = polja.get(12).trim(); // TODO: Trimovi mozda suvisni ako u parsirajRed radi trim
 
             String doplataStr = polja.get(11).trim();
             Integer doplata = doplataStr.isEmpty() ? null : Integer.valueOf(doplataStr);
