@@ -12,11 +12,11 @@ public class Aranzman {
     private int minBrojPutnika;
     private int maxBrojPutnika;
     private int brojNocenja;
-    private int doplataZaJednokrevetnuSobu;
+    private Integer doplataZaJednokrevetnuSobu;
     private String prijevoz;
-    private int brojDorucka;
-    private int brojRuckova;
-    private int brojVecera;
+    private Integer brojDorucka;
+    private Integer brojRuckova;
+    private Integer brojVecera;
 
     public Aranzman(){}
     public Aranzman(
@@ -127,11 +127,11 @@ public class Aranzman {
         this.brojNocenja = brojNocenja;
     }
 
-    public int getDoplataZaJednokrevetnuSobu() {
+    public Integer getDoplataZaJednokrevetnuSobu() {
         return doplataZaJednokrevetnuSobu;
     }
 
-    public void setDoplataZaJednokrevetnuSobu(int doplataZaJednokrevetnuSobu) {
+    public void setDoplataZaJednokrevetnuSobu(Integer doplataZaJednokrevetnuSobu) {
         this.doplataZaJednokrevetnuSobu = doplataZaJednokrevetnuSobu;
     }
 
@@ -143,27 +143,27 @@ public class Aranzman {
         this.prijevoz = prijevoz;
     }
 
-    public int getBrojDorucka() {
+    public Integer getBrojDorucka() {
         return brojDorucka;
     }
 
-    public void setBrojDorucka(int brojDorucka) {
+    public void setBrojDorucka(Integer brojDorucka) {
         this.brojDorucka = brojDorucka;
     }
 
-    public int getBrojRuckova() {
+    public Integer getBrojRuckova() {
         return brojRuckova;
     }
 
-    public void setBrojRuckova(int brojRuckova) {
+    public void setBrojRuckova(Integer brojRuckova) {
         this.brojRuckova = brojRuckova;
     }
 
-    public int getBrojVecera() {
+    public Integer getBrojVecera() {
         return brojVecera;
     }
 
-    public void setBrojVecera(int brojVecera) {
+    public void setBrojVecera(Integer brojVecera) {
         this.brojVecera = brojVecera;
     }
 

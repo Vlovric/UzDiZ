@@ -1,5 +1,9 @@
 package foi.vlovric21.parser;
 
+import foi.vlovric21.builder.AranzmanDirector;
+import foi.vlovric21.objekti.Aranzman;
+import foi.vlovric21.singleton.RepozitorijPodataka;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -161,7 +165,52 @@ public class CsvParser {
 
     private void stvoriObjekt(List<String> polja, CsvTip tip){
         if(tip == CsvTip.ARANZMAN){
-            //TODO implementirati stvaranje objekta aranžmana
+            int oznaka = Integer.parseInt(polja.get(0));
+            String naziv = polja.get(1);
+            String program = polja.get(2);
+            String pocetniDatum = polja.get(3);
+            String zavrsniDatum = polja.get(4);
+            String vrijemeKretanja = polja.get(5);
+            String vrijemePovratka = polja.get(6);
+            int cijena = Integer.parseInt(polja.get(7));
+            int minBrojPutnika = Integer.parseInt(polja.get(8));
+            int maxBrojPutnika = Integer.parseInt(polja.get(9));
+            int brojNocenja = Integer.parseInt(polja.get(10));
+
+            String prijevoz = polja.get(12).trim();
+
+            String doplataStr = polja.get(11).trim();
+            Integer doplata = doplataStr.isEmpty() ? null : Integer.valueOf(doplataStr);
+
+            String dorucakStr = polja.get(13).trim();
+            Integer brojDorucka = dorucakStr.isEmpty() ? null : Integer.valueOf(dorucakStr);
+
+            String ruckStr = polja.get(14).trim();
+            Integer brojRuckova = ruckStr.isEmpty() ? null : Integer.valueOf(ruckStr);
+
+            String veceraStr = polja.get(15).trim();
+            Integer brojVecera = veceraStr.isEmpty() ? null : Integer.valueOf(veceraStr);
+
+            AranzmanDirector direktor = new AranzmanDirector();
+            Aranzman ar = direktor.stvoriAranzman(
+                    oznaka,
+                    naziv,
+                    program,
+                    pocetniDatum,
+                    zavrsniDatum,
+                    cijena,
+                    minBrojPutnika,
+                    maxBrojPutnika,
+                    brojNocenja,
+                    vrijemeKretanja,
+                    vrijemePovratka,
+                    doplata,
+                    prijevoz,
+                    brojDorucka,
+                    brojRuckova,
+                    brojVecera
+            );
+            RepozitorijPodataka.getInstance().dodajAranzman(ar);
         }else{
             //TODO implementirati stvaranje objekta rezervacije
         }

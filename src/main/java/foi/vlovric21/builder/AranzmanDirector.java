@@ -21,11 +21,11 @@ public class AranzmanDirector {
             int brojNocenja,
             String vrijemeKretanja,
             String vrijemePovratka,
-            int doplataZaJednokrevetnuSobu,
+            Integer doplataZaJednokrevetnuSobu,
             String prijevoz,
-            int brojDorucka,
-            int brojRuckova,
-            int brojVecera
+            Integer brojDorucka,
+            Integer brojRuckova,
+            Integer brojVecera
     ) {
         builder.stvoriAranzman(oznaka, naziv, program, pocetniDatum, zavrsniDatum, cijena, minBrojPutnika, maxBrojPutnika, brojNocenja)
                .postaviVrijemeKretanja(vrijemeKretanja)

@@ -99,7 +99,7 @@ public class AranzmanBuilderConcrete implements AranzmanBuilder {
     }
 
     @Override
-    public AranzmanBuilder postaviDoplataZaJednokrevetnuSobu(int doplataZaJednokrevetnuSobu) {
+    public AranzmanBuilder postaviDoplataZaJednokrevetnuSobu(Integer doplataZaJednokrevetnuSobu) {
         this.aranzman.setDoplataZaJednokrevetnuSobu(doplataZaJednokrevetnuSobu);
         return this;
     }
@@ -111,19 +111,19 @@ public class AranzmanBuilderConcrete implements AranzmanBuilder {
     }
 
     @Override
-    public AranzmanBuilder postaviBrojDorucka(int brojDorucka) {
+    public AranzmanBuilder postaviBrojDorucka(Integer brojDorucka) {
         this.aranzman.setBrojDorucka(brojDorucka);
         return this;
     }
 
     @Override
-    public AranzmanBuilder postaviBrojRuckova(int brojRuckova) {
+    public AranzmanBuilder postaviBrojRuckova(Integer brojRuckova) {
         this.aranzman.setBrojRuckova(brojRuckova);
         return this;
     }
 
     @Override
-    public AranzmanBuilder postaviBrojVecera(int brojVecera) {
+    public AranzmanBuilder postaviBrojVecera(Integer brojVecera) {
         this.aranzman.setBrojVecera(brojVecera);
         return this;
     }

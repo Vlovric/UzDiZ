@@ -26,11 +26,11 @@ public interface AranzmanBuilder {
     public AranzmanBuilder postaviMinBrojPutnika(int minBrojPutnika);
     public AranzmanBuilder postaviMaxBrojPutnika(int maxBrojPutnika);
     public AranzmanBuilder postaviBrojNocenja(int brojNocenja);
-    public AranzmanBuilder postaviDoplataZaJednokrevetnuSobu(int doplataZaJednokrevetnuSobu);
+    public AranzmanBuilder postaviDoplataZaJednokrevetnuSobu(Integer doplataZaJednokrevetnuSobu);
     public AranzmanBuilder postaviPrijevoz(String prijevoz);
-    public AranzmanBuilder postaviBrojDorucka(int brojDorucka);
-    public AranzmanBuilder postaviBrojRuckova(int brojRuckova);
-    public AranzmanBuilder postaviBrojVecera(int brojVecera);
+    public AranzmanBuilder postaviBrojDorucka(Integer brojDorucka);
+    public AranzmanBuilder postaviBrojRuckova(Integer brojRuckova);
+    public AranzmanBuilder postaviBrojVecera(Integer brojVecera);
 
     public Aranzman dohvatiAranzman();
 }
