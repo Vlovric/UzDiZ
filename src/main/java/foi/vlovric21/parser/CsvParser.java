@@ -151,7 +151,7 @@ public class CsvParser {
         }
         for(int index : obaveznaZaglavljaAranzman){
             if(red.get(index).isEmpty()){
-                return "Obavezno polje je prazno, stupac: " + index;
+                return "Obavezno polje je prazno, stupac: " + index+1;
             }
         }
         try { //TODO refaktorirat
@@ -186,7 +186,7 @@ public class CsvParser {
         }
         for(int index : obaveznaZaglavljaRezervacija){
             if(red.get(index).isEmpty()){
-                return "Obavezno polje je prazno, stupac: " + index;
+                return "Obavezno polje je prazno, stupac: " + index+1;
             }
         }
         try{
@@ -194,6 +194,14 @@ public class CsvParser {
         }catch(NumberFormatException ex){
             return "Neispravan broj u polju oznake";
         }
+
+        int oznakaAranzmana = Integer.parseInt(red.get(2));
+        boolean postojiAranzman = RepozitorijPodataka.getInstance().getAranzmani().stream()
+                .anyMatch(aranzman -> aranzman.getOznaka() == oznakaAranzmana);
+        if(!postojiAranzman){
+            return "Ne postoji aranžman s oznakom: " + oznakaAranzmana;
+        }
+
         if(!red.get(3).matches(regexDatumVrijeme)){
             return "Neispravan format datuma";
         }
