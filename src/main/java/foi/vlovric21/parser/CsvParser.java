@@ -68,11 +68,11 @@ public class CsvParser {
             String red;
             int redniBroj = 0;
             while((red = br.readLine()) != null){
+                redniBroj++;
                 if(imaZaglavlje){
                     imaZaglavlje = false;
                     continue;
                 }
-                redniBroj++;
                 red = red.trim();
                 if(red.isEmpty() || red.startsWith("#")){
                     continue;
@@ -95,13 +95,16 @@ public class CsvParser {
         List<String> polja = parsirajRed(red);
         List<String> ocekivanoZaglavlje = (tip == CsvTip.ARANZMAN) ? zaglavljeAranzman : zaglavljeRezervacija;
         List<Integer> obavezniIndeksi = (tip == CsvTip.ARANZMAN) ? obaveznaZaglavljaAranzman : obaveznaZaglavljaRezervacija;
-        Integer prviObavezniIndeks = obavezniIndeksi.getFirst();
+        Integer prviObavezniIndeks = obavezniIndeksi.get(0);
 
         if(polja.isEmpty()){
             return false;
         }
-        return polja.get(prviObavezniIndeks).equals(ocekivanoZaglavlje.get(prviObavezniIndeks));
-    }
+        String dobiveno = polja.get(prviObavezniIndeks).trim();
+        String ocekivano = ocekivanoZaglavlje.get(prviObavezniIndeks).trim();
+
+        return dobiveno.equals(ocekivano);
+        }
 
     private List<String> parsirajRed(String red){
         List<String> polja = new ArrayList<>();
