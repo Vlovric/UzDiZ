@@ -48,6 +48,24 @@ public class Main {
         // stvorit ocekivane objekte za rezervacije
         // usporedit s pravima
         List<Aranzman> stvarniAranzmani = RepozitorijPodataka.getInstance().getAranzmani();
+        usporediAranzmane(ocekivaniAranzmani, stvarniAranzmani);
         // ispisat rezultate
+    }
+
+    static void usporediAranzmane(List<Aranzman> ocekivani, List<Aranzman> stvarni) {
+        Map<Integer, Aranzman> stvarniMap = stvarni.stream()
+                .collect(Collectors.toMap(Aranzman::getOznaka, aranzman -> aranzman));
+        for (Aranzman ocekivaniAranzman : ocekivani) {
+            Aranzman stvarniAranzman = stvarniMap.get(ocekivaniAranzman.getOznaka());
+            if (stvarniAranzman == null) {
+                System.out.println("Nedostaje aranžman s oznakom: " + ocekivaniAranzman.getOznaka());
+            } else if (!ocekivaniAranzman.equals(stvarniAranzman)) {
+                System.out.println("Aranžman s oznakom " + ocekivaniAranzman.getOznaka() + " se ne podudara.");
+                System.out.println("Očekivano: " + ocekivaniAranzman);
+                System.out.println("Stvarno: " + stvarniAranzman);
+            } else {
+                System.out.println("Aranžman s oznakom " + ocekivaniAranzman.getOznaka() + " je ispravan.");
+            }
+        }
     }
 }

@@ -56,7 +56,6 @@ public class CsvParser {
 
             if(provjeriZaglavlje(red, tip)){
                 imaZaglavlje = true;
-                System.out.println("Datoteka sadrži zaglavlje: " + datoteka); //TODO uklonit ispis
             }
         }catch(IOException ex){
             System.out.println("Greška kod čitanja datoteke: " + datoteka);
@@ -78,8 +77,18 @@ public class CsvParser {
                     continue;
                 }
                 polja = parsirajRed(red);
-                if(!validirajRed(polja, tip)){
-                    System.out.println("Neispravan red " + redniBroj + " u datoteci: " + datoteka);
+                String greska = validirajRed(polja, tip);
+                if(!greska.isEmpty()){
+                    System.out.println("---------------------------------");
+                    System.out.println("Neispravan red: " + redniBroj + " u datoteci: " + datoteka);
+                    System.out.println("Razlog: " + greska);
+                    System.out.println("Red: " + red);
+                    System.out.println("Polja: ");
+                    for(int i=0; i<polja.size(); i++){
+                        System.out.println("[" + i + "] => '" + polja.get(i) + "'");
+                    }
+                    System.out.println("---------------------------------");
+                    System.out.println("\n");
                     continue;
                 }
                 stvoriObjekt(polja, tip);
@@ -128,19 +137,17 @@ public class CsvParser {
         return polja;
     }
 
-    private boolean validirajRed(List<String> red, CsvTip tip){
+    private String validirajRed(List<String> red, CsvTip tip){
         String regexDatum = "\\d{1,2}\\.\\d{1,2}\\.\\d{4}\\.?";
         String regexDatumVrijeme = "\\d{1,2}\\.\\d{1,2}\\.\\d{4}\\.? \\d{1,2}:\\d{2}(:\\d{2})?";
 
         if(tip == CsvTip.ARANZMAN){
             if(red.size() != zaglavljeAranzman.size()){
-                System.out.println("Red nema polja koliko zaglavlje stupaca"); //TODO uklonit ispis
-                return false;
+                return "Red nema polja koliko zaglavlje stupaca, red ima: " + red.size() + ", a treba imati: " + zaglavljeAranzman.size();
             }
             for(int index : obaveznaZaglavljaAranzman){
                 if(red.get(index).isEmpty()){
-                    System.out.println("Obavezno polje je prazno, index: " + index); //TODO uklonit ispis
-                    return false;
+                    return "Obavezno polje je prazno, stupac: " + index;
                 }
             }
             try { //TODO refaktorirat
@@ -165,36 +172,30 @@ public class CsvParser {
                     Integer.parseInt(red.get(15)); //Broj večera
                 }
             }catch(NumberFormatException ex){
-                System.out.println("Neispravan broj u jednom od polja brojeva"); //TODO uklonit ispis
-                return false;
+                return "Neispravan broj u jednom od polja brojeva";
             }
             if(!red.get(3).matches(regexDatum) || !red.get(4).matches(regexDatum)){
-                System.out.println("Neispravan format datuma u jednom od obaveznih polja"); //TODO uklonit ispis
-                return false;
+                return "Neispravan format datuma u jednom od obaveznih polja";
             }
         }else{
             if(red.size() != zaglavljeRezervacija.size()){
-                System.out.println("Red nema polja koliko zaglavlje stupaca"); //TODO uklonit ispis
-                return false;
+                return "Red nema polja koliko zaglavlje stupaca";
             }
             for(int index : obaveznaZaglavljaRezervacija){
                 if(red.get(index).isEmpty()){
-                    System.out.println("Obavezno polje je prazno, index: " + index); //TODO uklonit ispis
-                    return false;
+                    return "Obavezno polje je prazno, stupac: " + index;
                 }
             }
             try{
                 Integer.parseInt(red.get(2)); //Oznaka aranžmana
             }catch(NumberFormatException ex){
-                System.out.println("Neispravan broj polja oznake"); //TODO uklonit ispis
-                return false;
+                return "Neispravan broj u polju oznake";
             }
             if(!red.get(3).matches(regexDatumVrijeme)){
-                System.out.println("Neispravan format datuma"); //TODO uklonit ispis
-                return false;
+                return "Neispravan format datuma";
             }
         }
-        return true;
+        return "";
     }
 
     private void stvoriObjekt(List<String> polja, CsvTip tip){
@@ -209,7 +210,9 @@ public class CsvParser {
             int cijena = Integer.parseInt(polja.get(7));
             int minBrojPutnika = Integer.parseInt(polja.get(8));
             int maxBrojPutnika = Integer.parseInt(polja.get(9));
-            int brojNocenja = Integer.parseInt(polja.get(10));
+
+            String brojNocenjaStr = polja.get(10).trim();
+            Integer brojNocenja = brojNocenjaStr.isEmpty() ? null : Integer.valueOf(brojNocenjaStr);
 
             String prijevoz = polja.get(12).trim(); // TODO: Trimovi mozda suvisni ako u parsirajRed radi trim
 
