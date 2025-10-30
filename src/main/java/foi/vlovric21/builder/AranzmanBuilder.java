@@ -11,8 +11,7 @@ public interface AranzmanBuilder {
             String zavrsniDatum,
             int cijena,
             int minBrojPutnika,
-            int maxBrojPutnika,
-            int brojNocenja
+            int maxBrojPutnika
     );
 
     public AranzmanBuilder postaviOznaka(int oznaka);
@@ -25,7 +24,7 @@ public interface AranzmanBuilder {
     public AranzmanBuilder postaviCijena(int cijena);
     public AranzmanBuilder postaviMinBrojPutnika(int minBrojPutnika);
     public AranzmanBuilder postaviMaxBrojPutnika(int maxBrojPutnika);
-    public AranzmanBuilder postaviBrojNocenja(int brojNocenja);
+    public AranzmanBuilder postaviBrojNocenja(Integer brojNocenja);
     public AranzmanBuilder postaviDoplataZaJednokrevetnuSobu(Integer doplataZaJednokrevetnuSobu);
     public AranzmanBuilder postaviPrijevoz(String prijevoz);
     public AranzmanBuilder postaviBrojDorucka(Integer brojDorucka);

@@ -18,7 +18,7 @@ public class AranzmanDirector {
             int cijena,
             int minBrojPutnika,
             int maxBrojPutnika,
-            int brojNocenja,
+            Integer brojNocenja,
             String vrijemeKretanja,
             String vrijemePovratka,
             Integer doplataZaJednokrevetnuSobu,
@@ -27,9 +27,10 @@ public class AranzmanDirector {
             Integer brojRuckova,
             Integer brojVecera
     ) {
-        builder.stvoriAranzman(oznaka, naziv, program, pocetniDatum, zavrsniDatum, cijena, minBrojPutnika, maxBrojPutnika, brojNocenja)
+        builder.stvoriAranzman(oznaka, naziv, program, pocetniDatum, zavrsniDatum, cijena, minBrojPutnika, maxBrojPutnika)
                .postaviVrijemeKretanja(vrijemeKretanja)
                .postaviVrijemePovratka(vrijemePovratka)
+                .postaviBrojNocenja(brojNocenja)
                .postaviDoplataZaJednokrevetnuSobu(doplataZaJednokrevetnuSobu)
                .postaviPrijevoz(prijevoz)
                .postaviBrojDorucka(brojDorucka)

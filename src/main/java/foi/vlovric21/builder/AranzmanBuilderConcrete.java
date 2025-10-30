@@ -16,8 +16,7 @@ public class AranzmanBuilderConcrete implements AranzmanBuilder {
             String zavrsniDatum,
             int cijena,
             int minBrojPutnika,
-            int maxBrojPutnika,
-            int brojNocenja
+            int maxBrojPutnika
     ) {
         this.aranzman = new Aranzman();
         this.aranzman.setOznaka(oznaka);
@@ -28,7 +27,6 @@ public class AranzmanBuilderConcrete implements AranzmanBuilder {
         this.aranzman.setCijena(cijena);
         this.aranzman.setMinBrojPutnika(minBrojPutnika);
         this.aranzman.setMaxBrojPutnika(maxBrojPutnika);
-        this.aranzman.setBrojNocenja(brojNocenja);
         return this;
     }
 
@@ -93,7 +91,7 @@ public class AranzmanBuilderConcrete implements AranzmanBuilder {
     }
 
     @Override
-    public AranzmanBuilder postaviBrojNocenja(int brojNocenja) {
+    public AranzmanBuilder postaviBrojNocenja(Integer brojNocenja) {
         this.aranzman.setBrojNocenja(brojNocenja);
         return this;
     }

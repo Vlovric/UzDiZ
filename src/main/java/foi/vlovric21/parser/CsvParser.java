@@ -35,7 +35,7 @@ public class CsvParser {
             "Oznaka aranžmana",
             "Datum i vrijeme"
     );
-    private static final List<Integer> obaveznaZaglavljaAranzman = List.of(0,1,2,3,4,7,8,9,10);
+    private static final List<Integer> obaveznaZaglavljaAranzman = List.of(0,1,2,3,4,7,8,9);
     private static final List<Integer> obaveznaZaglavljaRezervacija = List.of(0,1,2,3);
 
     public boolean parsirajCsv(String datoteka, CsvTip tip){
@@ -140,13 +140,15 @@ public class CsvParser {
                     return false;
                 }
             }
-            try { //TODO uvest za opcionalne validaciju i refaktorirat
+            try { //TODO refaktorirat
                 Integer.parseInt(red.get(0)); //Oznaka
                 Integer.parseInt(red.get(7)); //Cijena
                 Integer.parseInt(red.get(8)); //Min broj putnika
                 Integer.parseInt(red.get(9)); //Maks broj putnika
-                Integer.parseInt(red.get(10)); //Broj noćenja
 
+                if(!red.get(10).isEmpty()){
+                    Integer.parseInt(red.get(10)); //Broj noćenja
+                }
                 if(!red.get(11).isEmpty()){
                     Integer.parseInt(red.get(11)); //Doplata za jednokrevetnu sobu
                 }
@@ -160,7 +162,7 @@ public class CsvParser {
                     Integer.parseInt(red.get(15)); //Broj večera
                 }
             }catch(NumberFormatException ex){
-                System.out.println("Neispravan broj u jednom od obaveznih polja"); //TODO uklonit ispis
+                System.out.println("Neispravan broj u jednom od polja brojeva"); //TODO uklonit ispis
                 return false;
             }
             if(!red.get(3).matches(regexDatum) || !red.get(4).matches(regexDatum)){

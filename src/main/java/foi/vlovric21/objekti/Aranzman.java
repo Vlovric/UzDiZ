@@ -11,7 +11,7 @@ public class Aranzman {
     private int cijena;
     private int minBrojPutnika;
     private int maxBrojPutnika;
-    private int brojNocenja;
+    private Integer brojNocenja;
     private Integer doplataZaJednokrevetnuSobu;
     private String prijevoz;
     private Integer brojDorucka;
@@ -27,8 +27,7 @@ public class Aranzman {
             String zavrsniDatum,
             int cijena,
             int minBrojPutnika,
-            int maxBrojPutnika,
-            int brojNocenja
+            int maxBrojPutnika
     ){
         this.oznaka = oznaka;
         this.naziv = naziv;
@@ -38,7 +37,6 @@ public class Aranzman {
         this.cijena = cijena;
         this.minBrojPutnika = minBrojPutnika;
         this.maxBrojPutnika = maxBrojPutnika;
-        this.brojNocenja = brojNocenja;
     }
 
     public int getOznaka() {
@@ -119,11 +117,11 @@ public class Aranzman {
         this.maxBrojPutnika = maxBrojPutnika;
     }
 
-    public int getBrojNocenja() {
+    public Integer getBrojNocenja() {
         return brojNocenja;
     }
 
-    public void setBrojNocenja(int brojNocenja) {
+    public void setBrojNocenja(Integer brojNocenja) {
         this.brojNocenja = brojNocenja;
     }
 
