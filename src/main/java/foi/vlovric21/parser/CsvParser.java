@@ -38,25 +38,23 @@ public class CsvParser {
     private static final List<Integer> obaveznaZaglavljaAranzman = List.of(0,1,2,3,4,7,8,9);
     private static final List<Integer> obaveznaZaglavljaRezervacija = List.of(0,1,2,3);
 
+    private static final String regexDatum = "\\d{1,2}\\.\\d{1,2}\\.\\d{4}\\.?";
+    private static final String regexDatumVrijeme = "\\d{1,2}\\.\\d{1,2}\\.\\d{4}\\.? \\d{1,2}:\\d{2}(:\\d{2})?";
+
     public boolean parsirajCsv(String datoteka, CsvTip tip){
         List<String> polja;
-        boolean imaZaglavlje = false;
+        boolean imaZaglavlje;
 
         try(BufferedReader br = new BufferedReader(new FileReader(datoteka))){
             String red;
-            red = br.readLine();
-            if(red != null && red.startsWith("\uFEFF")){
-                red = red.substring(1);
-            }
+            red = makniBOM(br.readLine());
 
             if(red == null){
                 System.out.println("Datoteka je prazna: " + datoteka);
-                return false;
+                return false; //TODO vidjet sta s ovim
             }
+            imaZaglavlje = provjeriZaglavlje(red, tip);
 
-            if(provjeriZaglavlje(red, tip)){
-                imaZaglavlje = true;
-            }
         }catch(IOException ex){
             System.out.println("Greška kod čitanja datoteke: " + datoteka);
             return false;
@@ -66,29 +64,24 @@ public class CsvParser {
 
             String red;
             int redniBroj = 0;
+
             while((red = br.readLine()) != null){
                 redniBroj++;
+
                 if(imaZaglavlje){
                     imaZaglavlje = false;
                     continue;
                 }
+
                 red = red.trim();
                 if(red.isEmpty() || red.startsWith("#")){
                     continue;
                 }
+
                 polja = parsirajRed(red);
                 String greska = validirajRed(polja, tip);
                 if(!greska.isEmpty()){
-                    System.out.println("---------------------------------");
-                    System.out.println("Neispravan red: " + redniBroj + " u datoteci: " + datoteka);
-                    System.out.println("Razlog: " + greska);
-                    System.out.println("Red: " + red);
-                    System.out.println("Polja: ");
-                    for(int i=0; i<polja.size(); i++){
-                        System.out.println("[" + i + "] => '" + polja.get(i) + "'");
-                    }
-                    System.out.println("---------------------------------");
-                    System.out.println("\n");
+                    ispisiGresku(redniBroj, datoteka, greska, red, polja);
                     continue;
                 }
                 stvoriObjekt(polja, tip);
@@ -100,11 +93,18 @@ public class CsvParser {
         return true;
     }
 
+    private String makniBOM(String red){
+        if(red != null && red.startsWith("\uFEFF")){
+            return red.substring(1);
+        }
+        return red;
+    }
+
     private boolean provjeriZaglavlje(String red, CsvTip tip){
         List<String> polja = parsirajRed(red);
         List<String> ocekivanoZaglavlje = (tip == CsvTip.ARANZMAN) ? zaglavljeAranzman : zaglavljeRezervacija;
         List<Integer> obavezniIndeksi = (tip == CsvTip.ARANZMAN) ? obaveznaZaglavljaAranzman : obaveznaZaglavljaRezervacija;
-        Integer prviObavezniIndeks = obavezniIndeksi.get(0);
+        int prviObavezniIndeks = obavezniIndeksi.get(0);
 
         if(polja.isEmpty()){
             return false;
@@ -138,118 +138,136 @@ public class CsvParser {
     }
 
     private String validirajRed(List<String> red, CsvTip tip){
-        String regexDatum = "\\d{1,2}\\.\\d{1,2}\\.\\d{4}\\.?";
-        String regexDatumVrijeme = "\\d{1,2}\\.\\d{1,2}\\.\\d{4}\\.? \\d{1,2}:\\d{2}(:\\d{2})?";
-
         if(tip == CsvTip.ARANZMAN){
-            if(red.size() != zaglavljeAranzman.size()){
-                return "Red nema polja koliko zaglavlje stupaca, red ima: " + red.size() + ", a treba imati: " + zaglavljeAranzman.size();
-            }
-            for(int index : obaveznaZaglavljaAranzman){
-                if(red.get(index).isEmpty()){
-                    return "Obavezno polje je prazno, stupac: " + index;
-                }
-            }
-            try { //TODO refaktorirat
-                Integer.parseInt(red.get(0)); //Oznaka
-                Integer.parseInt(red.get(7)); //Cijena
-                Integer.parseInt(red.get(8)); //Min broj putnika
-                Integer.parseInt(red.get(9)); //Maks broj putnika
-
-                if(!red.get(10).isEmpty()){
-                    Integer.parseInt(red.get(10)); //Broj noćenja
-                }
-                if(!red.get(11).isEmpty()){
-                    Integer.parseInt(red.get(11)); //Doplata za jednokrevetnu sobu
-                }
-                if(!red.get(13).isEmpty()){
-                    Integer.parseInt(red.get(13)); //Broj doručka
-                }
-                if(!red.get(14).isEmpty()){
-                    Integer.parseInt(red.get(14)); //Broj ručkova
-                }
-                if(!red.get(15).isEmpty()){
-                    Integer.parseInt(red.get(15)); //Broj večera
-                }
-            }catch(NumberFormatException ex){
-                return "Neispravan broj u jednom od polja brojeva";
-            }
-            if(!red.get(3).matches(regexDatum) || !red.get(4).matches(regexDatum)){
-                return "Neispravan format datuma u jednom od obaveznih polja";
-            }
+            return validirajAranzman(red);
         }else{
-            if(red.size() != zaglavljeRezervacija.size()){
-                return "Red nema polja koliko zaglavlje stupaca";
+            return validirajRezervacija(red);
+        }
+    }
+
+    private String validirajAranzman(List<String> red){
+        if(red.size() != zaglavljeAranzman.size()){
+            return "Red nema polja koliko zaglavlje stupaca, red ima: " + red.size() + ", a treba imati: " + zaglavljeAranzman.size();
+        }
+        for(int index : obaveznaZaglavljaAranzman){
+            if(red.get(index).isEmpty()){
+                return "Obavezno polje je prazno, stupac: " + index;
             }
-            for(int index : obaveznaZaglavljaRezervacija){
-                if(red.get(index).isEmpty()){
-                    return "Obavezno polje je prazno, stupac: " + index;
-                }
-            }
-            try{
-                Integer.parseInt(red.get(2)); //Oznaka aranžmana
-            }catch(NumberFormatException ex){
-                return "Neispravan broj u polju oznake";
-            }
-            if(!red.get(3).matches(regexDatumVrijeme)){
-                return "Neispravan format datuma";
-            }
+        }
+        try { //TODO refaktorirat
+            Integer.parseInt(red.get(0)); //Oznaka
+            Integer.parseInt(red.get(7)); //Cijena
+            Integer.parseInt(red.get(8)); //Min broj putnika
+            Integer.parseInt(red.get(9)); //Maks broj putnika
+
+            parseAkoNijePrazno(red.get(10)); //Broj noćenja
+            parseAkoNijePrazno(red.get(11)); //Doplata za jednokrevetnu sobu
+            parseAkoNijePrazno(red.get(13)); //Broj doručka
+            parseAkoNijePrazno(red.get(14)); //Broj ručkova
+            parseAkoNijePrazno(red.get(15)); //Broj večera
+        }catch(NumberFormatException ex){
+            return "Neispravan broj u jednom od polja brojeva";
+        }
+        if(!red.get(3).matches(regexDatum) || !red.get(4).matches(regexDatum)){
+            return "Neispravan format datuma u jednom od obaveznih polja";
         }
         return "";
     }
 
+    private void parseAkoNijePrazno(String vrijednost) throws NumberFormatException {
+        if(!vrijednost.isEmpty()){
+            Integer.parseInt(vrijednost);
+        }
+    }
+
+    private String validirajRezervacija(List<String> red){
+        if(red.size() != zaglavljeRezervacija.size()){
+            return "Red nema polja koliko zaglavlje stupaca";
+        }
+        for(int index : obaveznaZaglavljaRezervacija){
+            if(red.get(index).isEmpty()){
+                return "Obavezno polje je prazno, stupac: " + index;
+            }
+        }
+        try{
+            Integer.parseInt(red.get(2)); //Oznaka aranžmana
+        }catch(NumberFormatException ex){
+            return "Neispravan broj u polju oznake";
+        }
+        if(!red.get(3).matches(regexDatumVrijeme)){
+            return "Neispravan format datuma";
+        }
+        return "";
+    }
+
+    private void ispisiGresku(int redniBroj, String datoteka, String greska, String red, List<String> polja){
+        System.out.println("---------------------------------");
+        System.out.println("Neispravan red: " + redniBroj + " u datoteci: " + datoteka);
+        System.out.println("Razlog: " + greska);
+        System.out.println("Red: " + red);
+        System.out.println("Polja: "); //TODO maknut prije predaje
+        for(int i=0; i<polja.size(); i++){
+            System.out.println("[" + i + "] => '" + polja.get(i) + "'");
+        }
+        System.out.println("---------------------------------");
+    }
+
     private void stvoriObjekt(List<String> polja, CsvTip tip){
         if(tip == CsvTip.ARANZMAN){
-            int oznaka = Integer.parseInt(polja.get(0));
-            String naziv = polja.get(1);
-            String program = polja.get(2);
-            String pocetniDatum = polja.get(3);
-            String zavrsniDatum = polja.get(4);
-            String vrijemeKretanja = polja.get(5);
-            String vrijemePovratka = polja.get(6);
-            int cijena = Integer.parseInt(polja.get(7));
-            int minBrojPutnika = Integer.parseInt(polja.get(8));
-            int maxBrojPutnika = Integer.parseInt(polja.get(9));
-
-            String brojNocenjaStr = polja.get(10).trim();
-            Integer brojNocenja = brojNocenjaStr.isEmpty() ? null : Integer.valueOf(brojNocenjaStr);
-
-            String prijevoz = polja.get(12).trim(); // TODO: Trimovi mozda suvisni ako u parsirajRed radi trim
-
-            String doplataStr = polja.get(11).trim();
-            Integer doplata = doplataStr.isEmpty() ? null : Integer.valueOf(doplataStr);
-
-            String dorucakStr = polja.get(13).trim();
-            Integer brojDorucka = dorucakStr.isEmpty() ? null : Integer.valueOf(dorucakStr);
-
-            String ruckStr = polja.get(14).trim();
-            Integer brojRuckova = ruckStr.isEmpty() ? null : Integer.valueOf(ruckStr);
-
-            String veceraStr = polja.get(15).trim();
-            Integer brojVecera = veceraStr.isEmpty() ? null : Integer.valueOf(veceraStr);
-
-            AranzmanDirector direktor = new AranzmanDirector();
-            Aranzman ar = direktor.stvoriAranzman(
-                    oznaka,
-                    naziv,
-                    program,
-                    pocetniDatum,
-                    zavrsniDatum,
-                    cijena,
-                    minBrojPutnika,
-                    maxBrojPutnika,
-                    brojNocenja,
-                    vrijemeKretanja,
-                    vrijemePovratka,
-                    doplata,
-                    prijevoz,
-                    brojDorucka,
-                    brojRuckova,
-                    brojVecera
-            );
-            RepozitorijPodataka.getInstance().dodajAranzman(ar);
+            stvoriAranzmanObjekt(polja);
         }else{
+            stvoriRezervacijaObjekt(polja);
             //TODO implementirati stvaranje objekta rezervacije
         }
+    }
+
+    private void stvoriAranzmanObjekt(List<String> polja){
+        int oznaka = Integer.parseInt(polja.get(0));
+        String naziv = polja.get(1);
+        String program = polja.get(2);
+        String pocetniDatum = polja.get(3);
+        String zavrsniDatum = polja.get(4);
+        String vrijemeKretanja = polja.get(5);
+        String vrijemePovratka = polja.get(6);
+        int cijena = Integer.parseInt(polja.get(7));
+        int minBrojPutnika = Integer.parseInt(polja.get(8));
+        int maxBrojPutnika = Integer.parseInt(polja.get(9));
+        String prijevoz = polja.get(12).trim(); // TODO: Trimovi mozda suvisni ako u parsirajRed radi trim
+
+        Integer brojNocenja = parseOpcionalniInt(polja.get(10));
+        Integer doplata = parseOpcionalniInt(polja.get(11));
+        Integer brojDorucka = parseOpcionalniInt(polja.get(13));
+        Integer brojRuckova = parseOpcionalniInt(polja.get(14));
+        Integer brojVecera = parseOpcionalniInt(polja.get(15));
+
+        AranzmanDirector direktor = new AranzmanDirector();
+        Aranzman ar = direktor.stvoriAranzman(
+                oznaka,
+                naziv,
+                program,
+                pocetniDatum,
+                zavrsniDatum,
+                cijena,
+                minBrojPutnika,
+                maxBrojPutnika,
+                brojNocenja,
+                vrijemeKretanja,
+                vrijemePovratka,
+                doplata,
+                prijevoz,
+                brojDorucka,
+                brojRuckova,
+                brojVecera
+        );
+        RepozitorijPodataka.getInstance().dodajAranzman(ar);
+    }
+
+    private Integer parseOpcionalniInt(String vrijednost){
+        String skracen = vrijednost.trim();
+        return skracen.isEmpty() ? null : Integer.valueOf(skracen);
+    }
+
+    private void stvoriRezervacijaObjekt(List<String> polja){
+
     }
 }
