@@ -11,6 +11,8 @@ public class RepozitorijPodataka {
 
     private List<Aranzman> aranzmani = new ArrayList<>();
     private List<Rezervacija> rezervacije = new ArrayList<>();
+    private List<Rezervacija> otkazaneRezervacije = new ArrayList<>();
+    //imat mapu koja mapira rezervacije na aranzmane da bi im lakse pristupo?
 
     private RepozitorijPodataka() {}
 

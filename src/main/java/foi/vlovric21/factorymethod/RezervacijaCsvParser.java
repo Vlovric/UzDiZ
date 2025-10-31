@@ -3,7 +3,7 @@ package foi.vlovric21.factorymethod;
 import foi.vlovric21.parser.CsvParser;
 
 import java.util.List;
-
+// ConcreteCreator
 public class RezervacijaCsvParser extends CsvParser {
     private static final List<String> zaglavlje = List.of(
             "Ime",

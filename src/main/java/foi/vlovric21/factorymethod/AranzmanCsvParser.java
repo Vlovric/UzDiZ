@@ -6,7 +6,7 @@ import foi.vlovric21.parser.CsvParser;
 import foi.vlovric21.singleton.RepozitorijPodataka;
 
 import java.util.List;
-
+// ConcreteCreator
 public class AranzmanCsvParser extends CsvParser {
     private static final List<String> zaglavlje = List.of(
             "Oznaka",
