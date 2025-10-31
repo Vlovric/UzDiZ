@@ -168,7 +168,7 @@ public class Aranzman {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(Object o) { //TODO: jel ovo ostavljam?
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Aranzman that = (Aranzman) o;

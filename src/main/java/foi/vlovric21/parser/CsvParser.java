@@ -249,7 +249,7 @@ public class CsvParser {
         Integer brojVecera = parseOpcionalniInt(polja.get(15));
 
         AranzmanDirector direktor = new AranzmanDirector();
-        Aranzman ar = direktor.stvoriAranzman(
+        Aranzman ar = direktor.stvoriKompletanAranzman(
                 oznaka,
                 naziv,
                 program,

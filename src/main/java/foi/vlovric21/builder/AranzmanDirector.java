@@ -9,7 +9,11 @@ public class AranzmanDirector {
         this.builder = new AranzmanBuilderConcrete();
     }
 
-    public Aranzman stvoriAranzman(
+    public AranzmanDirector(AranzmanBuilder arBuilder){
+        this.builder = arBuilder;
+    }
+
+    public Aranzman stvoriKompletanAranzman(
             int oznaka,
             String naziv,
             String program,
@@ -27,7 +31,7 @@ public class AranzmanDirector {
             Integer brojRuckova,
             Integer brojVecera
     ) {
-        builder.stvoriAranzman(oznaka, naziv, program, pocetniDatum, zavrsniDatum, cijena, minBrojPutnika, maxBrojPutnika)
+        builder.stvoriMinimalanAranzman(oznaka, naziv, program, pocetniDatum, zavrsniDatum, cijena, minBrojPutnika, maxBrojPutnika)
                .postaviVrijemeKretanja(vrijemeKretanja)
                .postaviVrijemePovratka(vrijemePovratka)
                 .postaviBrojNocenja(brojNocenja)

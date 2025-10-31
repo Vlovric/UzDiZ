@@ -8,7 +8,7 @@ public class AranzmanBuilderConcrete implements AranzmanBuilder {
     public AranzmanBuilderConcrete(){}
 
     @Override
-    public AranzmanBuilder stvoriAranzman(
+    public AranzmanBuilder stvoriMinimalanAranzman(
             int oznaka,
             String naziv,
             String program,

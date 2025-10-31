@@ -3,7 +3,7 @@ package foi.vlovric21.builder;
 import foi.vlovric21.objekti.Aranzman;
 
 public interface AranzmanBuilder {
-    public AranzmanBuilder stvoriAranzman(
+    public AranzmanBuilder stvoriMinimalanAranzman(
             int oznaka,
             String naziv,
             String program,

@@ -36,14 +36,14 @@ public class Main {
         // stvorit ocekivane objekte za aranzmane
         AranzmanDirector director = new AranzmanDirector();
         List<Aranzman> ocekivaniAranzmani = List.of(
-                director.stvoriAranzman(1, "Tocno samo obavezno", "Program", "01.01.2025.", "02.01.2025.", 1, 1, 2, null, "", "", null, "", null, null, null),
-                director.stvoriAranzman(2, "Tocno sve", "Program", "01.01.2025.", "02.01.2025.", 1, 1, 2, 1, "10:00", "11:00", 10, "avion; bus", 1, 1, 1),
-                director.stvoriAranzman(3, "Tocno sve svi brojevi 0", "Program", "01.01.2025.", "02.01.2025.", 0, 0, 0, 0, "10:00", "11:00", 0, "avion;bus", 0, 0, 0),
-                director.stvoriAranzman(18, "Tocno razmak cijena", "Program", "01.01.2025.", "02.01.2025.", 1, 1, 2, 1, "10:00", "11:00", null, "", null, null, null),
-                director.stvoriAranzman(19, "Tocno razmak cijena", "Program", "01.01.2025.", "02.01.2025.", 1, 1, 2, 1, "10:00", "11:00", null, "", null, null, null),
-                director.stvoriAranzman(20, "Tocno razmak cijena", "Program", "01.01.2025.", "02.01.2025.", 1, 1, 2, 1, "10:00", "11:00", null, "", null, null, null),
-                director.stvoriAranzman(21, "Tocno datum nema tocku i maknute nule", "Program", "1.01.2025", "02.1.2025", 1, 1, 2, 1, "10:00", "11:00", null, "", null, null, null),
-                director.stvoriAranzman(22, "Tocno sve bez razmaka", "Program", "01.01.2025.", "02.01.2025.", 1, 1, 2, 1, "10:00", "11:00", 10, "avion; bus", 1, 1, 1)
+                director.stvoriKompletanAranzman(1, "Tocno samo obavezno", "Program", "01.01.2025.", "02.01.2025.", 1, 1, 2, null, "", "", null, "", null, null, null),
+                director.stvoriKompletanAranzman(2, "Tocno sve", "Program", "01.01.2025.", "02.01.2025.", 1, 1, 2, 1, "10:00", "11:00", 10, "avion; bus", 1, 1, 1),
+                director.stvoriKompletanAranzman(3, "Tocno sve svi brojevi 0", "Program", "01.01.2025.", "02.01.2025.", 0, 0, 0, 0, "10:00", "11:00", 0, "avion;bus", 0, 0, 0),
+                director.stvoriKompletanAranzman(18, "Tocno razmak cijena", "Program", "01.01.2025.", "02.01.2025.", 1, 1, 2, 1, "10:00", "11:00", null, "", null, null, null),
+                director.stvoriKompletanAranzman(19, "Tocno razmak cijena", "Program", "01.01.2025.", "02.01.2025.", 1, 1, 2, 1, "10:00", "11:00", null, "", null, null, null),
+                director.stvoriKompletanAranzman(20, "Tocno razmak cijena", "Program", "01.01.2025.", "02.01.2025.", 1, 1, 2, 1, "10:00", "11:00", null, "", null, null, null),
+                director.stvoriKompletanAranzman(21, "Tocno datum nema tocku i maknute nule", "Program", "1.01.2025", "02.1.2025", 1, 1, 2, 1, "10:00", "11:00", null, "", null, null, null),
+                director.stvoriKompletanAranzman(22, "Tocno sve bez razmaka", "Program", "01.01.2025.", "02.01.2025.", 1, 1, 2, 1, "10:00", "11:00", 10, "avion; bus", 1, 1, 1)
         );
         List<Aranzman> stvarniAranzmani = RepozitorijPodataka.getInstance().getAranzmani();
         // stvorit ocekivane objekte za rezervacije
