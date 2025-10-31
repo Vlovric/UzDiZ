@@ -1,6 +1,7 @@
 package foi.vlovric21;
 
 import foi.vlovric21.builder.AranzmanDirector;
+import foi.vlovric21.factorymethod.CsvParserFactory;
 import foi.vlovric21.objekti.Aranzman;
 import foi.vlovric21.parser.ArgumentParser;
 import foi.vlovric21.parser.CsvParser;
@@ -20,14 +21,16 @@ public class Main {
         }
 
         ucitajPodatke(parser.getAranzmaniDatoteka(), parser.getRezervacijeDatoteka());
-        //testirajObjekte();
+        testirajObjekte();
         interaktivniNacinRada();
     }
 
     static void ucitajPodatke(String aranzmaniDatoteka, String rezervacijeDatoteka){
-        CsvParser csvParser = new CsvParser();
-        csvParser.parsirajCsv(aranzmaniDatoteka, CsvTip.ARANZMAN);
-        csvParser.parsirajCsv(rezervacijeDatoteka, CsvTip.REZERVACIJA);
+        CsvParser aranzmanParser = CsvParserFactory.stvoriParser(CsvTip.ARANZMAN);
+        CsvParser rezervacijaParser = CsvParserFactory.stvoriParser(CsvTip.REZERVACIJA);
+
+        aranzmanParser.parsirajCsv(aranzmaniDatoteka);
+        rezervacijaParser.parsirajCsv(rezervacijeDatoteka);
     }
     static void interaktivniNacinRada(){
     }
