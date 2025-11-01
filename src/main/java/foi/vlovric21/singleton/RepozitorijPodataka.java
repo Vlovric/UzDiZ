@@ -22,7 +22,6 @@ public class RepozitorijPodataka {
     private Map<Integer, Rezervacija> rezervacijePoId = new HashMap<>();
     private Map<String, List<Integer>> rezervacijePoImenu = new HashMap<>();
 
-    private List<Rezervacija> otkazaneRezervacije = new ArrayList<>();
     private List<Rezervacija> izbaceneRezervacije = new ArrayList<>();
 
     private static final DateTimeFormatter parser = new DateTimeFormatterBuilder()

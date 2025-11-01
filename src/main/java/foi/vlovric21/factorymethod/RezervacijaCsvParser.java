@@ -2,6 +2,7 @@ package foi.vlovric21.factorymethod;
 
 import foi.vlovric21.objekti.Rezervacija;
 import foi.vlovric21.parser.CsvParser;
+import foi.vlovric21.pomocne.RezervacijaPomocnik;
 import foi.vlovric21.singleton.RepozitorijPodataka;
 
 import java.util.List;
@@ -66,6 +67,8 @@ public class RezervacijaCsvParser extends CsvParser {
 
         Rezervacija rezervacija = new Rezervacija(ime, prezime, oznakaAranzmana, datumIVrijeme);
         rezervacija.setId(id);
-        repozitorij.dodajRezervaciju(rezervacija);
+
+        RezervacijaPomocnik pomocnik = new RezervacijaPomocnik();
+        pomocnik.dodajRezervaciju(rezervacija);
     }
 }

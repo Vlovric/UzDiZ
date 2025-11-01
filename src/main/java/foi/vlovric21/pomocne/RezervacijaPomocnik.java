@@ -5,18 +5,11 @@ import foi.vlovric21.objekti.Rezervacija;
 import foi.vlovric21.objekti.RezervacijaStatus;
 import foi.vlovric21.singleton.RepozitorijPodataka;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
-import java.time.format.DateTimeParseException;
-import java.time.temporal.ChronoField;
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 public class RezervacijaPomocnik {
 
-    public String dodajRezervaciju(Rezervacija rezervacija){
+    public String dodajRezervaciju(Rezervacija rezervacija){ //TODO: masivno refaktorirat
         int oznaka = rezervacija.getOznakaAranzmana();
         RepozitorijPodataka repozitorij = RepozitorijPodataka.getInstance();
 
@@ -98,22 +91,4 @@ public class RezervacijaPomocnik {
     private void dodijeliAktivniStatus(){
 
     }
-    /*
-    public void dodajInicijalneRezervacije(){
-        List<Rezervacija> inicijalneRezervacije = RepozitorijPodataka.getInstance().getRezervacije();
-        RepozitorijPodataka.getInstance().setRezervacije(new ArrayList<>());
-
-        inicijalneRezervacije.sort(Comparator.comparing(r -> parseDatumIVrijeme(r.getDatumIVrijeme())));
-
-        for(Rezervacija r : inicijalneRezervacije){
-            dodajInicijalnuRezervaciju(r);
-        }
-    }
-
-
-
-    public void dodajInicijalnuRezervaciju(Rezervacija r){
-
-    }
-     */
 }
