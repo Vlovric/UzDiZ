@@ -62,6 +62,9 @@ public class AranzmanCsvParser extends CsvParser {
         }catch(NumberFormatException ex){
             return "Neispravan broj u jednom od polja brojeva";
         }
+        if(RepozitorijPodataka.getInstance().getAranzmaniMapu().containsKey(Integer.parseInt(red.get(0)))) {
+            return "Aranžman s oznakom" + red.get(0) + "već postoji";
+        }
         if(!red.get(3).matches(regexDatum) || !red.get(4).matches(regexDatum)){
             return "Neispravan format datuma u jednom od obaveznih polja";
         }

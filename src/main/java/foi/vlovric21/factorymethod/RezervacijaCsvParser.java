@@ -1,6 +1,8 @@
 package foi.vlovric21.factorymethod;
 
+import foi.vlovric21.objekti.Rezervacija;
 import foi.vlovric21.parser.CsvParser;
+import foi.vlovric21.singleton.RepozitorijPodataka;
 
 import java.util.List;
 // ConcreteCreator
@@ -40,14 +42,11 @@ public class RezervacijaCsvParser extends CsvParser {
             return "Neispravan broj u polju oznake";
         }
 
-        /* TODO: maknut komentare
         int oznakaAranzmana = Integer.parseInt(red.get(2));
-        boolean postojiAranzman = RepozitorijPodataka.getInstance().getAranzmani().stream()
-                .anyMatch(aranzman -> aranzman.getOznaka() == oznakaAranzmana);
+        boolean postojiAranzman = RepozitorijPodataka.getInstance().getAranzmaniMapu().containsKey(oznakaAranzmana);
         if(!postojiAranzman){
             return "Ne postoji aranžman s oznakom: " + oznakaAranzmana;
         }
-         */
 
         if(!red.get(3).matches(regexDatumVrijeme)){
             return "Neispravan format datuma";
@@ -57,6 +56,16 @@ public class RezervacijaCsvParser extends CsvParser {
 
     @Override
     protected void stvoriObjekt(List<String> polja) {
+        RepozitorijPodataka repozitorij = RepozitorijPodataka.getInstance();
 
+        int id = repozitorij.generirajIdZaRezervaciju();
+        String ime = polja.get(0);
+        String prezime = polja.get(1);
+        int oznakaAranzmana = Integer.parseInt(polja.get(2));
+        String datumIVrijeme = polja.get(3);
+
+        Rezervacija rezervacija = new Rezervacija(ime, prezime, oznakaAranzmana, datumIVrijeme);
+        rezervacija.setId(id);
+        repozitorij.dodajRezervaciju(rezervacija);
     }
 }

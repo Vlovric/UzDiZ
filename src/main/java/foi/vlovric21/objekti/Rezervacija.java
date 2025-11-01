@@ -1,6 +1,7 @@
 package foi.vlovric21.objekti;
 
 public class Rezervacija {
+    private int id;
     private String ime;
     private String prezime;
     private int oznakaAranzmana;
@@ -8,12 +9,19 @@ public class Rezervacija {
     private RezervacijaStatus status;
 
     public Rezervacija(){}
-    public Rezervacija(String ime, String prezime, int oznakaAranzmana, String datumIVrijeme, RezervacijaStatus status) {
+    public Rezervacija(String ime, String prezime, int oznakaAranzmana, String datumIVrijeme) {
         this.ime = ime;
         this.prezime = prezime;
         this.oznakaAranzmana = oznakaAranzmana;
         this.datumIVrijeme = datumIVrijeme;
-        this.status = status;
+    }
+    
+    public int getId() {
+        return id;
+    }
+    
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getIme() {
@@ -28,6 +36,10 @@ public class Rezervacija {
     }
     public void setPrezime(String prezime) {
         this.prezime = prezime;
+    }
+
+    public String getPunoIme() {
+        return ime + " " + prezime;
     }
 
     public int getOznakaAranzmana() {

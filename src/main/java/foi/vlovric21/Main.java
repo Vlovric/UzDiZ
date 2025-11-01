@@ -6,6 +6,7 @@ import foi.vlovric21.objekti.Aranzman;
 import foi.vlovric21.parser.ArgumentParser;
 import foi.vlovric21.parser.CsvParser;
 import foi.vlovric21.parser.CsvTip;
+import foi.vlovric21.pomocne.RezervacijaPomocnik;
 import foi.vlovric21.singleton.RepozitorijPodataka;
 
 import java.util.*;
@@ -31,6 +32,9 @@ public class Main {
 
         aranzmanParser.parsirajCsv(aranzmaniDatoteka);
         rezervacijaParser.parsirajCsv(rezervacijeDatoteka);
+
+        RezervacijaPomocnik rezervacijaPomocnik = new RezervacijaPomocnik();
+        rezervacijaPomocnik.dodajInicijalneRezervacije();
     }
     static void interaktivniNacinRada(){
     }
