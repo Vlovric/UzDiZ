@@ -5,6 +5,7 @@ import foi.vlovric21.objekti.Rezervacija;
 import foi.vlovric21.objekti.RezervacijaStatus;
 import foi.vlovric21.singleton.RepozitorijPodataka;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class RezervacijaPomocnik {
@@ -18,7 +19,14 @@ public class RezervacijaPomocnik {
 
         int minBrojPutnika = aranzman.getMinBrojPutnika();
         int maxBrojPutnika = aranzman.getMaxBrojPutnika();
-        int brojRezervacija = rezervacijeZaAranzman.size();
+        int brojRezervacija = 0;
+
+        for(Rezervacija r : rezervacijeZaAranzman){
+            if(r.getStatus() == RezervacijaStatus.PRIMLJENA || r.getStatus() == RezervacijaStatus.AKTIVNA){ //TODO: provjerit jel jedno od ovo dvoje 0 da budem sig sam pri ispisu
+                brojRezervacija++;
+            }
+        }
+
         int brojRezervacijaNakonDodavanja = brojRezervacija + 1;
 
         if(brojRezervacijaNakonDodavanja < minBrojPutnika){
@@ -32,10 +40,13 @@ public class RezervacijaPomocnik {
                 return "Neuspješno dodavanje rezervacije: postoji aktivna rezervacija u istom aranžmanu ili preklapanje s drugim aranžmanom";
             }
             if(brojRezervacijaNakonDodavanja == minBrojPutnika){
+                List<Integer> validneRezervacijeId = new ArrayList<>();
                 int brojValidnihRezervacija = 0;
                 for(Rezervacija r : rezervacijeZaAranzman){
-                    if(provjeriValidnostRezervacije(r, RezervacijaStatus.PRIMLJENA)){
-                        r.setStatus(RezervacijaStatus.AKTIVNA);
+                    if(!provjeriValidnostRezervacije(r, RezervacijaStatus.PRIMLJENA)){
+                        r.setStatus(RezervacijaStatus.NA_CEKANJU);
+                    }else{
+                        validneRezervacijeId.add(r.getId());
                         brojValidnihRezervacija++;
                     }
                 }
@@ -43,6 +54,11 @@ public class RezervacijaPomocnik {
                     rezervacija.setStatus(RezervacijaStatus.PRIMLJENA);
                     repozitorij.dodajRezervaciju(rezervacija);
                     return "Uspješno dodavanje rezervacije: rezervacija je PRIMLJENA, potrebno je još " + (minBrojPutnika - brojValidnihRezervacija) + " rezervacija za aktivaciju aranžmana";
+                }
+                for(int id : validneRezervacijeId){
+                    rezervacijeZaAranzman.stream()
+                            .filter(r -> r.getId() == id)
+                            .forEach(r -> r.setStatus(RezervacijaStatus.AKTIVNA));
                 }
                 rezervacija.setStatus(RezervacijaStatus.AKTIVNA);
                 repozitorij.dodajRezervaciju(rezervacija);
@@ -66,29 +82,37 @@ public class RezervacijaPomocnik {
         return true;
     }
 
-    public void otkaziRezervaciju(Rezervacija rezervacija){
-        switch(rezervacija.getStatus()){
-            case RezervacijaStatus.AKTIVNA:
-                // rezervacija odlazi u red otkazanih rezervacija
-                prenesiURedOtkazanih(rezervacija);
-                // uzima prva ispravna rezervacija NA_CEKANJU i postaje AKTIVNA
-                dodijeliAktivniStatus();
+    public String otkaziRezervaciju(String ime, String prezime, int oznaka){
+        RepozitorijPodataka repozitorij = RepozitorijPodataka.getInstance();
+
+        List<Rezervacija> rezervacijeZaAranzman = repozitorij.getRezervacijeZaAranzman(oznaka);
+        Rezervacija rezervacija = null;
+
+        for(Rezervacija r : rezervacijeZaAranzman){
+            if(r.getIme().equals(ime) && r.getPrezime().equals(prezime)){
+                rezervacija = r;
                 break;
-            case RezervacijaStatus.PRIMLJENA:
-                // rezervacija odlazi u red otkazanih rezervacija
-                break;
-            case RezervacijaStatus.NA_CEKANJU:
-                break;
-            default:
-                break;
+            }
+        }
+        if(rezervacija == null){
+            return "Neuspješno otkazivanje: Ne postoji rezervacija za uneseno ime, prezime i oznaku aranžmana";
+        }
+
+        if(rezervacija.getStatus() == RezervacijaStatus.AKTIVNA){
+            prenesiURedOtkazanih(rezervacija);
+            dodijeliAktivniStatus();
+            return "Uspješno otkazivanje rezervacije";
+        }else{
+            prenesiURedOtkazanih(rezervacija);
+            return "Uspješno otkazivanje rezervacije";
         }
     }
 
     private void prenesiURedOtkazanih(Rezervacija rezervacija){
-
+        RepozitorijPodataka.getInstance().prebaciURedOtkazanih(rezervacija);
     }
 
     private void dodijeliAktivniStatus(){
-
+        // TODO: implementirati
     }
 }

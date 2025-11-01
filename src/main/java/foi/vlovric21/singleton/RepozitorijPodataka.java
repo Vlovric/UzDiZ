@@ -22,7 +22,7 @@ public class RepozitorijPodataka {
     private Map<Integer, Rezervacija> rezervacijePoId = new HashMap<>();
     private Map<String, List<Integer>> rezervacijePoImenu = new HashMap<>();
 
-    private List<Rezervacija> izbaceneRezervacije = new ArrayList<>();
+    private List<Rezervacija> otkazaneRezervacije = new ArrayList<>();
 
     private static final DateTimeFormatter parser = new DateTimeFormatterBuilder()
             .appendPattern("d.MM.yyyy H:mm")
@@ -73,6 +73,14 @@ public class RepozitorijPodataka {
 
     public List<Rezervacija> getRezervacijeZaAranzman(int oznakaAranzmana){
         return rezervacijePoAranzmanu.getOrDefault(oznakaAranzmana, new ArrayList<>());
+    }
+
+    public List<Rezervacija> getOtkazaneRezervacije(){
+        return otkazaneRezervacije;
+    }
+
+    public void dodajOtkazanuRezervaciju(Rezervacija rezervacija){
+        otkazaneRezervacije.add(rezervacija);
     }
 
     public void dodajRezervaciju(Rezervacija rezervacija){
@@ -135,7 +143,7 @@ public class RepozitorijPodataka {
             }
         }
 
-        for(Rezervacija r : aktivneRezervacije){
+        for(Rezervacija r : aktivneRezervacije){ //TODO: ovo moze bit empty tak da jel problem?
             Aranzman aranzmanUsporedba = aranzmaniPoOznaci.get(r.getOznakaAranzmana());
             if(trazeniAranzman.getOznaka() == aranzmanUsporedba.getOznaka()){
                 continue;
@@ -159,12 +167,13 @@ public class RepozitorijPodataka {
         return true;
     }
 
-    public void ukloniRezervaciju(Rezervacija rezervacija){
-        int oznaka = rezervacija.getOznakaAranzmana();
-        List<Rezervacija> lista = rezervacijePoAranzmanu.get(oznaka);
-        if(lista != null){
-            lista.remove(rezervacija);
-        }
-        izbaceneRezervacije.add(rezervacija);
+    public void prebaciURedOtkazanih(Rezervacija rezervacija){
+        List<Rezervacija> lista = rezervacijePoAranzmanu.get(rezervacija.getOznakaAranzmana());
+        lista.remove(rezervacija);
+        rezervacija.setStatus(RezervacijaStatus.OTKAZANA);
+        dodajOtkazanuRezervaciju(rezervacija);
+    }
+
+    private void obrisiRezervacijuPremaId(Rezervacija rezervacija){
     }
 }
