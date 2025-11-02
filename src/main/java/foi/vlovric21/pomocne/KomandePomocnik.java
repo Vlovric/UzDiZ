@@ -228,6 +228,13 @@ public class KomandePomocnik {
         }
 
         int oznaka = Integer.parseInt(matcher.group(1));
+
+        Aranzman aranzman = repozitorij.getAranzmanPoOznaci(oznaka);
+        if(aranzman == null) {
+            System.out.println("Aranžman s oznakom " + oznaka + " ne postoji.");
+            return;
+        }
+
         String vrste = matcher.group(2);
         Set<RezervacijaStatus> statusi = EnumSet.noneOf(RezervacijaStatus.class);
         boolean prikaziOtkazane = false;
