@@ -88,7 +88,8 @@ public class RepozitorijPodataka {
 
     public void dodajRezervaciju(Rezervacija rezervacija){
         int oznaka = rezervacija.getOznakaAranzmana();
-        int id = rezervacija.getId();
+        int id = generirajIdZaRezervaciju();
+        rezervacija.setId(id);
 
         List<Integer> lista = rezervacijePoAranzmanu.computeIfAbsent(oznaka, k -> new ArrayList<>());
         LocalDateTime dt = parseDatumIVrijeme(rezervacija.getDatumIVrijeme());

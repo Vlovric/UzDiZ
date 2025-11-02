@@ -16,6 +16,7 @@ import java.util.regex.Pattern;
 public class KomandePomocnik {
     private static String porukaPogreske = "Neispravani ili nedostajući parametri za komandu.";
     private static RepozitorijPodataka repozitorij = RepozitorijPodataka.getInstance();
+    private static RezervacijaPomocnik rezervacijaPomocnik = new RezervacijaPomocnik();
 
     private Matcher provjeriRegex(Pattern regex, String unos){
         Matcher matcher = regex.matcher(unos.trim());
@@ -165,6 +166,39 @@ public class KomandePomocnik {
         return dt.format(formatter);
     }
 
+    private void ispisiRezervacijeTablicaIRO(List<Rezervacija> rezervacije){
+        System.out.printf("%-20s %-20s %-30s %-15s%n",
+                "Datum i vrijeme", "Oznaka aranžmana", "Naziv aranžmana", "Vrsta");
+        System.out.println("-".repeat(85));
+
+        for(Rezervacija r : rezervacije){
+            Aranzman aranzman = repozitorij.getAranzmanPoOznaci(r.getOznakaAranzmana());
+            String nazivAranzmana = aranzman != null ? aranzman.getNaziv() : "";
+
+            System.out.printf("%-20s %-20d %-30s %-15s%n",
+                    r.getDatumIVrijeme(),
+                    r.getOznakaAranzmana(),
+                    skratiTekst(nazivAranzmana, 30),
+                    pretvoriStatusUVrstu(r.getStatus()));
+        }
+        System.out.println();
+    }
+
+    private String formatirajDatumVrijeme(String dan, String mjesec, String godina, String sat, String minuta, String sekunda){
+        String formatiraniDatum = String.format("%02d.%02d.%s",
+                Integer.parseInt(dan),
+                Integer.parseInt(mjesec),
+                godina);
+
+        String formatiranoVrijeme;
+        formatiranoVrijeme = String.format("%02d:%02d:%02d",
+                Integer.parseInt(sat),
+                Integer.parseInt(minuta),
+                Integer.parseInt(sekunda));
+
+        return formatiraniDatum + " " + formatiranoVrijeme;
+    }
+
     public void pregledAranzmanITAP(String unos){
         String uzorak = "^ITAP\\s+(\\d+)$";
 
@@ -219,30 +253,70 @@ public class KomandePomocnik {
         }
     }
 
-    public String pregledRezervacijaOsobaIRO(String unos){
-        Pattern regex = Pattern.compile("");
+    public void pregledRezervacijaOsobaIRO(String unos){
+        String uzorak = "^IRO\\s+([A-ZČĆĐŠŽ][a-zčćđšž]+)\\s+([A-ZČĆĐŠŽ][a-zčćđšž]+)$";
+
+        Pattern regex = Pattern.compile(uzorak);
         Matcher matcher = provjeriRegex(regex, unos);
         if(matcher == null){
-            return "";
+            return;
         }
-        return "";
+
+        String ime = matcher.group(1);
+        String prezime = matcher.group(2);
+        String punoIme = ime + " " + prezime;
+
+        List<Rezervacija> rezervacije = repozitorij.dohvatiRezervacijePoImenu(punoIme);
+
+        ispisiRezervacijeTablicaIRO(rezervacije);
     }
 
-    public String otkazRezervacijeORTA(String unos){
-        Pattern regex = Pattern.compile("");
+    public void otkazRezervacijeORTA(String unos){
+        String uzorak = "^ORTA\\s+([A-ZČĆĐŠŽ][a-zčćđšž]+)\\s+([A-ZČĆĐŠŽ][a-zčćđšž]+)\\s+(\\d+)$";
+
+        Pattern regex = Pattern.compile(uzorak);
         Matcher matcher = provjeriRegex(regex, unos);
         if(matcher == null){
-            return "";
+            return;
         }
-        return "";
+
+        String ime = matcher.group(1);
+        String prezime = matcher.group(2);
+        int oznaka = Integer.parseInt(matcher.group(3));
+
+        String rezultat = rezervacijaPomocnik.otkaziRezervaciju(ime, prezime, oznaka);
+        System.out.println(rezultat);
     }
 
-    public String dodavanjeRezervacijeDRTA(String unos){
-        Pattern regex = Pattern.compile("");
+    public void dodavanjeRezervacijeDRTA(String unos){
+        String uzorak = "^DRTA\\s+([A-ZČĆĐŠŽ][a-zčćđšž]+)\\s+([A-ZČĆĐŠŽ][a-zčćđšž]+)\\s+(\\d+)\\s+([1-9]|[12]\\d|3[01])\\.([1-9]|1[0-2])\\.(\\d{4})\\.?\\s+(\\d{1,2}):(\\d{2})(?::(\\d{2}))?$";
+
+        Pattern regex = Pattern.compile(uzorak);
         Matcher matcher = provjeriRegex(regex, unos);
         if(matcher == null){
-            return "";
+            return;
         }
-        return "";
+
+        String ime = matcher.group(1);
+        String prezime = matcher.group(2);
+        int oznaka = Integer.parseInt(matcher.group(3));
+        String dan = matcher.group(4);
+        String mjesec = matcher.group(5);
+        String godina = matcher.group(6);
+        String sat = matcher.group(7);
+        String minuta = matcher.group(8);
+        String sekunda = matcher.group(9);
+
+        Aranzman aranzman = repozitorij.getAranzmanPoOznaci(oznaka);
+        if(aranzman == null){
+            System.out.println("Neuspješno dodavanje rezervacije: Aranžman s oznakom " + oznaka + " ne postoji.");
+            return;
+        }
+
+        String datumIVrijeme = formatirajDatumVrijeme(dan, mjesec, godina, sat, minuta, sekunda);
+
+        Rezervacija novaRezervacija = new Rezervacija(ime, prezime, oznaka, datumIVrijeme);
+        String rezultat = rezervacijaPomocnik.dodajRezervaciju(novaRezervacija);
+        System.out.println(rezultat);
     }
 }
