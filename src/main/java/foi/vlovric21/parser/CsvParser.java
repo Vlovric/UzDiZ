@@ -28,7 +28,7 @@ public abstract class CsvParser {
 
             if(red == null){
                 System.out.println("Datoteka je prazna: " + datoteka);
-                return false; //TODO vidjet sta s ovim
+                return false;
             }
             imaZaglavlje = provjeriZaglavlje(red);
 

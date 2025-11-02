@@ -119,7 +119,7 @@ public class RepozitorijPodataka {
         }
     }
 
-    public boolean postojiAktivnaRezervacija(Rezervacija rezervacija, RezervacijaStatus statusZaProvjeru){
+    public boolean postojiRezervacijaKorisnikaStatus(Rezervacija rezervacija, RezervacijaStatus statusZaProvjeru){
         int oznaka = rezervacija.getOznakaAranzmana();
         List<Rezervacija> lista = rezervacijePoAranzmanu.get(oznaka);
         for(Rezervacija r : lista){
@@ -130,7 +130,7 @@ public class RepozitorijPodataka {
         return false;
     }
 
-    public boolean postojiAktivnaPreklapanje(Rezervacija rezervacija){
+    public List<Integer> dohvatiPreklapanjaStatus(Rezervacija rezervacija, RezervacijaStatus statusZaProvjeru){
         String punoIme = rezervacija.getPunoIme();
         Aranzman trazeniAranzman = aranzmaniPoOznaci.get(rezervacija.getOznakaAranzmana());
 
@@ -138,21 +138,22 @@ public class RepozitorijPodataka {
 
         List<Rezervacija> aktivneRezervacije = new ArrayList<>();
         for(Integer id : rezervacijeKorisnikaId) {
-            if (rezervacijePoId.get(id).getStatus() == RezervacijaStatus.AKTIVNA) {
+            if (rezervacijePoId.get(id).getStatus() == statusZaProvjeru) {
                 aktivneRezervacije.add(rezervacijePoId.get(id));
             }
         }
 
+        List<Integer> preklapajuceRezervacijeId = new ArrayList<>();
         for(Rezervacija r : aktivneRezervacije){ //TODO: ovo moze bit empty tak da jel problem?
             Aranzman aranzmanUsporedba = aranzmaniPoOznaci.get(r.getOznakaAranzmana());
             if(trazeniAranzman.getOznaka() == aranzmanUsporedba.getOznaka()){
                 continue;
             }
             if(provjeriPreklapanjeDatuma(trazeniAranzman, aranzmanUsporedba)){
-                return true;
+                preklapajuceRezervacijeId.add(r.getId());
             }
         }
-        return false;
+        return preklapajuceRezervacijeId;
     }
 
     private boolean provjeriPreklapanjeDatuma(Aranzman a1, Aranzman a2){
@@ -175,5 +176,14 @@ public class RepozitorijPodataka {
     }
 
     private void obrisiRezervacijuPremaId(Rezervacija rezervacija){
+    }
+
+    public List<Rezervacija> dohvatiRezervacijePoImenu(String punoIme){
+        List<Integer> rezervacijeId = rezervacijePoImenu.getOrDefault(punoIme, new ArrayList<>());
+        List<Rezervacija> rezervacije = new ArrayList<>();
+        for(Integer id : rezervacijeId){
+            rezervacije.add(rezervacijePoId.get(id));
+        }
+        return rezervacije;
     }
 }
