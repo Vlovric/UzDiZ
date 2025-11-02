@@ -22,7 +22,7 @@ public class RepozitorijPodataka {
     private Map<Integer, Rezervacija> rezervacijePoId = new HashMap<>();
     private Map<String, List<Integer>> rezervacijePoImenu = new HashMap<>();
 
-    private List<Rezervacija> otkazaneRezervacije = new ArrayList<>();
+    private Map<Integer, LocalDateTime> otkazaneRezervacije = new HashMap<>();
 
     private static final DateTimeFormatter parser = new DateTimeFormatterBuilder()
             .appendPattern("d.MM.yyyy H:mm")
@@ -185,5 +185,30 @@ public class RepozitorijPodataka {
             rezervacije.add(rezervacijePoId.get(id));
         }
         return rezervacije;
+    }
+
+    public List<Aranzman> dohvatiAranzmanRazdoblje(String pocetniDatum, String zavrsniDatum){
+        List<Aranzman> rezultat = new ArrayList<>();
+
+        if(pocetniDatum == null && zavrsniDatum == null){
+            for(Aranzman a : aranzmaniPoOznaci.values()){
+                rezultat.add(a);
+            }
+            return rezultat;
+        }
+
+        LocalDate pocDatum = parseDatum(pocetniDatum);
+        LocalDate zavDatum = parseDatum(zavrsniDatum);
+
+        for(Aranzman a : aranzmaniPoOznaci.values()){
+            LocalDate aPocDatum = parseDatum(a.getPocetniDatum());
+            LocalDate aZavDatum = parseDatum(a.getZavrsniDatum());
+
+            if(aPocDatum.isBefore(pocDatum) || aZavDatum.isAfter(zavDatum)){
+                continue;
+            }
+            rezultat.add(a);
+        }
+        return rezultat;
     }
 }

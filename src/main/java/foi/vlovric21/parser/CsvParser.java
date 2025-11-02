@@ -16,7 +16,7 @@ public abstract class CsvParser {
     protected abstract String validirajRed(List<String> red);
     protected abstract void stvoriObjekt(List<String> polja);
 
-    protected static final String regexDatum = "\\d{1,2}\\.\\d{1,2}\\.\\d{4}\\.?";
+    protected static final String regexDatum = "\\d{1,2}\\.\\d{1,2}\\.\\d{4}\\.";
     protected static final String regexDatumVrijeme = "\\d{1,2}\\.\\d{1,2}\\.\\d{4}\\.? \\d{1,2}:\\d{2}(:\\d{2})?";
 
     public boolean parsirajCsv(String datoteka){
