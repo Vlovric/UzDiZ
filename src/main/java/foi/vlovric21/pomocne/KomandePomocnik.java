@@ -1,9 +1,15 @@
 package foi.vlovric21.pomocne;
 
 import foi.vlovric21.objekti.Aranzman;
+import foi.vlovric21.objekti.Rezervacija;
+import foi.vlovric21.objekti.RezervacijaStatus;
 import foi.vlovric21.singleton.RepozitorijPodataka;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.EnumSet;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -107,6 +113,58 @@ public class KomandePomocnik {
                 godina);
     }
 
+    private void ispisiRezervacijeTablicaIRTAOtkaz(List<Rezervacija> rezervacije){
+        System.out.printf("%-20s %-20s %-20s %-15s %-25s%n",
+                "Ime", "Prezime", "Datum i vrijeme", "Vrsta", "Datum i vrijeme otkaza");
+        System.out.println("-".repeat(100));
+
+        for(Rezervacija r : rezervacije){
+            String datumOtkaza = "";
+            if(r.getStatus() == RezervacijaStatus.OTKAZANA){
+                LocalDateTime dtOtkaza = repozitorij.dohvatiVrijemeOtkazivanjaRezervacije(r.getId());
+                datumOtkaza = dtOtkaza != null ? formatirajDatumVrijeme(dtOtkaza) : "";
+            }
+
+            System.out.printf("%-20s %-20s %-20s %-15s %-25s%n",
+                    skratiTekst(r.getIme(), 20),
+                    skratiTekst(r.getPrezime(), 20),
+                    r.getDatumIVrijeme(),
+                    pretvoriStatusUVrstu(r.getStatus()),
+                    datumOtkaza);
+        }
+        System.out.println();
+    }
+
+    private void ispisiRezervacijaTablicaIRTA(List<Rezervacija> rezervacije){
+        System.out.printf("%-20s %-20s %-20s %-15s%n",
+                "Ime", "Prezime", "Datum i vrijeme", "Vrsta");
+        System.out.println("-".repeat(75));
+
+        for(Rezervacija r : rezervacije){
+            System.out.printf("%-20s %-20s %-20s %-15s%n",
+                    skratiTekst(r.getIme(), 20),
+                    skratiTekst(r.getPrezime(), 20),
+                    r.getDatumIVrijeme(),
+                    pretvoriStatusUVrstu(r.getStatus()));
+        }
+        System.out.println();
+    }
+
+    private String pretvoriStatusUVrstu(RezervacijaStatus status){
+        switch(status){
+            case PRIMLJENA: return "Primljena";
+            case AKTIVNA: return "Aktivna";
+            case NA_CEKANJU: return "Na čekanju";
+            case OTKAZANA: return "Otkazana";
+            default: return "";
+        }
+    }
+
+    private String formatirajDatumVrijeme(LocalDateTime dt){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss");
+        return dt.format(formatter);
+    }
+
     public void pregledAranzmanITAP(String unos){
         String uzorak = "^ITAP\\s+(\\d+)$";
 
@@ -137,27 +195,28 @@ public class KomandePomocnik {
 
         int oznaka = Integer.parseInt(matcher.group(1));
         String vrste = matcher.group(2);
-        boolean pa = false;
-        boolean c = false;
-        boolean o = false;
+        Set<RezervacijaStatus> statusi = EnumSet.noneOf(RezervacijaStatus.class);
+        boolean prikaziOtkazane = false;
 
-        if(vrste == null){
-            pa = true;
-            c = true;
-            o = true;
-        }else{
-            if(vrste.contains("PA")){
-                pa = true;
-            }
-            if(vrste.contains("Č")){
-                c = true;
-            }
-            if(vrste.contains("O")){
-                o = true;
-            }
+        if(vrste == null || vrste.contains("PA")){
+            statusi.add(RezervacijaStatus.PRIMLJENA);
+            statusi.add(RezervacijaStatus.AKTIVNA);
+        }
+        if(vrste == null || vrste.contains("Č")){
+            statusi.add(RezervacijaStatus.NA_CEKANJU);
+        }
+        if(vrste == null || vrste.contains("O")){
+            statusi.add(RezervacijaStatus.OTKAZANA);
+            prikaziOtkazane = true;
         }
 
+        List<Rezervacija> rezervacije = repozitorij.getRezervacijeZaAranzman(oznaka, statusi);
 
+        if(prikaziOtkazane){
+            ispisiRezervacijeTablicaIRTAOtkaz(rezervacije);
+        }else{
+            ispisiRezervacijaTablicaIRTA(rezervacije);
+        }
     }
 
     public String pregledRezervacijaOsobaIRO(String unos){

@@ -17,11 +17,10 @@ public class RepozitorijPodataka {
     private static int idBrojacRezervacija = 1;
 
     private Map<Integer, Aranzman> aranzmaniPoOznaci = new HashMap<>();
-    private Map<Integer, List<Rezervacija>> rezervacijePoAranzmanu = new HashMap<>();
-
+    private Map<Integer, List<Integer>> rezervacijePoAranzmanu = new HashMap<>();
     private Map<Integer, Rezervacija> rezervacijePoId = new HashMap<>();
-    private Map<String, List<Integer>> rezervacijePoImenu = new HashMap<>();
 
+    private Map<String, List<Integer>> rezervacijePoImenu = new HashMap<>();
     private Map<Integer, LocalDateTime> otkazaneRezervacije = new HashMap<>();
 
     private static final DateTimeFormatter parser = new DateTimeFormatterBuilder()
@@ -64,33 +63,39 @@ public class RepozitorijPodataka {
     }
 
     public List<Rezervacija> getRezervacijeLista(){
-        List<Rezervacija> sveRezervacije = new ArrayList<>();
-        for(List<Rezervacija> lista : rezervacijePoAranzmanu.values()){
-            sveRezervacije.addAll(lista);
+        return new ArrayList<>(rezervacijePoId.values());
+    }
+
+    public List<Rezervacija> getRezervacijeZaAranzman(int oznakaAranzmana, Set<RezervacijaStatus> statusi){
+        List<Integer> rezervacijeId = rezervacijePoAranzmanu.getOrDefault(oznakaAranzmana, new ArrayList<>());
+        List<Rezervacija> rezervacije = new ArrayList<>();
+        for(Integer id : rezervacijeId){
+            Rezervacija r = rezervacijePoId.get(id);
+            if(statusi == null || statusi.isEmpty() || statusi.contains(r.getStatus())){
+                rezervacije.add(r);
+            }
         }
-        return sveRezervacije;
+        return rezervacije;
     }
 
-    public List<Rezervacija> getRezervacijeZaAranzman(int oznakaAranzmana){
-        return rezervacijePoAranzmanu.getOrDefault(oznakaAranzmana, new ArrayList<>());
-    }
-
-    public List<Rezervacija> getOtkazaneRezervacije(){
-        return otkazaneRezervacije;
+    public LocalDateTime dohvatiVrijemeOtkazivanjaRezervacije(int rezervacijaId){
+        return otkazaneRezervacije.get(rezervacijaId);
     }
 
     public void dodajOtkazanuRezervaciju(Rezervacija rezervacija){
-        otkazaneRezervacije.add(rezervacija);
+        otkazaneRezervacije.put(rezervacija.getId(), LocalDateTime.now());
     }
 
     public void dodajRezervaciju(Rezervacija rezervacija){
         int oznaka = rezervacija.getOznakaAranzmana();
+        int id = rezervacija.getId();
 
-        List<Rezervacija> lista = rezervacijePoAranzmanu.computeIfAbsent(oznaka, k -> new ArrayList<>());
+        List<Integer> lista = rezervacijePoAranzmanu.computeIfAbsent(oznaka, k -> new ArrayList<>());
         LocalDateTime dt = parseDatumIVrijeme(rezervacija.getDatumIVrijeme());
 
         int index = 0; //TODO jel mi ne treba ovdje check ak mi je lista prazna??
-        for(Rezervacija r : lista){
+        for(Integer rId : lista){
+            Rezervacija r = rezervacijePoId.get(rId);
             LocalDateTime rezervacijaDT = parseDatumIVrijeme(r.getDatumIVrijeme());
             if(dt.isAfter(rezervacijaDT)){
                 index++;
@@ -98,9 +103,9 @@ public class RepozitorijPodataka {
                 break;
             }
         }
-        lista.add(index, rezervacija);
-        rezervacijePoImenu.computeIfAbsent(rezervacija.getPunoIme(), k -> new ArrayList<>()).add(rezervacija.getId());
-        rezervacijePoId.computeIfAbsent(rezervacija.getId(), k -> rezervacija);
+        lista.add(index, id);
+        rezervacijePoImenu.computeIfAbsent(rezervacija.getPunoIme(), k -> new ArrayList<>()).add(id);
+        rezervacijePoId.put(id, rezervacija);
     }
 
     private LocalDateTime parseDatumIVrijeme(String dv){
@@ -121,8 +126,9 @@ public class RepozitorijPodataka {
 
     public boolean postojiRezervacijaKorisnikaStatus(Rezervacija rezervacija, RezervacijaStatus statusZaProvjeru){
         int oznaka = rezervacija.getOznakaAranzmana();
-        List<Rezervacija> lista = rezervacijePoAranzmanu.get(oznaka);
-        for(Rezervacija r : lista){
+        List<Integer> lista = rezervacijePoAranzmanu.get(oznaka);
+        for(Integer id : lista){
+            Rezervacija r = rezervacijePoId.get(id);
             if(r.getPunoIme().equals(rezervacija.getPunoIme()) && r.getStatus() == statusZaProvjeru){
                 return true;
             }
@@ -169,8 +175,8 @@ public class RepozitorijPodataka {
     }
 
     public void prebaciURedOtkazanih(Rezervacija rezervacija){
-        List<Rezervacija> lista = rezervacijePoAranzmanu.get(rezervacija.getOznakaAranzmana());
-        lista.remove(rezervacija);
+        List<Integer> lista = rezervacijePoAranzmanu.get(rezervacija.getOznakaAranzmana());
+        lista.remove(Integer.valueOf(rezervacija.getId()));
         rezervacija.setStatus(RezervacijaStatus.OTKAZANA);
         dodajOtkazanuRezervaciju(rezervacija);
     }

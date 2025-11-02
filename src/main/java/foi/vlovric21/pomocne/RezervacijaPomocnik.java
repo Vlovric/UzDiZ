@@ -11,27 +11,34 @@ import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoField;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
+import java.util.Set;
 
 public class RezervacijaPomocnik {
+
+    private Set<RezervacijaStatus> osnovniStatusi = EnumSet.of(
+            RezervacijaStatus.AKTIVNA,
+            RezervacijaStatus.PRIMLJENA,
+            RezervacijaStatus.NA_CEKANJU
+    );
+
+    private Set<RezervacijaStatus> aktPrimStatusi = EnumSet.of(
+            RezervacijaStatus.AKTIVNA,
+            RezervacijaStatus.PRIMLJENA
+    );
 
     public String dodajRezervaciju(Rezervacija rezervacija){ //TODO: masivno refaktorirat
         int oznaka = rezervacija.getOznakaAranzmana();
         RepozitorijPodataka repozitorij = RepozitorijPodataka.getInstance();
 
         Aranzman aranzman = repozitorij.getAranzmanPoOznaci(oznaka);
-        List<Rezervacija> rezervacijeZaAranzman = repozitorij.getRezervacijeZaAranzman(oznaka);
+        List<Rezervacija> rezervacijeZaAranzman = repozitorij.getRezervacijeZaAranzman(oznaka, aktPrimStatusi);
 
         int minBrojPutnika = aranzman.getMinBrojPutnika();
         int maxBrojPutnika = aranzman.getMaxBrojPutnika();
-        int brojRezervacija = 0;
 
-        for(Rezervacija r : rezervacijeZaAranzman){
-            if(r.getStatus() == RezervacijaStatus.PRIMLJENA || r.getStatus() == RezervacijaStatus.AKTIVNA){ //TODO: provjerit jel jedno od ovo dvoje 0 da budem sig sam pri ispisu
-                brojRezervacija++;
-            }
-        }
-
+        int brojRezervacija = rezervacijeZaAranzman.size();
         int brojRezervacijaNakonDodavanja = brojRezervacija + 1;
 
         if(brojRezervacijaNakonDodavanja < minBrojPutnika){
@@ -92,7 +99,7 @@ public class RezervacijaPomocnik {
     public String otkaziRezervaciju(String ime, String prezime, int oznaka){
         RepozitorijPodataka repozitorij = RepozitorijPodataka.getInstance();
 
-        List<Rezervacija> rezervacijeZaAranzman = repozitorij.getRezervacijeZaAranzman(oznaka);
+        List<Rezervacija> rezervacijeZaAranzman = repozitorij.getRezervacijeZaAranzman(oznaka, osnovniStatusi);
         Rezervacija rezervacija = null;
 
         for(Rezervacija r : rezervacijeZaAranzman){
