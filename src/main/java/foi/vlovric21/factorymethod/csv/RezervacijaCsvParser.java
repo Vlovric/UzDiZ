@@ -1,4 +1,4 @@
-package foi.vlovric21.factorymethod;
+package foi.vlovric21.factorymethod.csv;
 
 import foi.vlovric21.objekti.Rezervacija;
 import foi.vlovric21.parser.CsvParser;

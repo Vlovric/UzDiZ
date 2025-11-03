@@ -1,4 +1,4 @@
-package foi.vlovric21.factorymethod;
+package foi.vlovric21.factorymethod.csv;
 
 import foi.vlovric21.builder.AranzmanDirector;
 import foi.vlovric21.objekti.Aranzman;
