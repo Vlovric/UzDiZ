@@ -62,7 +62,7 @@ public class RezervacijaPomocnik {
                 int brojValidnihRezervacija = 0;
                 for(Rezervacija r : rezervacijeZaAranzman){
                     if(!provjeriValidnostRezervacije(r, RezervacijaStatus.PRIMLJENA)){
-                        r.setStatus(RezervacijaStatus.NA_CEKANJU);
+                        neispravnaRezervacija(r);
                     }else{
                         validneRezervacijeId.add(r.getId());
                         brojValidnihRezervacija++;
@@ -93,6 +93,11 @@ public class RezervacijaPomocnik {
             repozitorij.dodajRezervaciju(rezervacija);
             return "Uspješno dodavanje rezervacije: rezervacija je NA ČEKANJU, maksimalan broj putnika je dostignut";
         }
+    }
+
+    private void neispravnaRezervacija(Rezervacija rezervacija){
+        System.out.println("Rezervacija korisnika " + rezervacija.getPunoIme() + " za ovaj aranžman je neispravna i briše se.");
+        RepozitorijPodataka.getInstance().obrisiRezervacijuIzAranzmana(rezervacija);
     }
 
     private boolean provjeriValidnostRezervacije(Rezervacija rezervacija, RezervacijaStatus statusZaProvjeru){
@@ -144,8 +149,6 @@ public class RezervacijaPomocnik {
             else{
                 dodijeliAktivniStatus(rezervacijeZaAranzman);
             }
-
-            postaviOstaleRezervacijeKorisnika(rezervacija);
             return "Uspješno otkazivanje rezervacije";
         }else{
             prenesiURedOtkazanih(rezervacija);
@@ -164,98 +167,11 @@ public class RezervacijaPomocnik {
             }
             boolean validno = provjeriValidnostRezervacije(r, RezervacijaStatus.AKTIVNA);
             if(!validno) {
+                neispravnaRezervacija(r);
                 continue;
             }
             r.setStatus(RezervacijaStatus.AKTIVNA);
             return;
-        }
-    }
-
-    private void postaviOstaleRezervacijeKorisnika(Rezervacija rezervacija){
-        //pogledam jel ima aranzmana koji su u preklapanju sa dohvatiAktivnaPreklapanja
-            //ako ima
-                //za svaki aranzman pogledam jel korisnik ima rezervaciju koja je NA CEKANJU
-                    //ako ima
-                        //provjerim jel moze bit AKTIVNA
-                            //ako moze
-                                //postavim na AKTIVNA
-        /*
-        RepozitorijPodataka repozitorij = RepozitorijPodataka.getInstance();
-        List<Integer> preklapajuciAranzmaniId = repozitorij.dohvatiPreklapanjaStatus(rezervacija, RezervacijaStatus.NA_CEKANJU);
-        if(preklapajuciAranzmaniId.isEmpty()){
-            return;
-        }
-
-        List<Aranzman> preklapajuciAranzmani = new ArrayList<>();
-        for(int aranzmanId : preklapajuciAranzmaniId){
-            Aranzman aranzman = repozitorij.getAranzmanPoOznaci(aranzmanId);
-            preklapajuciAranzmani.add(aranzman);
-        }
-        //uzet sve rezervacije korisnika
-        List<Rezervacija> rezervacijeKorisnika = repozitorij.dohvatiRezervacijePoImenu(rezervacija.getPunoIme());
-        //napravit sortiranu listu samo onih rezervacija s oznakom iz preklapajucih aranzmana
-        List<Rezervacija> rezervacijeZaObradu = new ArrayList<>();
-        for(Rezervacija r : rezervacijeKorisnika) {
-            for (Aranzman a : preklapajuciAranzmani) {
-                if (r.getOznakaAranzmana() == a.getOznaka() && r.getStatus() == RezervacijaStatus.NA_CEKANJU) {
-                    rezervacijeZaObradu.add(r);
-                }
-            }
-        }
-        //sortirati listu po datumu i vremenu rastuce
-        if(!rezervacijeZaObradu.isEmpty()) {
-            rezervacijeZaObradu.sort((r1, r2) -> {
-                LocalDateTime dt1 = parseDatumIVrijeme(r1.getDatumIVrijeme());
-                LocalDateTime dt2 = parseDatumIVrijeme(r2.getDatumIVrijeme());
-                return dt1.compareTo(dt2);
-            });
-
-            Rezervacija prvaRezervacija = rezervacijeZaObradu.get(0);
-            prvaRezervacija.setStatus(RezervacijaStatus.AKTIVNA);
-        }
-         */
-
-        RepozitorijPodataka repozitorij = RepozitorijPodataka.getInstance();
-        List<Integer> preklapajuciAranzmaniId = repozitorij.dohvatiPreklapanjaStatus(rezervacija, RezervacijaStatus.NA_CEKANJU);
-
-        if(preklapajuciAranzmaniId.isEmpty()){
-            return;
-        }
-
-        List<Rezervacija> rezervacijeKorisnika = repozitorij.dohvatiRezervacijePoImenu(rezervacija.getPunoIme());
-        List<Rezervacija> rezervacijeZaObradu = new ArrayList<>();
-
-        for(Rezervacija r : rezervacijeKorisnika) {
-            if(preklapajuciAranzmaniId.contains(r.getOznakaAranzmana()) &&
-                    r.getStatus() == RezervacijaStatus.NA_CEKANJU) {
-                rezervacijeZaObradu.add(r);
-            }
-        }
-
-        if (!rezervacijeZaObradu.isEmpty()) {
-
-            rezervacijeZaObradu.sort((r1, r2) -> {
-                LocalDateTime dt1 = parseDatumIVrijeme(r1.getDatumIVrijeme());
-                LocalDateTime dt2 = parseDatumIVrijeme(r2.getDatumIVrijeme());
-                return dt1.compareTo(dt2);
-            });
-
-            for(Rezervacija r : rezervacijeZaObradu){
-                int oznakaAranzmana = r.getOznakaAranzmana();
-                Aranzman aranzman = repozitorij.getAranzmanPoOznaci(oznakaAranzmana);
-                List<Rezervacija> rezervacijeZaAranzman = repozitorij.getRezervacijeZaAranzman(oznakaAranzmana, aktPrimStatusi);
-
-                if(rezervacijeZaAranzman.size() >= aranzman.getMaxBrojPutnika()){
-                    continue;
-                }
-                if(repozitorij.postojiRezervacijaKorisnikaStatus(r, RezervacijaStatus.AKTIVNA) || repozitorij.postojiRezervacijaKorisnikaStatus(r, RezervacijaStatus.PRIMLJENA)){
-                    continue;
-                }
-
-                repozitorij.obrisiRezervacijuIzAranzmana(r);
-                String rezultat = dodajRezervaciju(r);
-                break;
-            }
         }
     }
 
