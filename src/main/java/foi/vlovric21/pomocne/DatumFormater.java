@@ -1,7 +1,11 @@
 package foi.vlovric21.pomocne;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.format.DateTimeParseException;
+import java.time.temporal.ChronoField;
 
 public class DatumFormater {
 
@@ -30,5 +34,36 @@ public class DatumFormater {
                 Integer.parseInt(sekunda));
 
         return formatiraniDatum + " " + formatiranoVrijeme;
+    }
+
+    private static final DateTimeFormatter parser = new DateTimeFormatterBuilder()
+            .appendPattern("d.MM.yyyy H:mm")
+            .optionalStart().appendPattern(":ss").optionalEnd()
+            .parseDefaulting(ChronoField.SECOND_OF_MINUTE, 0)
+            .toFormatter();
+
+    public DateTimeFormatter getParser(){
+        return parser;
+    }
+
+    private static final DateTimeFormatter datumParser = new DateTimeFormatterBuilder()
+            .appendPattern("d.M.yyyy")
+            .appendLiteral(".")
+            .toFormatter();
+
+    public LocalDate parseDatum(String d){
+        try{
+            return LocalDate.parse(d, datumParser);
+        }catch(DateTimeParseException ex){
+            return null;
+        }
+    }
+
+    public LocalDateTime parseDatumIVrijeme(String dv){
+        try{
+            return LocalDateTime.parse(dv, parser);
+        }catch(DateTimeParseException ex){
+            return LocalDateTime.MAX;
+        }
     }
 }

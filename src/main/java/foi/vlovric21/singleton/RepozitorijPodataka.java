@@ -3,13 +3,10 @@ package foi.vlovric21.singleton;
 import foi.vlovric21.objekti.Aranzman;
 import foi.vlovric21.objekti.Rezervacija;
 import foi.vlovric21.objekti.RezervacijaStatus;
+import foi.vlovric21.pomocne.DatumFormater;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
-import java.time.format.DateTimeParseException;
-import java.time.temporal.ChronoField;
 import java.util.*;
 
 public class RepozitorijPodataka {
@@ -23,16 +20,7 @@ public class RepozitorijPodataka {
     private Map<String, List<Integer>> rezervacijePoImenu = new HashMap<>();
     private Map<Integer, LocalDateTime> otkazaneRezervacije = new HashMap<>();
 
-    private static final DateTimeFormatter parser = new DateTimeFormatterBuilder()
-            .appendPattern("d.MM.yyyy H:mm")
-            .optionalStart().appendPattern(":ss").optionalEnd()
-            .parseDefaulting(ChronoField.SECOND_OF_MINUTE, 0)
-            .toFormatter();
-
-    private static final DateTimeFormatter datumParser = new DateTimeFormatterBuilder()
-            .appendPattern("d.M.yyyy")
-            .appendLiteral(".")
-            .toFormatter();
+    private DatumFormater datumFormater = new DatumFormater();
 
     private RepozitorijPodataka() {}
 
@@ -42,10 +30,6 @@ public class RepozitorijPodataka {
 
     public int generirajIdZaRezervaciju(){
         return idBrojacRezervacija++;
-    }
-
-    public List<Aranzman> getAranzmani(){
-        return new ArrayList<>(aranzmaniPoOznaci.values());
     }
 
     public Aranzman getAranzmanPoOznaci(int oznaka){
@@ -60,10 +44,6 @@ public class RepozitorijPodataka {
         int oznaka = aranzman.getOznaka();
         aranzmaniPoOznaci.put(oznaka, aranzman);
         rezervacijePoAranzmanu.computeIfAbsent(oznaka, k  -> new ArrayList<>());
-    }
-
-    public List<Rezervacija> getRezervacijeLista(){
-        return new ArrayList<>(rezervacijePoId.values());
     }
 
     public List<Rezervacija> getRezervacijeZaAranzman(int oznakaAranzmana, Set<RezervacijaStatus> statusi){
@@ -100,12 +80,12 @@ public class RepozitorijPodataka {
         rezervacija.setId(id);
 
         List<Integer> lista = rezervacijePoAranzmanu.computeIfAbsent(oznaka, k -> new ArrayList<>());
-        LocalDateTime dt = parseDatumIVrijeme(rezervacija.getDatumIVrijeme());
+        LocalDateTime dt = datumFormater.parseDatumIVrijeme(rezervacija.getDatumIVrijeme());
 
         int index = 0;
         for(Integer rId : lista){
             Rezervacija r = rezervacijePoId.get(rId);
-            LocalDateTime rezervacijaDT = parseDatumIVrijeme(r.getDatumIVrijeme());
+            LocalDateTime rezervacijaDT = datumFormater.parseDatumIVrijeme(r.getDatumIVrijeme());
             if(dt.isAfter(rezervacijaDT)){
                 index++;
             }else{
@@ -115,22 +95,6 @@ public class RepozitorijPodataka {
         lista.add(index, id);
         rezervacijePoImenu.computeIfAbsent(rezervacija.getPunoIme(), k -> new ArrayList<>()).add(id);
         rezervacijePoId.put(id, rezervacija);
-    }
-
-    private LocalDateTime parseDatumIVrijeme(String dv){
-        try{
-            return LocalDateTime.parse(dv, parser);
-        }catch(DateTimeParseException ex){
-            return LocalDateTime.MAX;
-        }
-    }
-
-    private LocalDate parseDatum(String d){
-        try{
-            return LocalDate.parse(d, datumParser);
-        }catch(DateTimeParseException ex){
-            return null;
-        }
     }
 
     public boolean postojiRezervacijaKorisnikaStatus(Rezervacija rezervacija, RezervacijaStatus statusZaProvjeru){
@@ -186,10 +150,10 @@ public class RepozitorijPodataka {
     }
 
     private boolean provjeriPreklapanjeDatuma(Aranzman a1, Aranzman a2){
-        LocalDate a1Pocetak = parseDatum(a1.getPocetniDatum());
-        LocalDate a1Kraj = parseDatum(a1.getZavrsniDatum());
-        LocalDate a2Pocetak = parseDatum(a2.getPocetniDatum());
-        LocalDate a2Kraj = parseDatum(a2.getZavrsniDatum());
+        LocalDate a1Pocetak = datumFormater.parseDatum(a1.getPocetniDatum());
+        LocalDate a1Kraj = datumFormater.parseDatum(a1.getZavrsniDatum());
+        LocalDate a2Pocetak = datumFormater.parseDatum(a2.getPocetniDatum());
+        LocalDate a2Kraj = datumFormater.parseDatum(a2.getZavrsniDatum());
 
         if(a1Kraj.isBefore(a2Pocetak) || a2Kraj.isBefore(a1Pocetak)){
             return false;
@@ -202,9 +166,6 @@ public class RepozitorijPodataka {
         lista.remove(Integer.valueOf(rezervacija.getId()));
         rezervacija.setStatus(RezervacijaStatus.OTKAZANA);
         dodajOtkazanuRezervaciju(rezervacija);
-    }
-
-    private void obrisiRezervacijuPremaId(Rezervacija rezervacija){
     }
 
     public List<Rezervacija> dohvatiRezervacijePoImenu(String punoIme){
@@ -226,12 +187,12 @@ public class RepozitorijPodataka {
             return rezultat;
         }
 
-        LocalDate pocDatum = parseDatum(pocetniDatum);
-        LocalDate zavDatum = parseDatum(zavrsniDatum);
+        LocalDate pocDatum = datumFormater.parseDatum(pocetniDatum);
+        LocalDate zavDatum = datumFormater.parseDatum(zavrsniDatum);
 
         for(Aranzman a : aranzmaniPoOznaci.values()){
-            LocalDate aPocDatum = parseDatum(a.getPocetniDatum());
-            LocalDate aZavDatum = parseDatum(a.getZavrsniDatum());
+            LocalDate aPocDatum = datumFormater.parseDatum(a.getPocetniDatum());
+            LocalDate aZavDatum = datumFormater.parseDatum(a.getZavrsniDatum());
 
             if(aPocDatum.isBefore(pocDatum) || aZavDatum.isAfter(zavDatum)){
                 continue;
