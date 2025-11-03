@@ -65,7 +65,6 @@ public class RezervacijaPomocnik {
     }
 
     private boolean provjeriValidnostRezervacije(Rezervacija rezervacija, RezervacijaStatus statusZaProvjeru){
-        RepozitorijPodataka repozitorij = RepozitorijPodataka.getInstance();
         boolean postojiAktivna = repozitorij.postojiRezervacijaKorisnikaStatus(rezervacija, statusZaProvjeru);
         boolean postojiPreklapanje = !repozitorij.dohvatiPreklapanjaStatus(rezervacija, RezervacijaStatus.AKTIVNA).isEmpty();
         if(postojiAktivna || postojiPreklapanje){
@@ -107,7 +106,7 @@ public class RezervacijaPomocnik {
 
     private void neispravnaRezervacija(Rezervacija rezervacija){
         System.out.println("Rezervacija korisnika " + rezervacija.getPunoIme() + " za ovaj aranžman je neispravna i briše se.");
-        RepozitorijPodataka.getInstance().obrisiRezervacijuIzAranzmana(rezervacija);
+        repozitorij.obrisiRezervacijuIzAranzmana(rezervacija);
     }
 
     private int izracunajBrojValidnihRezervacija(Rezervacija novaRezervacija, int brojValidnih) {
@@ -139,53 +138,58 @@ public class RezervacijaPomocnik {
     }
 
     public String otkaziRezervaciju(String ime, String prezime, int oznaka){
-        RepozitorijPodataka repozitorij = RepozitorijPodataka.getInstance();
+        Rezervacija rezervacija = pronadiRezervaciju(ime, prezime, oznaka);
 
-        List<Rezervacija> rezervacijeZaAranzman = repozitorij.getRezervacijeZaAranzman(oznaka, osnovniStatusi);
-        Rezervacija rezervacija = null;
-
-        for(Rezervacija r : rezervacijeZaAranzman){
-            if(r.getIme().equals(ime) && r.getPrezime().equals(prezime)){
-                rezervacija = r;
-                break;
-            }
-        }
         if(rezervacija == null){
             return "Neuspješno otkazivanje: Ne postoji rezervacija za uneseno ime, prezime i oznaku aranžmana";
         }
 
         if(rezervacija.getStatus() == RezervacijaStatus.AKTIVNA){
-            prenesiURedOtkazanih(rezervacija);
-
-            Aranzman aranzman = repozitorij.getAranzmanPoOznaci(oznaka);
-            List<Rezervacija> preostaleRezervacije = repozitorij.getRezervacijeZaAranzman(oznaka, aktPrimStatusi);
-            List<Rezervacija> sveRezervacije = repozitorij.getRezervacijeZaAranzman(oznaka, osnovniStatusi);
-
-            if(preostaleRezervacije.size() < aranzman.getMinBrojPutnika()){
-
-                dodijeliAktivniStatus(sveRezervacije);
-                preostaleRezervacije = repozitorij.getRezervacijeZaAranzman(oznaka, aktPrimStatusi);
-
-                if(preostaleRezervacije.size() < aranzman.getMinBrojPutnika()){
-                    for(Rezervacija r : preostaleRezervacije){
-                        if(r.getStatus() == RezervacijaStatus.AKTIVNA){
-                            r.setStatus(RezervacijaStatus.PRIMLJENA);
-                        }
-                    }
-                }
-            }
-            else{
-                dodijeliAktivniStatus(rezervacijeZaAranzman);
-            }
-            return "Uspješno otkazivanje rezervacije";
+            return otkaziAktivnuRezervaciju(rezervacija, oznaka);
         }else{
             prenesiURedOtkazanih(rezervacija);
             return "Uspješno otkazivanje rezervacije";
         }
     }
 
+    private Rezervacija pronadiRezervaciju(String ime, String prezime, int oznaka){
+        List<Rezervacija> rezervacijeZaAranzman = repozitorij.getRezervacijeZaAranzman(oznaka, osnovniStatusi);
+
+        for (Rezervacija r : rezervacijeZaAranzman) {
+            if (r.getIme().equals(ime) && r.getPrezime().equals(prezime)) {
+                return r;
+            }
+        }
+        return null;
+    }
+
+    private String otkaziAktivnuRezervaciju(Rezervacija rezervacija, int oznaka){
+        prenesiURedOtkazanih(rezervacija);
+
+        Aranzman aranzman = repozitorij.getAranzmanPoOznaci(oznaka);
+        List<Rezervacija> preostaleRezervacije = repozitorij.getRezervacijeZaAranzman(oznaka, aktPrimStatusi);
+        List<Rezervacija> sveRezervacije = repozitorij.getRezervacijeZaAranzman(oznaka, osnovniStatusi);
+
+        if(preostaleRezervacije.size() < aranzman.getMinBrojPutnika()){
+            deaktivirajAranzmanAkoTreba(oznaka, sveRezervacije, aranzman.getMinBrojPutnika());
+        }else{
+            dodijeliAktivniStatus(sveRezervacije);
+        }
+        return "Uspješno otkazivanje rezervacije";
+    }
+
     private void prenesiURedOtkazanih(Rezervacija rezervacija){
-        RepozitorijPodataka.getInstance().prebaciURedOtkazanih(rezervacija);
+        repozitorij.prebaciURedOtkazanih(rezervacija);
+    }
+
+    private void deaktivirajAranzmanAkoTreba(int oznaka, List<Rezervacija> sveRezervacije, int minBrojPutnika){
+        dodijeliAktivniStatus(sveRezervacije);
+
+        List<Rezervacija> preostaleRezervacije = repozitorij.getRezervacijeZaAranzman(oznaka, aktPrimStatusi);
+
+        if(preostaleRezervacije.size() < minBrojPutnika){
+            prebaciAktivneUPrimljene(preostaleRezervacije);
+        }
     }
 
     private void dodijeliAktivniStatus(List<Rezervacija> rezervacijeZaAranzman){
@@ -200,6 +204,14 @@ public class RezervacijaPomocnik {
             }
             r.setStatus(RezervacijaStatus.AKTIVNA);
             return;
+        }
+    }
+
+    private void prebaciAktivneUPrimljene(List<Rezervacija> rezervacije){
+        for (Rezervacija r : rezervacije) {
+            if (r.getStatus() == RezervacijaStatus.AKTIVNA) {
+                r.setStatus(RezervacijaStatus.PRIMLJENA);
+            }
         }
     }
 }
