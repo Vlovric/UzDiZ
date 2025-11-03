@@ -75,6 +75,14 @@ public class RepozitorijPodataka {
                 rezervacije.add(r);
             }
         }
+        if(statusi.contains(RezervacijaStatus.OTKAZANA)){
+            for(Integer id : otkazaneRezervacije.keySet()){
+                Rezervacija r = rezervacijePoId.get(id);
+                if(r.getOznakaAranzmana() == oznakaAranzmana){
+                    rezervacije.add(r);
+                }
+            }
+        }
         return rezervacije;
     }
 
@@ -128,10 +136,24 @@ public class RepozitorijPodataka {
     public boolean postojiRezervacijaKorisnikaStatus(Rezervacija rezervacija, RezervacijaStatus statusZaProvjeru){
         int oznaka = rezervacija.getOznakaAranzmana();
         List<Integer> lista = rezervacijePoAranzmanu.get(oznaka);
-        for(Integer id : lista){
-            Rezervacija r = rezervacijePoId.get(id);
-            if(r.getPunoIme().equals(rezervacija.getPunoIme()) && r.getStatus() == statusZaProvjeru){
-                return true;
+        if(statusZaProvjeru.equals(RezervacijaStatus.PRIMLJENA)){
+            int brojPonavljanja = 0;
+            for(Integer id : lista){
+                Rezervacija r = rezervacijePoId.get(id);
+                if(r.getId() == rezervacija.getId()){
+                    continue;
+                }
+                if(r.getPunoIme().equals(rezervacija.getPunoIme()) && r.getStatus() == statusZaProvjeru){
+                    brojPonavljanja++;
+                }
+            }
+            return brojPonavljanja >= 1;
+        }else{
+            for(Integer id : lista){
+                Rezervacija r = rezervacijePoId.get(id);
+                if(r.getPunoIme().equals(rezervacija.getPunoIme()) && r.getStatus() == statusZaProvjeru){
+                    return true;
+                }
             }
         }
         return false;
@@ -150,17 +172,17 @@ public class RepozitorijPodataka {
             }
         }
 
-        List<Integer> preklapajuceRezervacijeId = new ArrayList<>();
+        List<Integer> preklapajuciAranzmaniId = new ArrayList<>();
         for(Rezervacija r : aktivneRezervacije){ //TODO: ovo moze bit empty tak da jel problem?
             Aranzman aranzmanUsporedba = aranzmaniPoOznaci.get(r.getOznakaAranzmana());
             if(trazeniAranzman.getOznaka() == aranzmanUsporedba.getOznaka()){
                 continue;
             }
             if(provjeriPreklapanjeDatuma(trazeniAranzman, aranzmanUsporedba)){
-                preklapajuceRezervacijeId.add(r.getId());
+                preklapajuciAranzmaniId.add(r.getOznakaAranzmana());
             }
         }
-        return preklapajuceRezervacijeId;
+        return preklapajuciAranzmaniId;
     }
 
     private boolean provjeriPreklapanjeDatuma(Aranzman a1, Aranzman a2){
@@ -217,5 +239,13 @@ public class RepozitorijPodataka {
             rezultat.add(a);
         }
         return rezultat;
+    }
+
+    public void obrisiRezervacijuIzAranzmana(Rezervacija rezervacija){
+        List<Integer> lista = rezervacijePoAranzmanu.get(rezervacija.getOznakaAranzmana());
+        lista.remove(Integer.valueOf(rezervacija.getId()));
+        rezervacijePoId.remove(rezervacija.getId());
+        List<Integer> listaImena = rezervacijePoImenu.get(rezervacija.getPunoIme());
+        listaImena.remove(Integer.valueOf(rezervacija.getId()));
     }
 }

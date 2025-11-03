@@ -39,7 +39,9 @@ public class RezervacijaPomocnik {
         int maxBrojPutnika = aranzman.getMaxBrojPutnika();
 
         int brojRezervacija = rezervacijeZaAranzman.size();
+        System.out.println("Broj rezervacija je: " + brojRezervacija); //TODO: Obrisat
         int brojRezervacijaNakonDodavanja = brojRezervacija + 1;
+        System.out.println("Broj rezervacija nakon dodavanja je: " + brojRezervacijaNakonDodavanja); //TODO: Obrisat
 
         if(brojRezervacijaNakonDodavanja < minBrojPutnika){
             rezervacija.setStatus(RezervacijaStatus.PRIMLJENA);
@@ -52,6 +54,10 @@ public class RezervacijaPomocnik {
                 return "Neuspješno dodavanje rezervacije: postoji aktivna rezervacija u istom aranžmanu ili preklapanje s drugim aranžmanom";
             }
             if(brojRezervacijaNakonDodavanja == minBrojPutnika){
+                validno = provjeriValidnostRezervacije(rezervacija, RezervacijaStatus.PRIMLJENA);
+                if(!validno){
+                    return "Neuspješno dodavanje rezervacije: već postoji primljena rezervacija za tog korisnika, a ovaj unos bi aktivirao aranžman";
+                }
                 List<Integer> validneRezervacijeId = new ArrayList<>();
                 int brojValidnihRezervacija = 0;
                 for(Rezervacija r : rezervacijeZaAranzman){
@@ -61,6 +67,9 @@ public class RezervacijaPomocnik {
                         validneRezervacijeId.add(r.getId());
                         brojValidnihRezervacija++;
                     }
+                }
+                if(provjeriValidnostRezervacije(rezervacija, RezervacijaStatus.PRIMLJENA)){
+                    brojValidnihRezervacija++;
                 }
                 if(brojValidnihRezervacija < minBrojPutnika){
                     rezervacija.setStatus(RezervacijaStatus.PRIMLJENA);
@@ -114,7 +123,28 @@ public class RezervacijaPomocnik {
 
         if(rezervacija.getStatus() == RezervacijaStatus.AKTIVNA){
             prenesiURedOtkazanih(rezervacija);
-            dodijeliAktivniStatus(rezervacijeZaAranzman);
+
+            Aranzman aranzman = repozitorij.getAranzmanPoOznaci(oznaka);
+            List<Rezervacija> preostaleRezervacije = repozitorij.getRezervacijeZaAranzman(oznaka, aktPrimStatusi);
+            List<Rezervacija> sveRezervacije = repozitorij.getRezervacijeZaAranzman(oznaka, osnovniStatusi);
+
+            if(preostaleRezervacije.size() < aranzman.getMinBrojPutnika()){
+
+                dodijeliAktivniStatus(sveRezervacije);
+                preostaleRezervacije = repozitorij.getRezervacijeZaAranzman(oznaka, aktPrimStatusi);
+
+                if(preostaleRezervacije.size() < aranzman.getMinBrojPutnika()){
+                    for(Rezervacija r : preostaleRezervacije){
+                        if(r.getStatus() == RezervacijaStatus.AKTIVNA){
+                            r.setStatus(RezervacijaStatus.PRIMLJENA);
+                        }
+                    }
+                }
+            }
+            else{
+                dodijeliAktivniStatus(rezervacijeZaAranzman);
+            }
+
             postaviOstaleRezervacijeKorisnika(rezervacija);
             return "Uspješno otkazivanje rezervacije";
         }else{
@@ -137,6 +167,7 @@ public class RezervacijaPomocnik {
                 continue;
             }
             r.setStatus(RezervacijaStatus.AKTIVNA);
+            return;
         }
     }
 
@@ -148,11 +179,13 @@ public class RezervacijaPomocnik {
                         //provjerim jel moze bit AKTIVNA
                             //ako moze
                                 //postavim na AKTIVNA
+        /*
         RepozitorijPodataka repozitorij = RepozitorijPodataka.getInstance();
         List<Integer> preklapajuciAranzmaniId = repozitorij.dohvatiPreklapanjaStatus(rezervacija, RezervacijaStatus.NA_CEKANJU);
         if(preklapajuciAranzmaniId.isEmpty()){
             return;
         }
+
         List<Aranzman> preklapajuciAranzmani = new ArrayList<>();
         for(int aranzmanId : preklapajuciAranzmaniId){
             Aranzman aranzman = repozitorij.getAranzmanPoOznaci(aranzmanId);
@@ -179,6 +212,50 @@ public class RezervacijaPomocnik {
 
             Rezervacija prvaRezervacija = rezervacijeZaObradu.get(0);
             prvaRezervacija.setStatus(RezervacijaStatus.AKTIVNA);
+        }
+         */
+
+        RepozitorijPodataka repozitorij = RepozitorijPodataka.getInstance();
+        List<Integer> preklapajuciAranzmaniId = repozitorij.dohvatiPreklapanjaStatus(rezervacija, RezervacijaStatus.NA_CEKANJU);
+
+        if(preklapajuciAranzmaniId.isEmpty()){
+            return;
+        }
+
+        List<Rezervacija> rezervacijeKorisnika = repozitorij.dohvatiRezervacijePoImenu(rezervacija.getPunoIme());
+        List<Rezervacija> rezervacijeZaObradu = new ArrayList<>();
+
+        for(Rezervacija r : rezervacijeKorisnika) {
+            if(preklapajuciAranzmaniId.contains(r.getOznakaAranzmana()) &&
+                    r.getStatus() == RezervacijaStatus.NA_CEKANJU) {
+                rezervacijeZaObradu.add(r);
+            }
+        }
+
+        if (!rezervacijeZaObradu.isEmpty()) {
+
+            rezervacijeZaObradu.sort((r1, r2) -> {
+                LocalDateTime dt1 = parseDatumIVrijeme(r1.getDatumIVrijeme());
+                LocalDateTime dt2 = parseDatumIVrijeme(r2.getDatumIVrijeme());
+                return dt1.compareTo(dt2);
+            });
+
+            for(Rezervacija r : rezervacijeZaObradu){
+                int oznakaAranzmana = r.getOznakaAranzmana();
+                Aranzman aranzman = repozitorij.getAranzmanPoOznaci(oznakaAranzmana);
+                List<Rezervacija> rezervacijeZaAranzman = repozitorij.getRezervacijeZaAranzman(oznakaAranzmana, aktPrimStatusi);
+
+                if(rezervacijeZaAranzman.size() >= aranzman.getMaxBrojPutnika()){
+                    continue;
+                }
+                if(repozitorij.postojiRezervacijaKorisnikaStatus(r, RezervacijaStatus.AKTIVNA) || repozitorij.postojiRezervacijaKorisnikaStatus(r, RezervacijaStatus.PRIMLJENA)){
+                    continue;
+                }
+
+                repozitorij.obrisiRezervacijuIzAranzmana(r);
+                String rezultat = dodajRezervaciju(r);
+                break;
+            }
         }
     }
 
