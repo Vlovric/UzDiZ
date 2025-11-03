@@ -102,7 +102,7 @@ public class RepozitorijPodataka {
         List<Integer> lista = rezervacijePoAranzmanu.computeIfAbsent(oznaka, k -> new ArrayList<>());
         LocalDateTime dt = parseDatumIVrijeme(rezervacija.getDatumIVrijeme());
 
-        int index = 0; //TODO jel mi ne treba ovdje check ak mi je lista prazna??
+        int index = 0;
         for(Integer rId : lista){
             Rezervacija r = rezervacijePoId.get(rId);
             LocalDateTime rezervacijaDT = parseDatumIVrijeme(r.getDatumIVrijeme());
@@ -173,7 +173,7 @@ public class RepozitorijPodataka {
         }
 
         List<Integer> preklapajuciAranzmaniId = new ArrayList<>();
-        for(Rezervacija r : aktivneRezervacije){ //TODO: ovo moze bit empty tak da jel problem?
+        for(Rezervacija r : aktivneRezervacije){
             Aranzman aranzmanUsporedba = aranzmaniPoOznaci.get(r.getOznakaAranzmana());
             if(trazeniAranzman.getOznaka() == aranzmanUsporedba.getOznaka()){
                 continue;

@@ -17,6 +17,7 @@ public class KomandePomocnik {
     private static String porukaPogreske = "Neispravani ili nedostajući parametri za komandu.";
     private static RepozitorijPodataka repozitorij = RepozitorijPodataka.getInstance();
     private static RezervacijaPomocnik rezervacijaPomocnik = new RezervacijaPomocnik();
+    private static DatumFormater datumFormater = new DatumFormater();
 
     private Matcher provjeriRegex(Pattern regex, String unos){
         Matcher matcher = regex.matcher(unos.trim());
@@ -98,20 +99,13 @@ public class KomandePomocnik {
         String zavrsniDatum = null;
 
         if(matcher.group(1) != null){
-            pocetniDatum = formatirajDatum(matcher.group(1), matcher.group(2), matcher.group(3));
-            zavrsniDatum = formatirajDatum(matcher.group(4), matcher.group(5), matcher.group(6));
+            pocetniDatum = datumFormater.formatirajDatum(matcher.group(1), matcher.group(2), matcher.group(3));
+            zavrsniDatum = datumFormater.formatirajDatum(matcher.group(4), matcher.group(5), matcher.group(6));
         }
 
         List<Aranzman> aranzmani = repozitorij.dohvatiAranzmanRazdoblje(pocetniDatum, zavrsniDatum);
 
         ispisiAranzmaneTablicaITAK(aranzmani);
-    }
-
-    private String formatirajDatum(String dan, String mjesec, String godina){
-        return String.format("%02d.%02d.%s.",
-                Integer.parseInt(dan),
-                Integer.parseInt(mjesec),
-                godina);
     }
 
     private void ispisiRezervacijeTablicaIRTAOtkaz(List<Rezervacija> rezervacije){
@@ -123,7 +117,7 @@ public class KomandePomocnik {
             String datumOtkaza = "";
             if(r.getStatus() == RezervacijaStatus.OTKAZANA){
                 LocalDateTime dtOtkaza = repozitorij.dohvatiVrijemeOtkazivanjaRezervacije(r.getId());
-                datumOtkaza = dtOtkaza != null ? formatirajDatumVrijeme(dtOtkaza) : "";
+                datumOtkaza = dtOtkaza != null ? datumFormater.formatirajDatumVrijeme(dtOtkaza) : "";
             }
 
             System.out.printf("%-20s %-20s %-20s %-15s %-25s%n",
@@ -161,11 +155,6 @@ public class KomandePomocnik {
         }
     }
 
-    private String formatirajDatumVrijeme(LocalDateTime dt){
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss");
-        return dt.format(formatter);
-    }
-
     private void ispisiRezervacijeTablicaIRO(List<Rezervacija> rezervacije){
         System.out.printf("%-20s %-20s %-30s %-15s%n",
                 "Datum i vrijeme", "Oznaka aranžmana", "Naziv aranžmana", "Vrsta");
@@ -182,21 +171,6 @@ public class KomandePomocnik {
                     pretvoriStatusUVrstu(r.getStatus()));
         }
         System.out.println();
-    }
-
-    private String formatirajDatumVrijeme(String dan, String mjesec, String godina, String sat, String minuta, String sekunda){
-        String formatiraniDatum = String.format("%02d.%02d.%s",
-                Integer.parseInt(dan),
-                Integer.parseInt(mjesec),
-                godina);
-
-        String formatiranoVrijeme;
-        formatiranoVrijeme = String.format("%02d:%02d:%02d",
-                Integer.parseInt(sat),
-                Integer.parseInt(minuta),
-                Integer.parseInt(sekunda));
-
-        return formatiraniDatum + " " + formatiranoVrijeme;
     }
 
     public void pregledAranzmanITAP(String unos){
@@ -320,7 +294,7 @@ public class KomandePomocnik {
             return;
         }
 
-        String datumIVrijeme = formatirajDatumVrijeme(dan, mjesec, godina, sat, minuta, sekunda);
+        String datumIVrijeme = datumFormater.formatirajDatumVrijeme(dan, mjesec, godina, sat, minuta, sekunda);
 
         Rezervacija novaRezervacija = new Rezervacija(ime, prezime, oznaka, datumIVrijeme);
         String rezultat = rezervacijaPomocnik.dodajRezervaciju(novaRezervacija);

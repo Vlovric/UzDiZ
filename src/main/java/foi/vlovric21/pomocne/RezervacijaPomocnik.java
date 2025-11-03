@@ -39,9 +39,7 @@ public class RezervacijaPomocnik {
         int maxBrojPutnika = aranzman.getMaxBrojPutnika();
 
         int brojRezervacija = rezervacijeZaAranzman.size();
-        System.out.println("Broj rezervacija je: " + brojRezervacija); //TODO: Obrisat
         int brojRezervacijaNakonDodavanja = brojRezervacija + 1;
-        System.out.println("Broj rezervacija nakon dodavanja je: " + brojRezervacijaNakonDodavanja); //TODO: Obrisat
 
         if(brojRezervacijaNakonDodavanja < minBrojPutnika){
             rezervacija.setStatus(RezervacijaStatus.PRIMLJENA);
@@ -172,20 +170,6 @@ public class RezervacijaPomocnik {
             }
             r.setStatus(RezervacijaStatus.AKTIVNA);
             return;
-        }
-    }
-
-    private LocalDateTime parseDatumIVrijeme(String dv){ //TODO: ovo je kopirano iz repozitorija, clean codeat to
-        DateTimeFormatter parser = new DateTimeFormatterBuilder()
-                .appendPattern("d.MM.yyyy H:mm")
-                .optionalStart().appendPattern(":ss").optionalEnd()
-                .parseDefaulting(ChronoField.SECOND_OF_MINUTE, 0)
-                .toFormatter();
-
-        try{
-            return LocalDateTime.parse(dv, parser);
-        }catch(DateTimeParseException ex){
-            return LocalDateTime.MAX;
         }
     }
 }

@@ -119,10 +119,6 @@ public abstract class CsvParser {
         System.out.println("Neispravan red: " + redniBroj + " u datoteci: " + datoteka);
         System.out.println("Razlog: " + greska);
         System.out.println("Red: " + red);
-        System.out.println("Polja: "); //TODO maknut prije predaje
-        for(int i=0; i<polja.size(); i++){
-            System.out.println("[" + i + "] => '" + polja.get(i) + "'");
-        }
         System.out.println("---------------------------------");
     }
 

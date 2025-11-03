@@ -83,7 +83,7 @@ public class AranzmanCsvParser extends CsvParser {
         int cijena = Integer.parseInt(polja.get(7));
         int minBrojPutnika = Integer.parseInt(polja.get(8));
         int maxBrojPutnika = Integer.parseInt(polja.get(9));
-        String prijevoz = polja.get(12).trim(); // TODO: Trimovi mozda suvisni ako u parsirajRed radi trim
+        String prijevoz = polja.get(12).trim();
 
         Integer brojNocenja = parseOpcionalniInt(polja.get(10));
         Integer doplata = parseOpcionalniInt(polja.get(11));
