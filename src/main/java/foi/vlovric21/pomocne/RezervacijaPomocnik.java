@@ -24,7 +24,7 @@ public class RezervacijaPomocnik {
             RezervacijaStatus.PRIMLJENA
     );
 
-    public String dodajRezervaciju(Rezervacija rezervacija){ //TODO: masivno refaktorirat
+    public String dodajRezervaciju(Rezervacija rezervacija){
         int oznaka = rezervacija.getOznakaAranzmana();
 
         Aranzman aranzman = repozitorij.getAranzmanPoOznaci(oznaka);
