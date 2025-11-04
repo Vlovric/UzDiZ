@@ -2,6 +2,7 @@ package foi.vlovric21.factorymethod.formater;
 
 import foi.vlovric21.objekti.Aranzman;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public class ITAKFormater extends Formater{
@@ -15,11 +16,14 @@ public class ITAKFormater extends Formater{
         System.out.println("-".repeat(160));
 
         for(Aranzman a : aranzmani) {
+            LocalDate pocDatum = datumFormater.parseDatum(a.getPocetniDatum());
+            LocalDate zavDatum = datumFormater.parseDatum(a.getZavrsniDatum());
+
             System.out.printf("%-8d %-30s %-18s %-18s %-18s %-18s %-10d %-18d %-18d%n",
                     a.getOznaka(),
                     skratiTekst(a.getNaziv(), 30),
-                    a.getPocetniDatum(),
-                    a.getZavrsniDatum(),
+                    datumFormater.formatirajDatumIspis(pocDatum),
+                    datumFormater.formatirajDatumIspis(zavDatum),
                     a.getVrijemeKretanja() != null ? a.getVrijemeKretanja() : "",
                     a.getVrijemePovratka() != null ? a.getVrijemePovratka() : "",
                     a.getCijena(),

@@ -4,6 +4,7 @@ import foi.vlovric21.objekti.Aranzman;
 import foi.vlovric21.objekti.Rezervacija;
 import foi.vlovric21.singleton.RepozitorijPodataka;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class IROFormater extends Formater{
@@ -20,8 +21,11 @@ public class IROFormater extends Formater{
             Aranzman aranzman = repozitorij.getAranzmanPoOznaci(r.getOznakaAranzmana());
             String nazivAranzmana = aranzman != null ? aranzman.getNaziv() : "";
 
+            LocalDateTime dt = datumFormater.parseDatumIVrijeme(r.getDatumIVrijeme());
+            String formatiraniDatumVrijeme = datumFormater.formatirajDatumVrijemeIspis(dt);
+
             System.out.printf("%-20s %-20d %-30s %-15s%n",
-                    r.getDatumIVrijeme(),
+                    formatiraniDatumVrijeme,
                     r.getOznakaAranzmana(),
                     skratiTekst(nazivAranzmana, 30),
                     pretvoriStatusUVrstu(r.getStatus()));

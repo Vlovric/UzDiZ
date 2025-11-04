@@ -20,16 +20,19 @@ public class IRTAOtkazFormater extends Formater{
         System.out.println("-".repeat(100));
 
         for(Rezervacija r : rezervacije){
+            LocalDateTime dt = datumFormater.parseDatumIVrijeme(r.getDatumIVrijeme());
+            String formatiraniDatumVrijeme = datumFormater.formatirajDatumVrijemeIspis(dt);
+
             String datumOtkaza = "";
             if(r.getStatus() == RezervacijaStatus.OTKAZANA){
                 LocalDateTime dtOtkaza = repozitorij.dohvatiVrijemeOtkazivanjaRezervacije(r.getId());
-                datumOtkaza = dtOtkaza != null ? datumFormater.formatirajDatumVrijeme(dtOtkaza) : "";
+                datumOtkaza = dtOtkaza != null ? datumFormater.formatirajDatumVrijemeIspis(dtOtkaza) : "";
             }
 
             System.out.printf("%-20s %-20s %-20s %-15s %-25s%n",
                     skratiTekst(r.getIme(), 20),
                     skratiTekst(r.getPrezime(), 20),
-                    r.getDatumIVrijeme(),
+                    formatiraniDatumVrijeme,
                     pretvoriStatusUVrstu(r.getStatus()),
                     datumOtkaza);
         }

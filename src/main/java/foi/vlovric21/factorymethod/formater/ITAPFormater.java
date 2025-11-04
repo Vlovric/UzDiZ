@@ -2,21 +2,27 @@ package foi.vlovric21.factorymethod.formater;
 
 import foi.vlovric21.objekti.Aranzman;
 
+import java.time.LocalDate;
+
 public class ITAPFormater extends Formater {
     private static int brojCrtica = 50;
 
     @Override
     public void formatiraj(Object obj) {
         Aranzman aranzman = (Aranzman) obj;
+
+        LocalDate pocDatum = datumFormater.parseDatum(aranzman.getPocetniDatum());
+        LocalDate zavDatum = datumFormater.parseDatum(aranzman.getZavrsniDatum());
+
         System.out.printf("%-25s: %d%n", "Oznaka", aranzman.getOznaka());
         System.out.println("-".repeat(brojCrtica));
         System.out.printf("%-25s: %s%n", "Naziv", aranzman.getNaziv());
         System.out.println("-".repeat(brojCrtica));
         System.out.printf("%-25s: %s%n", "Program", aranzman.getProgram());
         System.out.println("-".repeat(brojCrtica));
-        System.out.printf("%-25s: %s%n", "Početni datum", aranzman.getPocetniDatum());
+        System.out.printf("%-25s: %s%n", "Početni datum", datumFormater.formatirajDatumIspis(pocDatum));
         System.out.println("-".repeat(brojCrtica));
-        System.out.printf("%-25s: %s%n", "Završni datum", aranzman.getZavrsniDatum());
+        System.out.printf("%-25s: %s%n", "Završni datum", datumFormater.formatirajDatumIspis(zavDatum));
         System.out.println("-".repeat(brojCrtica));
         System.out.printf("%-25s: %s%n", "Vrijeme kretanja",
                 aranzman.getVrijemeKretanja() != null ? aranzman.getVrijemeKretanja() : "");

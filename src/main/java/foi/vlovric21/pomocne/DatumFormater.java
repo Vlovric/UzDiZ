@@ -8,6 +8,16 @@ import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoField;
 
 public class DatumFormater {
+    private static DateTimeFormatter datumIispis = DateTimeFormatter.ofPattern("dd.MM.yyyy.");
+    private static DateTimeFormatter datumVrijemeIspis = DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm:ss");
+
+    public String formatirajDatumIspis(LocalDate datum) {
+        return datum.format(datumIispis);
+    }
+
+    public String formatirajDatumVrijemeIspis(LocalDateTime datumVrijeme) {
+        return datumVrijeme.format(datumVrijemeIspis);
+    }
 
     public String formatirajDatum(String dan, String mjesec, String godina){
         return String.format("%02d.%02d.%s.",
