@@ -2,8 +2,8 @@ package foi.vlovric21.builder;
 
 import foi.vlovric21.objekti.Aranzman;
 
-public interface AranzmanBuilder {
-    public AranzmanBuilder stvoriMinimalanAranzman(
+public abstract class AranzmanBuilder {
+    public abstract AranzmanBuilder stvoriMinimalanAranzman(
             int oznaka,
             String naziv,
             String program,
@@ -14,22 +14,22 @@ public interface AranzmanBuilder {
             int maxBrojPutnika
     );
 
-    public AranzmanBuilder postaviOznaka(int oznaka);
-    public AranzmanBuilder postaviNaziv(String naziv);
-    public AranzmanBuilder postaviProgram(String program);
-    public AranzmanBuilder postaviPocetniDatum(String pocetniDatum);
-    public AranzmanBuilder postaviZavrsniDatum(String zavrsniDatum);
-    public AranzmanBuilder postaviVrijemeKretanja(String vrijemeKretanja);
-    public AranzmanBuilder postaviVrijemePovratka(String vrijemePovratka);
-    public AranzmanBuilder postaviCijena(int cijena);
-    public AranzmanBuilder postaviMinBrojPutnika(int minBrojPutnika);
-    public AranzmanBuilder postaviMaxBrojPutnika(int maxBrojPutnika);
-    public AranzmanBuilder postaviBrojNocenja(Integer brojNocenja);
-    public AranzmanBuilder postaviDoplataZaJednokrevetnuSobu(Integer doplataZaJednokrevetnuSobu);
-    public AranzmanBuilder postaviPrijevoz(String prijevoz);
-    public AranzmanBuilder postaviBrojDorucka(Integer brojDorucka);
-    public AranzmanBuilder postaviBrojRuckova(Integer brojRuckova);
-    public AranzmanBuilder postaviBrojVecera(Integer brojVecera);
+    public abstract AranzmanBuilder postaviOznaka(int oznaka);
+    public abstract AranzmanBuilder postaviNaziv(String naziv);
+    public abstract AranzmanBuilder postaviProgram(String program);
+    public abstract AranzmanBuilder postaviPocetniDatum(String pocetniDatum);
+    public abstract AranzmanBuilder postaviZavrsniDatum(String zavrsniDatum);
+    public abstract AranzmanBuilder postaviVrijemeKretanja(String vrijemeKretanja);
+    public abstract AranzmanBuilder postaviVrijemePovratka(String vrijemePovratka);
+    public abstract AranzmanBuilder postaviCijena(int cijena);
+    public abstract AranzmanBuilder postaviMinBrojPutnika(int minBrojPutnika);
+    public abstract AranzmanBuilder postaviMaxBrojPutnika(int maxBrojPutnika);
+    public abstract AranzmanBuilder postaviBrojNocenja(Integer brojNocenja);
+    public abstract AranzmanBuilder postaviDoplataZaJednokrevetnuSobu(Integer doplataZaJednokrevetnuSobu);
+    public abstract AranzmanBuilder postaviPrijevoz(String prijevoz);
+    public abstract AranzmanBuilder postaviBrojDorucka(Integer brojDorucka);
+    public abstract AranzmanBuilder postaviBrojRuckova(Integer brojRuckova);
+    public abstract AranzmanBuilder postaviBrojVecera(Integer brojVecera);
 
-    public Aranzman dohvatiAranzman();
+    public abstract Aranzman dohvatiAranzman();
 }

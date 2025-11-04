@@ -8,7 +8,7 @@ import foi.vlovric21.singleton.RepozitorijPodataka;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class IRTAOtkazFormater extends Formater{
+public class IRTAOtkazFormater extends Formater {
     private RepozitorijPodataka repozitorij = RepozitorijPodataka.getInstance();
     private DatumFormater datumFormater = new DatumFormater();
 

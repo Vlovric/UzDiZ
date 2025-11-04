@@ -5,7 +5,7 @@ import foi.vlovric21.objekti.Aranzman;
 import java.time.LocalDate;
 import java.util.List;
 
-public class ITAKFormater extends Formater{
+public class ITAKFormater extends Formater {
 
     @Override
     public void formatiraj(Object obj){

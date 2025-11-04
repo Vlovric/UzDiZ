@@ -1,9 +1,5 @@
 package foi.vlovric21.parser;
 
-import foi.vlovric21.builder.AranzmanDirector;
-import foi.vlovric21.objekti.Aranzman;
-import foi.vlovric21.singleton.RepozitorijPodataka;
-
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;

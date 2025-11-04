@@ -5,7 +5,7 @@ import foi.vlovric21.objekti.Rezervacija;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class IRTAFormater extends Formater{
+public class IRTAFormater extends Formater {
 
     @Override
     public void formatiraj(Object obj) {

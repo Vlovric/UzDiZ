@@ -2,7 +2,7 @@ package foi.vlovric21.builder;
 
 import foi.vlovric21.objekti.Aranzman;
 
-public class AranzmanBuilderConcrete implements AranzmanBuilder {
+public class AranzmanBuilderConcrete extends AranzmanBuilder {
     protected Aranzman aranzman;
 
     public AranzmanBuilderConcrete(){}

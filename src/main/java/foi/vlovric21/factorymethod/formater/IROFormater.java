@@ -7,7 +7,7 @@ import foi.vlovric21.singleton.RepozitorijPodataka;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class IROFormater extends Formater{
+public class IROFormater extends Formater {
 
     @Override
     public void formatiraj(Object obj) {
