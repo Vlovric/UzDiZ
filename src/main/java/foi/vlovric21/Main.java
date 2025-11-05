@@ -5,6 +5,7 @@ import foi.vlovric21.parser.ArgumentParser;
 import foi.vlovric21.parser.CsvParser;
 import foi.vlovric21.parser.CsvTip;
 import foi.vlovric21.pomocne.KomandePomocnik;
+import foi.vlovric21.pomocne.RezervacijaPomocnik;
 
 import java.util.*;
 
@@ -28,7 +29,11 @@ public class Main {
         aranzmanParser.parsirajCsv(aranzmaniDatoteka);
         rezervacijaParser.parsirajCsv(rezervacijeDatoteka);
 
+        RezervacijaPomocnik rezervacijaPomocnik = new RezervacijaPomocnik();
+        rezervacijaPomocnik.ucitajSveInicijalneRezervacije();
+
     }
+
     static void interaktivniNacinRada(){
         System.out.println("Započet interaktivni način rada.");
         Scanner scanner = new Scanner(System.in);

@@ -68,7 +68,6 @@ public class RezervacijaCsvParser extends CsvParser {
         Rezervacija rezervacija = new Rezervacija(ime, prezime, oznakaAranzmana, datumIVrijeme);
         rezervacija.setId(id);
 
-        RezervacijaPomocnik pomocnik = new RezervacijaPomocnik();
-        pomocnik.dodajRezervaciju(rezervacija);
+        RepozitorijPodataka.getInstance().dodajInicijalnuRezervaciju(rezervacija);
     }
 }

@@ -152,7 +152,7 @@ public class KomandePomocnik {
     }
 
     public void dodavanjeRezervacijeDRTA(String unos){
-        String uzorak = "^DRTA\\s+([A-ZČĆĐŠŽa-zčćđšž]+)\\s+([A-ZČĆĐŠŽa-zčćđšž]+)\\s+(\\d+)\\s+([1-9]|[12]\\d|3[01])\\.([1-9]|1[0-2])\\.(\\d{4})\\.?\\s+(\\d{1,2}):(\\d{2})(?::(\\d{2}))?$";
+        String uzorak = "^DRTA\\s+([A-ZČĆĐŠŽa-zčćđšž]+)\\s+([A-ZČĆĐŠŽa-zčćđšž]+)\\s+(\\d+)\\s+([1-9]|[12]\\d|3[01])\\.([1-9]|1[0-2])\\.(\\d{4})\\.?\\s+([01]?\\d|2[0-3]):([0-5]\\d)(?::([0-5]\\d))?$";
 
         Pattern regex = Pattern.compile(uzorak);
         Matcher matcher = provjeriRegex(regex, unos);

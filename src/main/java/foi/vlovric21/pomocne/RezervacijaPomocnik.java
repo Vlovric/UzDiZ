@@ -5,6 +5,7 @@ import foi.vlovric21.objekti.Rezervacija;
 import foi.vlovric21.objekti.RezervacijaStatus;
 import foi.vlovric21.singleton.RepozitorijPodataka;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
@@ -23,6 +24,22 @@ public class RezervacijaPomocnik {
             RezervacijaStatus.AKTIVNA,
             RezervacijaStatus.PRIMLJENA
     );
+
+    public void ucitajSveInicijalneRezervacije(){
+        List<Rezervacija> inicijalneRezervacije = repozitorij.getInicijalneRezervacije();
+        DatumFormater datumFormater = new DatumFormater();
+
+        inicijalneRezervacije.sort((r1, r2) -> {
+            LocalDateTime dt1 = datumFormater.parseDatumIVrijeme(r1.getDatumIVrijeme());
+            LocalDateTime dt2 = datumFormater.parseDatumIVrijeme(r2.getDatumIVrijeme());
+            return dt1.compareTo(dt2);
+        });
+
+        for(Rezervacija r : inicijalneRezervacije){
+            dodajRezervaciju(r);
+        }
+        repozitorij.obrisiInicijalneRezervacije();
+    }
 
     public String dodajRezervaciju(Rezervacija rezervacija){
         int oznaka = rezervacija.getOznakaAranzmana();

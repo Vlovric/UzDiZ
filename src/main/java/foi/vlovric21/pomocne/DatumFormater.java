@@ -38,17 +38,26 @@ public class DatumFormater {
                 godina);
 
         String formatiranoVrijeme;
-        formatiranoVrijeme = String.format("%02d:%02d:%02d",
-                Integer.parseInt(sat),
-                Integer.parseInt(minuta),
-                Integer.parseInt(sekunda));
+        if (sekunda != null && !sekunda.isEmpty()) {
+            formatiranoVrijeme = String.format("%02d:%02d:%02d",
+                    Integer.parseInt(sat),
+                    Integer.parseInt(minuta),
+                    Integer.parseInt(sekunda));
+        } else {
+            formatiranoVrijeme = String.format("%02d:%02d",
+                    Integer.parseInt(sat),
+                    Integer.parseInt(minuta));
+        }
 
         return formatiraniDatum + " " + formatiranoVrijeme;
     }
 
     private static final DateTimeFormatter parser = new DateTimeFormatterBuilder()
-            .appendPattern("d.MM.yyyy H:mm")
-            .optionalStart().appendPattern(":ss").optionalEnd()
+            .appendPattern("d.M.yyyy")
+            .optionalStart().appendLiteral(".").optionalEnd()
+            .appendLiteral(" ")
+            .appendPattern("H:mm")
+            .optionalStart().appendLiteral(":").appendPattern("ss").optionalEnd()
             .parseDefaulting(ChronoField.SECOND_OF_MINUTE, 0)
             .toFormatter();
 

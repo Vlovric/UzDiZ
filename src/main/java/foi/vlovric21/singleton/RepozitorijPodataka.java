@@ -20,6 +20,8 @@ public class RepozitorijPodataka {
     private Map<String, List<Integer>> rezervacijePoImenu = new HashMap<>();
     private Map<Integer, LocalDateTime> otkazaneRezervacije = new HashMap<>();
 
+    private List<Rezervacija> inicijalneRezervacije = new ArrayList<>();
+
     private DatumFormater datumFormater = new DatumFormater();
 
     private RepozitorijPodataka() {}
@@ -44,6 +46,18 @@ public class RepozitorijPodataka {
         int oznaka = aranzman.getOznaka();
         aranzmaniPoOznaci.put(oznaka, aranzman);
         rezervacijePoAranzmanu.computeIfAbsent(oznaka, k  -> new ArrayList<>());
+    }
+
+    public void dodajInicijalnuRezervaciju(Rezervacija rezervacija){
+        inicijalneRezervacije.add(rezervacija);
+    }
+
+    public List<Rezervacija> getInicijalneRezervacije(){
+        return inicijalneRezervacije;
+    }
+
+    public void obrisiInicijalneRezervacije(){
+        inicijalneRezervacije.clear();
     }
 
     public List<Rezervacija> getRezervacijeZaAranzman(int oznakaAranzmana, Set<RezervacijaStatus> statusi){

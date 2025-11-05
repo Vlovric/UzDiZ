@@ -12,8 +12,9 @@ public abstract class CsvParser {
     protected abstract String validirajRed(List<String> red);
     protected abstract void stvoriObjekt(List<String> polja);
 
-    protected static final String regexDatum = "\\d{1,2}\\.\\d{1,2}\\.\\d{4}\\.";
-    protected static final String regexDatumVrijeme = "\\d{1,2}\\.\\d{1,2}\\.\\d{4}\\.? \\d{1,2}:\\d{2}(:\\d{2})?";
+    protected static final String regexDatum = "([1-9]|[12]\\d|3[01])\\.([1-9]|1[0-2])\\.(\\d{4})\\.";
+    protected static final String regexDatumVrijeme = "(0?[1-9]|[12]\\d|3[01])\\.(0?[1-9]|1[0-2])\\.(\\d{4})\\.?\\s+([01]?\\d|2[0-3]):([0-5]\\d)(?::([0-5]\\d))?";
+
 
     public boolean parsirajCsv(String datoteka){
         List<String> polja;
