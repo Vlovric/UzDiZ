@@ -6,7 +6,7 @@ import foi.vlovric21.parser.CsvParser;
 import foi.vlovric21.singleton.RepozitorijPodataka;
 
 import java.util.List;
-// ConcreteCreator
+
 public class AranzmanCsvParser extends CsvParser {
     private static final List<String> zaglavlje = List.of(
             "Oznaka",
@@ -48,7 +48,7 @@ public class AranzmanCsvParser extends CsvParser {
                 return "Obavezno polje je prazno, stupac: " + index+1;
             }
         }
-        try { //TODO refaktorirat
+        try {
             Integer.parseInt(red.get(0)); //Oznaka
             Integer.parseInt(red.get(7)); //Cijena
             Integer.parseInt(red.get(8)); //Min broj putnika

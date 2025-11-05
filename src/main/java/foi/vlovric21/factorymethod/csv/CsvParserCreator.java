@@ -2,7 +2,7 @@ package foi.vlovric21.factorymethod.csv;
 
 import foi.vlovric21.parser.CsvParser;
 import foi.vlovric21.parser.CsvTip;
-// Creator
+
 public class CsvParserCreator {
     public static CsvParser stvoriParser(CsvTip tip){
         switch(tip){

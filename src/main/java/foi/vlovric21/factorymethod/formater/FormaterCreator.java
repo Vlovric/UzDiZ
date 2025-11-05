@@ -1,6 +1,5 @@
 package foi.vlovric21.factorymethod.formater;
 
-// Creator (abstract)
 public class FormaterCreator {
 
     public Formater stvoriFormater(FormaterTip tip){

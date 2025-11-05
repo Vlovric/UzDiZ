@@ -6,7 +6,7 @@ import foi.vlovric21.pomocne.RezervacijaPomocnik;
 import foi.vlovric21.singleton.RepozitorijPodataka;
 
 import java.util.List;
-// ConcreteCreator
+
 public class RezervacijaCsvParser extends CsvParser {
     private static final List<String> zaglavlje = List.of(
             "Ime",

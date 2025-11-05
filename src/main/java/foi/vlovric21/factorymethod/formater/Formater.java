@@ -3,7 +3,6 @@ package foi.vlovric21.factorymethod.formater;
 import foi.vlovric21.objekti.RezervacijaStatus;
 import foi.vlovric21.pomocne.DatumFormater;
 
-// Product apstraktni
 public abstract class Formater {
     protected DatumFormater datumFormater = new DatumFormater();
 
