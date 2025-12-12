@@ -3,15 +3,12 @@ package foi.vlovric21.factorymethod.csv;
 import foi.vlovric21.parser.CsvParser;
 import foi.vlovric21.parser.CsvTip;
 
-public class CsvParserCreator {
-    public static CsvParser stvoriParser(CsvTip tip){
-        switch(tip){
-            case CsvTip.ARANZMAN:
-                return new AranzmanCsvParser();
-            case CsvTip.REZERVACIJA:
-                return new RezervacijaCsvParser();
-            default:
-                throw new IllegalArgumentException();
-        }
+public abstract class CsvParserCreator {
+
+    protected abstract CsvParser stvoriParser();
+
+    public void parsirajCsv(String datoteka){
+        CsvParser parser = stvoriParser();
+        parser.parsirajCsv(datoteka);
     }
 }

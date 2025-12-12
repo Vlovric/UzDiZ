@@ -1,6 +1,8 @@
 package foi.vlovric21;
 
+import foi.vlovric21.factorymethod.csv.AranzmanCsvParserCreator;
 import foi.vlovric21.factorymethod.csv.CsvParserCreator;
+import foi.vlovric21.factorymethod.csv.RezervacijaCsvParserCreator;
 import foi.vlovric21.parser.ArgumentParser;
 import foi.vlovric21.parser.CsvParser;
 import foi.vlovric21.parser.CsvTip;
@@ -23,8 +25,8 @@ public class Main {
     }
 
     static void ucitajPodatke(String aranzmaniDatoteka, String rezervacijeDatoteka){
-        CsvParser aranzmanParser = CsvParserCreator.stvoriParser(CsvTip.ARANZMAN);
-        CsvParser rezervacijaParser = CsvParserCreator.stvoriParser(CsvTip.REZERVACIJA);
+        CsvParserCreator aranzmanParser = new AranzmanCsvParserCreator();
+        CsvParserCreator rezervacijaParser = new RezervacijaCsvParserCreator();
 
         aranzmanParser.parsirajCsv(aranzmaniDatoteka);
         rezervacijaParser.parsirajCsv(rezervacijeDatoteka);
