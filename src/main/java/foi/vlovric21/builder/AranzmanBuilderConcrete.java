@@ -18,15 +18,16 @@ public class AranzmanBuilderConcrete extends AranzmanBuilder {
             int minBrojPutnika,
             int maxBrojPutnika
     ) {
-        this.aranzman = new Aranzman();
-        this.aranzman.setOznaka(oznaka);
-        this.aranzman.setNaziv(naziv);
-        this.aranzman.setProgram(program);
-        this.aranzman.setPocetniDatum(pocetniDatum);
-        this.aranzman.setZavrsniDatum(zavrsniDatum);
-        this.aranzman.setCijena(cijena);
-        this.aranzman.setMinBrojPutnika(minBrojPutnika);
-        this.aranzman.setMaxBrojPutnika(maxBrojPutnika);
+        this.aranzman = new Aranzman(
+                oznaka,
+                naziv,
+                program,
+                pocetniDatum,
+                zavrsniDatum,
+                cijena,
+                minBrojPutnika,
+                maxBrojPutnika
+        );
         return this;
     }
 
