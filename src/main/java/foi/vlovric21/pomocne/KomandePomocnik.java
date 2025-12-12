@@ -2,6 +2,7 @@ package foi.vlovric21.pomocne;
 
 import foi.vlovric21.factorymethod.formater.Formater;
 import foi.vlovric21.factorymethod.formater.FormaterCreator;
+import foi.vlovric21.factorymethod.formater.FormaterFactory;
 import foi.vlovric21.factorymethod.formater.FormaterTip;
 import foi.vlovric21.objekti.Aranzman;
 import foi.vlovric21.objekti.Rezervacija;
@@ -30,9 +31,8 @@ public class KomandePomocnik {
     }
 
     private void ispisi(Object obj, FormaterTip tip){
-        FormaterCreator formaterCreator = new FormaterCreator();
-        Formater formater = formaterCreator.stvoriFormater(tip);
-        formater.formatiraj(obj);
+        FormaterCreator formaterCreator = FormaterFactory.getCreator(tip);
+        formaterCreator.formatiraj(obj);
     }
 
     public void pregledAranzmanRazdobljeITAK(String unos){
