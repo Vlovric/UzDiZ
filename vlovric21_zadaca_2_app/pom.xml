@@ -26,6 +26,7 @@
         <maven.resources>3.3.1</maven.resources>
         <maven.jar>3.3.0</maven.jar>
         <maven.install>3.1.1</maven.install>
+        <maven.assembly>3.7.1</maven.assembly>
     </properties>
 
     <dependencies>
@@ -69,6 +70,31 @@
                         </manifest>
                     </archive>
                 </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>${maven.assembly}</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <descriptorRefs>
+                                <descriptorRef>jar-with-dependencies</descriptorRef>
+                            </descriptorRefs>
+                            <archive>
+                                <manifest>
+                                    <mainClass>edu.unizg.foi.uzdiz.vlovric21.Main</mainClass>
+                                </manifest>
+                            </archive>
+                            <appendAssemblyId>false</appendAssemblyId>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
 
             <plugin>

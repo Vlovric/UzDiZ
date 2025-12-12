@@ -1,6 +1,9 @@
 package edu.unizg.foi.uzdiz.vlovric21;
 
 import edu.unizg.foi.uzdiz.vlovric21.facade.CsvParsiranjeFacade;
+import edu.unizg.foi.uzdiz.vlovric21.factorymethod.unos_objekta.CsvAranzmanUnositeljCreator;
+import edu.unizg.foi.uzdiz.vlovric21.factorymethod.unos_objekta.CsvObjectCreator;
+import edu.unizg.foi.uzdiz.vlovric21.factorymethod.unos_objekta.CsvRezervacijaUnositeljCreator;
 import edu.unizg.foi.uzdiz.vlovric21.parser.ArgumentParser;
 import edu.unizg.foi.uzdiz.vlovric21.pomocne.KomandePomocnik;
 import edu.unizg.foi.uzdiz.vlovric21.pomocne.RezervacijaPomocnik;
@@ -27,7 +30,11 @@ public class Main {
         List<Map<String, String>> aranzmanRedovi = CsvParsiranjeFacade.ucitajAranzmane(aranzmaniDatoteka);
         List<Map<String, String>> rezervacijaRedovi = CsvParsiranjeFacade.ucitajRezervacije(rezervacijeDatoteka);
 
-        //moram buildat objekte i ucitat ih u repozitorij (zasad)
+        CsvObjectCreator aranzmanCreator = new CsvAranzmanUnositeljCreator();
+        aranzmanCreator.validirajUnesiObjekte(aranzmanRedovi);
+        
+        CsvObjectCreator rezervacijaCreator = new CsvRezervacijaUnositeljCreator();
+        rezervacijaCreator.validirajUnesiObjekte(rezervacijaRedovi);
 
         RezervacijaPomocnik rezervacijaPomocnik = new RezervacijaPomocnik();
         rezervacijaPomocnik.ucitajSveInicijalneRezervacije();
