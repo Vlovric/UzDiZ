@@ -1,17 +1,74 @@
 package edu.unizg.foi.uzdiz.vlovric21;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+import edu.unizg.foi.uzdiz.vlovric21.facade.CsvParsiranjeFacade;
+import edu.unizg.foi.uzdiz.vlovric21.parser.ArgumentParser;
+import edu.unizg.foi.uzdiz.vlovric21.pomocne.KomandePomocnik;
+import edu.unizg.foi.uzdiz.vlovric21.pomocne.RezervacijaPomocnik;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
+
 public class Main {
     public static void main(String[] args) {
-        //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-        // to see how IntelliJ IDEA suggests fixing it.
-        System.out.printf("Hello and welcome!");
+        ArgumentParser parser = new ArgumentParser();
 
-        for (int i = 1; i <= 5; i++) {
-            //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-            // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-            System.out.println("i = " + i);
+        if(!parser.parsirajArgumente(args)){
+            System.out.println("Neispravni argumenti");
+            return;
+        }
+
+        ucitajPodatke(parser.getAranzmaniDatoteka(), parser.getRezervacijeDatoteka());
+        interaktivniNacinRada();
+    }
+
+    static void ucitajPodatke(String aranzmaniDatoteka, String rezervacijeDatoteka){
+
+        List<Map<String, String>> aranzmanRedovi = CsvParsiranjeFacade.ucitajAranzmane(aranzmaniDatoteka);
+        List<Map<String, String>> rezervacijaRedovi = CsvParsiranjeFacade.ucitajRezervacije(rezervacijeDatoteka);
+
+        //moram buildat objekte i ucitat ih u repozitorij (zasad)
+
+        RezervacijaPomocnik rezervacijaPomocnik = new RezervacijaPomocnik();
+        rezervacijaPomocnik.ucitajSveInicijalneRezervacije();
+
+    }
+
+    static void interaktivniNacinRada(){
+        System.out.println("Započet interaktivni način rada.");
+        Scanner scanner = new Scanner(System.in);
+        KomandePomocnik komandePomocnik = new KomandePomocnik();
+
+        while(true){
+            String unos = scanner.nextLine();
+
+            String[] dijeloviUnosa = unos.split(" ");
+            String komanda = dijeloviUnosa[0];
+
+            switch(komanda){
+                case "ITAK":
+                    komandePomocnik.pregledAranzmanRazdobljeITAK(unos);
+                    break;
+                case "ITAP":
+                    komandePomocnik.pregledAranzmanITAP(unos);
+                    break;
+                case "IRTA":
+                    komandePomocnik.pregledRezervacijaAranzmanIRTA(unos);
+                    break;
+                case "IRO":
+                    komandePomocnik.pregledRezervacijaOsobaIRO(unos);
+                    break;
+                case "ORTA":
+                    komandePomocnik.otkazRezervacijeORTA(unos);
+                    break;
+                case "DRTA":
+                    komandePomocnik.dodavanjeRezervacijeDRTA(unos);
+                    break;
+                case "Q":
+                    return;
+                default:
+                    System.out.println("Neispravna komanda.");
+            }
         }
     }
 }

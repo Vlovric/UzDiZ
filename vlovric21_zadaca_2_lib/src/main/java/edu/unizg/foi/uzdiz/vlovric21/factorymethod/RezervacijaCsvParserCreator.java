@@ -1,6 +1,4 @@
-package edu.unizg.foi.uzdiz.vlovric21.factorymethod.csv;
-
-import edu.unizg.foi.uzdiz.vlovric21.parser.CsvParser;
+package edu.unizg.foi.uzdiz.vlovric21.factorymethod;
 
 public class RezervacijaCsvParserCreator extends CsvParserCreator {
 

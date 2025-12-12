@@ -1,6 +1,6 @@
-package edu.unizg.foi.uzdiz.vlovric21.parser;
+package edu.unizg.foi.uzdiz.vlovric21.factorymethod;
 
-import edu.unizg.foi.uzdiz.vlovric21.singleton.RepozitorijPodataka;
+import edu.unizg.foi.uzdiz.vlovric21.singleton.ParsiranjePomagac;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -12,13 +12,13 @@ public abstract class CsvParser {
     protected abstract List<String> dohvatiZaglavlje();
     protected abstract List<Integer> dohvatiObaveznaZaglavlja();
     protected abstract String validirajRed(List<String> red);
-    protected abstract void stvoriObjekt(List<String> polja);
+    protected abstract void spremiRed(List<String> polja);
 
     protected static final String regexDatum = "([1-9]|[12]\\d|3[01])\\.([1-9]|1[0-2])\\.(\\d{4})\\.";
     protected static final String regexDatumVrijeme = "(0?[1-9]|[12]\\d|3[01])\\.(0?[1-9]|1[0-2])\\.(\\d{4})\\.?\\s+([01]?\\d|2[0-3]):([0-5]\\d)(?::([0-5]\\d))?";
 
 
-    public boolean parsirajCsv(String datoteka){
+    public void parsirajCsv(String datoteka){
         List<String> polja;
         boolean imaZaglavlje;
 
@@ -27,13 +27,13 @@ public abstract class CsvParser {
 
             if(red == null){
                 System.out.println("Datoteka je prazna: " + datoteka);
-                return false;
+                return;
             }
             imaZaglavlje = provjeriZaglavlje(red);
 
         }catch(IOException ex){
             System.out.println("Greška kod čitanja datoteke: " + datoteka);
-            return false;
+            return;
         }
 
         try(BufferedReader br = new BufferedReader(new FileReader(datoteka))){
@@ -60,13 +60,11 @@ public abstract class CsvParser {
                     ispisiGresku(redniBroj, datoteka, greska, red, polja);
                     continue;
                 }
-                stvoriObjekt(polja);
+                spremiRed(polja);
             }
         }catch(IOException ex){
             System.out.println("Greška kod čitanja datoteke: " + datoteka);
-            return false;
         }
-        return true;
     }
 
     private String makniBOM(String red){
@@ -89,7 +87,7 @@ public abstract class CsvParser {
         String ocekivano = ocekivanoZaglavlje.get(prviObavezniIndeks).trim();
 
         return dobiveno.equals(ocekivano);
-        }
+    }
 
     private List<String> parsirajRed(String red){
         List<String> polja = new ArrayList<>();
@@ -115,7 +113,7 @@ public abstract class CsvParser {
 
     private void ispisiGresku(int redniBroj, String datoteka, String greska, String red, List<String> polja){
         System.out.println("---------------------------------");
-        System.out.println("Redni broj pogreške: " + RepozitorijPodataka.getBrojacPogresaka());
+        System.out.println("Redni broj pogreške: " + ParsiranjePomagac.getInstanca().getBrojGresaka());
         System.out.println("Neispravan red: " + redniBroj + " u datoteci: " + datoteka);
         System.out.println("Razlog: " + greska);
         System.out.println("Red: " + red);
@@ -126,10 +124,5 @@ public abstract class CsvParser {
         if(!vrijednost.isEmpty()){
             Integer.parseInt(vrijednost);
         }
-    }
-
-    protected Integer parseOpcionalniInt(String vrijednost){
-        String skracen = vrijednost.trim();
-        return skracen.isEmpty() ? null : Integer.valueOf(skracen);
     }
 }
