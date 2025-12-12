@@ -31,7 +31,6 @@ public class Main {
 
         RezervacijaPomocnik rezervacijaPomocnik = new RezervacijaPomocnik();
         rezervacijaPomocnik.ucitajSveInicijalneRezervacije();
-
     }
 
     static void interaktivniNacinRada(){
