@@ -12,6 +12,7 @@ import java.util.*;
 public class RepozitorijPodataka {
     private static RepozitorijPodataka instance = new RepozitorijPodataka();
     private static int idBrojacRezervacija = 1;
+    private static int brojacPogresaka = 1;
 
     private Map<Integer, Aranzman> aranzmaniPoOznaci = new HashMap<>();
     private Map<Integer, List<Integer>> rezervacijePoAranzmanu = new HashMap<>();
@@ -222,5 +223,9 @@ public class RepozitorijPodataka {
         rezervacijePoId.remove(rezervacija.getId());
         List<Integer> listaImena = rezervacijePoImenu.get(rezervacija.getPunoIme());
         listaImena.remove(Integer.valueOf(rezervacija.getId()));
+    }
+
+    public static int getBrojacPogresaka(){
+        return brojacPogresaka++;
     }
 }

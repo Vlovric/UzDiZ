@@ -1,5 +1,7 @@
 package foi.vlovric21.parser;
 
+import foi.vlovric21.singleton.RepozitorijPodataka;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -113,6 +115,7 @@ public abstract class CsvParser {
 
     private void ispisiGresku(int redniBroj, String datoteka, String greska, String red, List<String> polja){
         System.out.println("---------------------------------");
+        System.out.println("Redni broj pogreške: " + RepozitorijPodataka.getBrojacPogresaka());
         System.out.println("Neispravan red: " + redniBroj + " u datoteci: " + datoteka);
         System.out.println("Razlog: " + greska);
         System.out.println("Red: " + red);
