@@ -7,7 +7,11 @@
     <groupId>edu.unizg.foi.uzdiz.vlovric21</groupId>
     <artifactId>vlovric21_zadaca_2</artifactId>
     <version>2.0.0</version>
-    <packaging>jar</packaging>
+    <packaging>pom</packaging>
+    <modules>
+        <module>vlovric21_zadaca_2_lib</module>
+        <module>vlovric21_zadaca_2_app</module>
+    </modules>
 
     <properties>
         <java.version>21</java.version>
