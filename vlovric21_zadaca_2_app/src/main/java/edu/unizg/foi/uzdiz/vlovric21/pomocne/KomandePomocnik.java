@@ -178,7 +178,9 @@ public class KomandePomocnik {
         String datumIVrijeme = datumFormater.formatirajDatumVrijeme(dan, mjesec, godina, sat, minuta, sekunda);
 
         Rezervacija novaRezervacija = new Rezervacija(ime, prezime, oznaka, datumIVrijeme);
-        String rezultat = rezervacijaPomocnik.dodajRezervaciju(novaRezervacija);
-        System.out.println(rezultat);
+        repozitorij.dodajRezervaciju(novaRezervacija);
+
+        // String rezultat = rezervacijaPomocnik.dodajRezervaciju(novaRezervacija);
+        // System.out.println(rezultat);
     }
 }

@@ -14,6 +14,8 @@ import java.util.Set;
 public class RezervacijaPomocnik {
     private static RepozitorijPodataka repozitorij = RepozitorijPodataka.getInstance();
 
+    /*
+
     private Set<RezervacijaStatus> osnovniStatusi = EnumSet.of(
             RezervacijaStatus.AKTIVNA,
             RezervacijaStatus.PRIMLJENA,
@@ -231,4 +233,5 @@ public class RezervacijaPomocnik {
             }
         }
     }
+     */
 }

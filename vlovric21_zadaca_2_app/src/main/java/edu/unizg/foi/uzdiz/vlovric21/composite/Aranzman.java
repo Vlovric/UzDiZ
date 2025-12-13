@@ -23,9 +23,10 @@ public class Aranzman implements AranzmanKomponenta{
     private Integer brojDorucka;
     private Integer brojRuckova;
     private Integer brojVecera;
-    private AranzmanStatus status;
 
-    private List<AranzmanKomponenta> rezervacije = new ArrayList<>();
+    private AranzmanStatus status = new AranzmanUPripremi();
+
+    private final List<AranzmanKomponenta> djeca = new ArrayList<>();
 
     public Aranzman(){}
     public Aranzman(
@@ -46,36 +47,21 @@ public class Aranzman implements AranzmanKomponenta{
         this.cijena = cijena;
         this.minBrojPutnika = minBrojPutnika;
         this.maxBrojPutnika = maxBrojPutnika;
-        this.status = new AranzmanUPripremi();
     }
 
-    public void dodajRezervaciju(Rezervacija rezervacija){
-        /* ne znam jos kak il sta
-        this.rezervacije.add(rezervacija);
-        this.status.dodajRezervaciju(this, rezervacija);
-         */
+    @Override
+    public void dodajDijete(AranzmanKomponenta komponenta){
+        //logika
     }
 
-    public void obrisiRezervaciju(Rezervacija rezervacija){
-        this.rezervacije.remove(rezervacija);
+    @Override
+    public void ukloniDijete(AranzmanKomponenta komponenta){
+        djeca.remove(komponenta);
     }
 
-    public List<Rezervacija> dohvatiRezervacije(){
-        List<Rezervacija> rezervacije = new ArrayList<>();
-        for(AranzmanKomponenta komponenta : this.rezervacije){
-            rezervacije.add((Rezervacija)komponenta);
-        }
-        return rezervacije;
-    }
-
-    public Rezervacija dohvatiRezervaciju(int id){
-        for(AranzmanKomponenta komponenta : this.rezervacije){
-            Rezervacija rezervacija = (Rezervacija)komponenta;
-            if(rezervacija.getId() == id){
-                return rezervacija;
-            }
-        }
-        return null;
+    @Override
+    public List<AranzmanKomponenta> dohvatiDjecu() {
+        return djeca;
     }
 
     public int getOznaka() {

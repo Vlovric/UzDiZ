@@ -1,9 +1,11 @@
 package edu.unizg.foi.uzdiz.vlovric21.singleton;
 
 import edu.unizg.foi.uzdiz.vlovric21.composite.Aranzman;
+import edu.unizg.foi.uzdiz.vlovric21.composite.AranzmanKolekcija;
 import edu.unizg.foi.uzdiz.vlovric21.composite.Rezervacija;
 import edu.unizg.foi.uzdiz.vlovric21.composite.RezervacijaStatus;
 import edu.unizg.foi.uzdiz.vlovric21.pomocne.DatumFormater;
+import edu.unizg.foi.uzdiz.vlovric21.state_rezervacija.RezervacijaNova;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -13,32 +15,22 @@ public class RepozitorijPodataka {
     private static RepozitorijPodataka instance = new RepozitorijPodataka();
     private static int idBrojacRezervacija = 1;
 
-    private List<Aranzman> aranzmani = new ArrayList<>();
+    private AranzmanKolekcija aranzmanKolekcija = new AranzmanKolekcija();
 
-    private List<Rezervacija> inicijalneRezervacije = new ArrayList<>();
-
+    private Map<String, List<Integer>> rezervacijePoImenu = new HashMap<>();
+    private Map<Integer, List<Integer>> rezervacijePoAranzmanu = new HashMap<>();
 
 
     public Aranzman getAranzman(int oznaka){
-        for(Aranzman a : aranzmani){
-            if(a.getOznaka() == oznaka){
-                return a;
-            }
-        }
-        return null;
+        return aranzmanKolekcija.dohvatiAranzmanPoOznaci(oznaka);
     }
 
     public void dodajAranzman(Aranzman ar){
-        aranzmani.add(ar);
+        aranzmanKolekcija.dodajDijete(ar);
     }
 
     public void dodajRezervaciju(Rezervacija rezervacija){
-        int oznaka = rezervacija.getOznakaAranzmana();
-        int id = generirajIdZaRezervaciju();
-        rezervacija.setId(id);
 
-        Aranzman aranzman = getAranzman(oznaka);
-        aranzman.dodajRezervaciju(rezervacija); //TODO moram resortirat i re-dat statuse prema novom sortu pri svakom unosu
     }
 
     /*
@@ -80,12 +72,13 @@ public class RepozitorijPodataka {
 
     // ------------------------ Staro ------------------------
 
+    private List<Rezervacija> inicijalneRezervacije = new ArrayList<>();
+
 
     private Map<Integer, Aranzman> aranzmaniPoOznaci = new HashMap<>();
-    private Map<Integer, List<Integer>> rezervacijePoAranzmanu = new HashMap<>();
     private Map<Integer, Rezervacija> rezervacijePoId = new HashMap<>();
 
-    private Map<String, List<Integer>> rezervacijePoImenu = new HashMap<>();
+
     private Map<Integer, LocalDateTime> otkazaneRezervacije = new HashMap<>();
 
     private DatumFormater datumFormater = new DatumFormater();
