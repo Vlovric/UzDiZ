@@ -19,6 +19,7 @@ public class Aranzman {
     private Integer brojDorucka;
     private Integer brojRuckova;
     private Integer brojVecera;
+    private AranzmanStatus status;
 
     public Aranzman(){}
     public Aranzman(
@@ -39,6 +40,7 @@ public class Aranzman {
         this.cijena = cijena;
         this.minBrojPutnika = minBrojPutnika;
         this.maxBrojPutnika = maxBrojPutnika;
+        this.status = AranzmanStatus.U_PRIPREMI;
     }
 
     public int getOznaka() {
@@ -165,5 +167,13 @@ public class Aranzman {
 
     public void setBrojVecera(Integer brojVecera) {
         this.brojVecera = brojVecera;
+    }
+
+    public AranzmanStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(AranzmanStatus status) {
+        this.status = status;
     }
 }
