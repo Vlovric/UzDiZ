@@ -122,8 +122,8 @@ public class RezervacijaPomocnik {
     }
 
     private void neispravnaRezervacija(Rezervacija rezervacija){
-        System.out.println("Rezervacija korisnika " + rezervacija.getPunoIme() + " za ovaj aranžman je neispravna i briše se.");
-        repozitorij.obrisiRezervacijuIzAranzmana(rezervacija);
+        System.out.println("Rezervacija korisnika " + rezervacija.getPunoIme() + " za ovaj aranžman je neispravna i postaje odgođena.");
+        rezervacija.setStatus(RezervacijaStatus.ODGODENA);
     }
 
     private int izracunajBrojValidnihRezervacija(Rezervacija novaRezervacija, int brojValidnih) {

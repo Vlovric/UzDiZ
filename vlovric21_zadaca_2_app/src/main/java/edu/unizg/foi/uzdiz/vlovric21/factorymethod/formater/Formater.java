@@ -19,6 +19,8 @@ public abstract class Formater {
             case AKTIVNA: return "Aktivna";
             case NA_CEKANJU: return "Na čekanju";
             case OTKAZANA: return "Otkazana";
+            case NOVA: return "Nova";
+            case ODGODENA: return "Odgođena";
             default: return "";
         }
     }

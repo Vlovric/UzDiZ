@@ -4,5 +4,7 @@ public enum RezervacijaStatus {
     PRIMLJENA,
     AKTIVNA,
     NA_CEKANJU,
-    OTKAZANA
+    OTKAZANA,
+    NOVA,
+    ODGODENA,
 }
