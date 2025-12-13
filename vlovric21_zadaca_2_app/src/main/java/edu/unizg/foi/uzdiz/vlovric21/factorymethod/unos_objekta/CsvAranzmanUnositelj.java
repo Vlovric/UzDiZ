@@ -62,25 +62,4 @@ public class CsvAranzmanUnositelj extends CsvObjectUnositelj {
         );
         RepozitorijPodataka.getInstance().dodajAranzman(ar);
     }
-
-    /*
-    private static final List<String> zaglavlje = List.of(
-            "Oznaka",
-            "Naziv",
-            "Program",
-            "Početni datum",
-            "Završni datum",
-            "Vrijeme kretanja",
-            "Vrijeme povratka",
-            "Cijena",
-            "Min broj putnika",
-            "Maks broj putnika",
-            "Broj noćenja",
-            "Doplata za jednokrevetnu sobu",
-            "Prijevoz",
-            "Broj doručka",
-            "Broj ručkova",
-            "Broj večera"
-    );
-     */
 }

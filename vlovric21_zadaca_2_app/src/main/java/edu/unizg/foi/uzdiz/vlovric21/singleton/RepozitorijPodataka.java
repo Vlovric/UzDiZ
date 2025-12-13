@@ -41,7 +41,7 @@ public class RepozitorijPodataka {
         aranzmanKolekcija.dodajDijete(ar);
     }
 
-    public void dodajRezervaciju(Rezervacija rezervacija){
+    public String dodajRezervaciju(Rezervacija rezervacija){
         int id = getIdRezervacije();
         rezervacija.setId(id);
         rezervacija.setStatus(new RezervacijaNova());
@@ -68,7 +68,7 @@ public class RepozitorijPodataka {
 
         aranzman.resetirajStanje();
 
-        String rezultat;
+        String rezultat = "";
 
         for(Rezervacija r : tempRezervacije) {
             if(r.getId() == id){
@@ -77,6 +77,8 @@ public class RepozitorijPodataka {
                 aranzman.dodajRezervaciju(r);
             }
         }
+
+        return rezultat;
         //na kraju na rezultat appendat stanje rezervacije, ako jedino moze bit odgodena u worst case, a ne obrisana
     }
 

@@ -22,7 +22,7 @@ public class CsvRezervacijaUnositelj extends CsvObjectUnositelj {
     protected void unesiObjekt(Map<String, String> red) {
         RepozitorijPodataka repozitorij = RepozitorijPodataka.getInstance();
 
-        int id = repozitorij.generirajIdZaRezervaciju();
+        int id = repozitorij.getIdRezervacije();
         String ime = red.get("Ime");
         String prezime = red.get("Prezime");
         int oznakaAranzmana = Integer.parseInt(red.get("Oznaka aranžmana"));
@@ -31,15 +31,6 @@ public class CsvRezervacijaUnositelj extends CsvObjectUnositelj {
         Rezervacija rezervacija = new Rezervacija(ime, prezime, oznakaAranzmana, datumIVrijeme);
         rezervacija.setId(id);
 
-        repozitorij.dodajInicijalnuRezervaciju(rezervacija);
+        repozitorij.dodajRezervaciju(rezervacija);
     }
-
-    /*
-    private static final List<String> zaglavlje = List.of(
-            "Ime",
-            "Prezime",
-            "Oznaka aranžmana",
-            "Datum i vrijeme"
-    );
-     */
 }

@@ -7,6 +7,7 @@ import edu.unizg.foi.uzdiz.vlovric21.factorymethod.unos_objekta.CsvRezervacijaUn
 import edu.unizg.foi.uzdiz.vlovric21.parser.ArgumentParser;
 import edu.unizg.foi.uzdiz.vlovric21.pomocne.KomandePomocnik;
 import edu.unizg.foi.uzdiz.vlovric21.pomocne.RezervacijaPomocnik;
+import edu.unizg.foi.uzdiz.vlovric21.singleton.RepozitorijPodataka;
 
 import java.util.List;
 import java.util.Map;
@@ -35,9 +36,6 @@ public class Main {
         
         CsvObjectCreator rezervacijaCreator = new CsvRezervacijaUnositeljCreator();
         rezervacijaCreator.validirajUnesiObjekte(rezervacijaRedovi);
-
-        RezervacijaPomocnik rezervacijaPomocnik = new RezervacijaPomocnik();
-        rezervacijaPomocnik.ucitajSveInicijalneRezervacije();
     }
 
     static void interaktivniNacinRada(){
