@@ -1,5 +1,8 @@
 package edu.unizg.foi.uzdiz.vlovric21.composite;
 
+import edu.unizg.foi.uzdiz.vlovric21.state_aranzman.AranzmanStatus;
+import edu.unizg.foi.uzdiz.vlovric21.state_aranzman.AranzmanUPripremi;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,7 +46,7 @@ public class Aranzman implements AranzmanKomponenta{
         this.cijena = cijena;
         this.minBrojPutnika = minBrojPutnika;
         this.maxBrojPutnika = maxBrojPutnika;
-        this.status = AranzmanStatus.U_PRIPREMI;
+        this.status = new AranzmanUPripremi();
     }
 
     public void dodajRezervaciju(AranzmanKomponenta rezervacija){
@@ -184,8 +187,8 @@ public class Aranzman implements AranzmanKomponenta{
         this.brojVecera = brojVecera;
     }
 
-    public AranzmanStatus getStatus() {
-        return status;
+    public String getStatus() {
+        return status.getStatusNaziv();
     }
 
     public void setStatus(AranzmanStatus status) {

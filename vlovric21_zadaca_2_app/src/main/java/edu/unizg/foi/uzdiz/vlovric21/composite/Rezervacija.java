@@ -1,11 +1,14 @@
 package edu.unizg.foi.uzdiz.vlovric21.composite;
 
+import edu.unizg.foi.uzdiz.vlovric21.state_rezervacija.RezervacijaStatus;
+
 public class Rezervacija implements AranzmanKomponenta{
     private int id;
     private String ime;
     private String prezime;
     private int oznakaAranzmana;
     private String datumIVrijeme;
+
     private RezervacijaStatus status;
 
     public Rezervacija(){}
@@ -14,6 +17,10 @@ public class Rezervacija implements AranzmanKomponenta{
         this.prezime = prezime;
         this.oznakaAranzmana = oznakaAranzmana;
         this.datumIVrijeme = datumIVrijeme;
+    }
+
+    public void otkazi(){
+        this.status.otkazi(this);
     }
     
     public int getId() {
@@ -56,8 +63,8 @@ public class Rezervacija implements AranzmanKomponenta{
         this.datumIVrijeme = datumIVrijeme;
     }
 
-    public RezervacijaStatus getStatus() {
-        return status;
+    public String getStatus() {
+        return status.getStatusNaziv();
     }
     public void setStatus(RezervacijaStatus status) {
         this.status = status;

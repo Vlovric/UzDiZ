@@ -122,7 +122,7 @@ public class RezervacijaPomocnik {
     }
 
     private void neispravnaRezervacija(Rezervacija rezervacija){
-        System.out.println("Rezervacija korisnika " + rezervacija.getPunoIme() + " za ovaj aranžman je neispravna i postaje odgođena.");
+        System.out.println("Rezervacija korisnika " + rezervacija.getPunoIme() + " za ovaj aranžman je neispravna i postaje ODGOĐENA.");
         rezervacija.setStatus(RezervacijaStatus.ODGODENA);
     }
 

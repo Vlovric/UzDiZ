@@ -32,6 +32,40 @@ public class RepozitorijPodataka {
         aranzmani.add(ar);
     }
 
+    public void dodajRezervaciju(Rezervacija rezervacija){
+        int oznaka = rezervacija.getOznakaAranzmana();
+        int id = generirajIdZaRezervaciju();
+        rezervacija.setId(id);
+
+        Aranzman aranzman = getAranzman(oznaka);
+        aranzman.dodajRezervaciju(rezervacija); //TODO moram resortirat i re-dat statuse prema novom sortu pri svakom unosu
+    }
+
+    /*
+    public void dodajRezervaciju(Rezervacija rezervacija){
+        int oznaka = rezervacija.getOznakaAranzmana();
+        int id = generirajIdZaRezervaciju();
+        rezervacija.setId(id);
+
+        List<Integer> lista = rezervacijePoAranzmanu.computeIfAbsent(oznaka, k -> new ArrayList<>());
+        LocalDateTime dt = datumFormater.parseDatumIVrijeme(rezervacija.getDatumIVrijeme());
+
+        int index = 0;
+        for(Integer rId : lista){
+            Rezervacija r = rezervacijePoId.get(rId);
+            LocalDateTime rezervacijaDT = datumFormater.parseDatumIVrijeme(r.getDatumIVrijeme());
+            if(dt.isAfter(rezervacijaDT)){
+                index++;
+            }else{
+                break;
+            }
+        }
+        lista.add(index, id);
+        rezervacijePoImenu.computeIfAbsent(rezervacija.getPunoIme(), k -> new ArrayList<>()).add(id);
+        rezervacijePoId.put(id, rezervacija);
+    }
+     */
+
 
     // Nekoristeni getteri i setteri
 
@@ -122,28 +156,7 @@ public class RepozitorijPodataka {
         otkazaneRezervacije.put(rezervacija.getId(), LocalDateTime.now());
     }
 
-    public void dodajRezervaciju(Rezervacija rezervacija){
-        int oznaka = rezervacija.getOznakaAranzmana();
-        int id = generirajIdZaRezervaciju();
-        rezervacija.setId(id);
 
-        List<Integer> lista = rezervacijePoAranzmanu.computeIfAbsent(oznaka, k -> new ArrayList<>());
-        LocalDateTime dt = datumFormater.parseDatumIVrijeme(rezervacija.getDatumIVrijeme());
-
-        int index = 0;
-        for(Integer rId : lista){
-            Rezervacija r = rezervacijePoId.get(rId);
-            LocalDateTime rezervacijaDT = datumFormater.parseDatumIVrijeme(r.getDatumIVrijeme());
-            if(dt.isAfter(rezervacijaDT)){
-                index++;
-            }else{
-                break;
-            }
-        }
-        lista.add(index, id);
-        rezervacijePoImenu.computeIfAbsent(rezervacija.getPunoIme(), k -> new ArrayList<>()).add(id);
-        rezervacijePoId.put(id, rezervacija);
-    }
 
     public boolean postojiRezervacijaKorisnikaStatus(Rezervacija rezervacija, RezervacijaStatus statusZaProvjeru){
         int oznaka = rezervacija.getOznakaAranzmana();
