@@ -1,8 +1,8 @@
 package edu.unizg.foi.uzdiz.vlovric21.pomocne;
 
-import edu.unizg.foi.uzdiz.vlovric21.objekti.Aranzman;
-import edu.unizg.foi.uzdiz.vlovric21.objekti.Rezervacija;
-import edu.unizg.foi.uzdiz.vlovric21.objekti.RezervacijaStatus;
+import edu.unizg.foi.uzdiz.vlovric21.composite.Aranzman;
+import edu.unizg.foi.uzdiz.vlovric21.composite.Rezervacija;
+import edu.unizg.foi.uzdiz.vlovric21.composite.RezervacijaStatus;
 import edu.unizg.foi.uzdiz.vlovric21.singleton.RepozitorijPodataka;
 
 import java.time.LocalDateTime;

@@ -1,6 +1,6 @@
 package edu.unizg.foi.uzdiz.vlovric21.factorymethod.formater;
 
-import edu.unizg.foi.uzdiz.vlovric21.objekti.RezervacijaStatus;
+import edu.unizg.foi.uzdiz.vlovric21.composite.RezervacijaStatus;
 import edu.unizg.foi.uzdiz.vlovric21.pomocne.DatumFormater;
 
 public abstract class Formater {

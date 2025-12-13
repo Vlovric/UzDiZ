@@ -1,6 +1,6 @@
 package edu.unizg.foi.uzdiz.vlovric21.factorymethod.formater;
 
-import edu.unizg.foi.uzdiz.vlovric21.objekti.Rezervacija;
+import edu.unizg.foi.uzdiz.vlovric21.composite.Rezervacija;
 
 import java.time.LocalDateTime;
 import java.util.List;

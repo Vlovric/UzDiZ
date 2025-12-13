@@ -1,6 +1,6 @@
 package edu.unizg.foi.uzdiz.vlovric21.builder;
 
-import edu.unizg.foi.uzdiz.vlovric21.objekti.Aranzman;
+import edu.unizg.foi.uzdiz.vlovric21.composite.Aranzman;
 
 public class AranzmanDirector {
     private AranzmanBuilder builder;

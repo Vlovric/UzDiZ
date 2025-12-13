@@ -1,8 +1,9 @@
-package edu.unizg.foi.uzdiz.vlovric21.objekti;
+package edu.unizg.foi.uzdiz.vlovric21.composite;
 
-import java.util.Objects;
+import java.util.ArrayList;
+import java.util.List;
 
-public class Aranzman {
+public class Aranzman implements AranzmanKomponenta{
     private int oznaka;
     private String naziv;
     private String program;
@@ -20,6 +21,8 @@ public class Aranzman {
     private Integer brojRuckova;
     private Integer brojVecera;
     private AranzmanStatus status;
+
+    private List<AranzmanKomponenta> rezervacije = new ArrayList<>();
 
     public Aranzman(){}
     public Aranzman(
@@ -41,6 +44,18 @@ public class Aranzman {
         this.minBrojPutnika = minBrojPutnika;
         this.maxBrojPutnika = maxBrojPutnika;
         this.status = AranzmanStatus.U_PRIPREMI;
+    }
+
+    public void dodajRezervaciju(AranzmanKomponenta rezervacija){
+        this.rezervacije.add(rezervacija);
+    }
+
+    public void obrisiRezervaciju(AranzmanKomponenta rezervacija){
+        this.rezervacije.remove(rezervacija);
+    }
+
+    public List<AranzmanKomponenta> dohvatiRezervacije(){
+        return this.rezervacije;
     }
 
     public int getOznaka() {

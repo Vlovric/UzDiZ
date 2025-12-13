@@ -1,7 +1,7 @@
 package edu.unizg.foi.uzdiz.vlovric21.factorymethod.unos_objekta;
 
 import edu.unizg.foi.uzdiz.vlovric21.builder.AranzmanDirector;
-import edu.unizg.foi.uzdiz.vlovric21.objekti.Aranzman;
+import edu.unizg.foi.uzdiz.vlovric21.composite.Aranzman;
 import edu.unizg.foi.uzdiz.vlovric21.singleton.RepozitorijPodataka;
 
 import java.util.Map;

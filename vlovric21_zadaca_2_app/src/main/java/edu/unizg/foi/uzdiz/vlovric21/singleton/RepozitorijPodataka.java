@@ -1,8 +1,8 @@
 package edu.unizg.foi.uzdiz.vlovric21.singleton;
 
-import edu.unizg.foi.uzdiz.vlovric21.objekti.Aranzman;
-import edu.unizg.foi.uzdiz.vlovric21.objekti.Rezervacija;
-import edu.unizg.foi.uzdiz.vlovric21.objekti.RezervacijaStatus;
+import edu.unizg.foi.uzdiz.vlovric21.composite.Aranzman;
+import edu.unizg.foi.uzdiz.vlovric21.composite.Rezervacija;
+import edu.unizg.foi.uzdiz.vlovric21.composite.RezervacijaStatus;
 import edu.unizg.foi.uzdiz.vlovric21.pomocne.DatumFormater;
 
 import java.time.LocalDate;
@@ -12,7 +12,40 @@ import java.util.*;
 public class RepozitorijPodataka {
     private static RepozitorijPodataka instance = new RepozitorijPodataka();
     private static int idBrojacRezervacija = 1;
-    private static int brojacPogresaka = 1;
+
+    private List<Aranzman> aranzmani = new ArrayList<>();
+
+    private List<Rezervacija> inicijalneRezervacije = new ArrayList<>();
+
+
+
+    public Aranzman getAranzman(int oznaka){
+        for(Aranzman a : aranzmani){
+            if(a.getOznaka() == oznaka){
+                return a;
+            }
+        }
+        return null;
+    }
+
+    public void dodajAranzman(Aranzman ar){
+        aranzmani.add(ar);
+    }
+
+
+    // Nekoristeni getteri i setteri
+
+    public List<Aranzman> getAranzmani(){
+        return aranzmani;
+    }
+
+    public void setAranzmani(List<Aranzman> aranzmani){
+        this.aranzmani = aranzmani;
+    }
+
+
+    // ------------------------ Staro ------------------------
+
 
     private Map<Integer, Aranzman> aranzmaniPoOznaci = new HashMap<>();
     private Map<Integer, List<Integer>> rezervacijePoAranzmanu = new HashMap<>();
@@ -20,8 +53,6 @@ public class RepozitorijPodataka {
 
     private Map<String, List<Integer>> rezervacijePoImenu = new HashMap<>();
     private Map<Integer, LocalDateTime> otkazaneRezervacije = new HashMap<>();
-
-    private List<Rezervacija> inicijalneRezervacije = new ArrayList<>();
 
     private DatumFormater datumFormater = new DatumFormater();
 
@@ -43,11 +74,13 @@ public class RepozitorijPodataka {
         return aranzmaniPoOznaci;
     }
 
+    /*
     public void dodajAranzman(Aranzman aranzman){
         int oznaka = aranzman.getOznaka();
         aranzmaniPoOznaci.put(oznaka, aranzman);
         rezervacijePoAranzmanu.computeIfAbsent(oznaka, k  -> new ArrayList<>());
     }
+     */
 
     public void dodajInicijalnuRezervaciju(Rezervacija rezervacija){
         inicijalneRezervacije.add(rezervacija);
@@ -223,9 +256,5 @@ public class RepozitorijPodataka {
         rezervacijePoId.remove(rezervacija.getId());
         List<Integer> listaImena = rezervacijePoImenu.get(rezervacija.getPunoIme());
         listaImena.remove(Integer.valueOf(rezervacija.getId()));
-    }
-
-    public static int getBrojacPogresaka(){
-        return brojacPogresaka++;
     }
 }

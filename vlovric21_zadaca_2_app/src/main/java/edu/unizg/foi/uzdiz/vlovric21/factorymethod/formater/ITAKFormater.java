@@ -1,6 +1,6 @@
 package edu.unizg.foi.uzdiz.vlovric21.factorymethod.formater;
 
-import edu.unizg.foi.uzdiz.vlovric21.objekti.Aranzman;
+import edu.unizg.foi.uzdiz.vlovric21.composite.Aranzman;
 
 import java.time.LocalDate;
 import java.util.List;

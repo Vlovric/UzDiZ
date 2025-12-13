@@ -1,6 +1,6 @@
-package edu.unizg.foi.uzdiz.vlovric21.objekti;
+package edu.unizg.foi.uzdiz.vlovric21.composite;
 
-public class Rezervacija {
+public class Rezervacija implements AranzmanKomponenta{
     private int id;
     private String ime;
     private String prezime;

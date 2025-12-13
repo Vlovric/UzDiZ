@@ -1,7 +1,7 @@
 package edu.unizg.foi.uzdiz.vlovric21.factorymethod.formater;
 
-import edu.unizg.foi.uzdiz.vlovric21.objekti.Aranzman;
-import edu.unizg.foi.uzdiz.vlovric21.objekti.Rezervacija;
+import edu.unizg.foi.uzdiz.vlovric21.composite.Aranzman;
+import edu.unizg.foi.uzdiz.vlovric21.composite.Rezervacija;
 import edu.unizg.foi.uzdiz.vlovric21.singleton.RepozitorijPodataka;
 
 import java.time.LocalDateTime;

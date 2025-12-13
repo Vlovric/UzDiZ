@@ -3,9 +3,9 @@ package edu.unizg.foi.uzdiz.vlovric21.pomocne;
 import edu.unizg.foi.uzdiz.vlovric21.factorymethod.formater.FormaterCreator;
 import edu.unizg.foi.uzdiz.vlovric21.factorymethod.formater.FormaterFactory;
 import edu.unizg.foi.uzdiz.vlovric21.factorymethod.formater.FormaterTip;
-import edu.unizg.foi.uzdiz.vlovric21.objekti.Aranzman;
-import edu.unizg.foi.uzdiz.vlovric21.objekti.Rezervacija;
-import edu.unizg.foi.uzdiz.vlovric21.objekti.RezervacijaStatus;
+import edu.unizg.foi.uzdiz.vlovric21.composite.Aranzman;
+import edu.unizg.foi.uzdiz.vlovric21.composite.Rezervacija;
+import edu.unizg.foi.uzdiz.vlovric21.composite.RezervacijaStatus;
 import edu.unizg.foi.uzdiz.vlovric21.singleton.RepozitorijPodataka;
 
 import java.util.EnumSet;
