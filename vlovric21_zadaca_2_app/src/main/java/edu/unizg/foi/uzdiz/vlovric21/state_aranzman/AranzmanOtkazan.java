@@ -6,18 +6,18 @@ import edu.unizg.foi.uzdiz.vlovric21.composite.Rezervacija;
 public class AranzmanOtkazan implements AranzmanStatus{
 
     @Override
-    public void dodajRezervaciju(Aranzman aranzman, Rezervacija rezervacija) {
-
+    public String dodajRezervaciju(Aranzman aranzman, Rezervacija rezervacija) {
+        return "Nije moguće dodati rezervaciju jer je aranžman OTKAZAN.";
     }
 
     @Override
-    public void otkaziRezervaciju(Aranzman aranzman, Rezervacija Rezervacija) {
-
+    public String otkaziRezervaciju(Aranzman aranzman, Rezervacija Rezervacija) {
+        return "";
     }
 
     @Override
-    public void otkaziAranzman(Aranzman aranzman) {
-
+    public String otkaziAranzman(Aranzman aranzman) {
+        return "";
     }
 
     @Override

@@ -5,6 +5,7 @@ import edu.unizg.foi.uzdiz.vlovric21.composite.AranzmanKolekcija;
 import edu.unizg.foi.uzdiz.vlovric21.composite.AranzmanKomponenta;
 import edu.unizg.foi.uzdiz.vlovric21.composite.Rezervacija;
 import edu.unizg.foi.uzdiz.vlovric21.pomocne.DatumFormater;
+import edu.unizg.foi.uzdiz.vlovric21.state_rezervacija.RezervacijaAktivna;
 import edu.unizg.foi.uzdiz.vlovric21.state_rezervacija.RezervacijaNova;
 
 import java.time.LocalDate;
@@ -54,6 +55,7 @@ public class RepozitorijPodataka {
         List<AranzmanKomponenta> rezervacije = aranzman.dohvatiDjecu();
         for(AranzmanKomponenta a : rezervacije){
             if(a instanceof Rezervacija r){
+                r.setStatus(new RezervacijaNova());
                 tempRezervacije.add(r);
             }
         }
@@ -66,37 +68,51 @@ public class RepozitorijPodataka {
 
         aranzman.resetirajStanje();
 
+        String rezultat;
+
         for(Rezervacija r : tempRezervacije) {
-            aranzman.dodajDijete(r);
-        }
-    }
-
-    /*
-    public void dodajRezervaciju(Rezervacija rezervacija){
-        int oznaka = rezervacija.getOznakaAranzmana();
-        int id = generirajIdZaRezervaciju();
-        rezervacija.setId(id);
-
-        List<Integer> lista = rezervacijePoAranzmanu.computeIfAbsent(oznaka, k -> new ArrayList<>());
-        LocalDateTime dt = datumFormater.parseDatumIVrijeme(rezervacija.getDatumIVrijeme());
-
-        int index = 0;
-        for(Integer rId : lista){
-            Rezervacija r = rezervacijePoId.get(rId);
-            LocalDateTime rezervacijaDT = datumFormater.parseDatumIVrijeme(r.getDatumIVrijeme());
-            if(dt.isAfter(rezervacijaDT)){
-                index++;
+            if(r.getId() == id){
+                rezultat = aranzman.dodajRezervaciju(r);
             }else{
-                break;
+                aranzman.dodajRezervaciju(r);
             }
         }
-        lista.add(index, id);
-        rezervacijePoImenu.computeIfAbsent(rezervacija.getPunoIme(), k -> new ArrayList<>()).add(id);
-        rezervacijePoId.put(id, rezervacija);
+        //na kraju na rezultat appendat stanje rezervacije, ako jedino moze bit odgodena u worst case, a ne obrisana
     }
-     */
 
+    public boolean postojiAktivnaRezervacijaPreklapanjeKorisnik(Aranzman aranzman, Rezervacija rezervacija){
+        String punoIme = rezervacija.getPunoIme();
 
+        for(AranzmanKomponenta k : aranzmanKolekcija.dohvatiDjecu()){
+            if(!(k instanceof Aranzman a) || a.getOznaka() == aranzman.getOznaka()){
+                continue;
+            }
+            if(!provjeriPreklapanjeDatuma(aranzman, a)){
+                continue;
+            }
+            for(Rezervacija r : a.dohvatiSveRezervacije()){
+                if(!r.getPunoIme().equals(punoIme)){
+                    continue;
+                }
+                if(r.getStatus().equals(new RezervacijaAktivna().getStatusNaziv())){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean provjeriPreklapanjeDatuma(Aranzman a1, Aranzman a2){
+        LocalDate a1Pocetak = datumFormater.parseDatum(a1.getPocetniDatum());
+        LocalDate a1Kraj = datumFormater.parseDatum(a1.getZavrsniDatum());
+        LocalDate a2Pocetak = datumFormater.parseDatum(a2.getPocetniDatum());
+        LocalDate a2Kraj = datumFormater.parseDatum(a2.getZavrsniDatum());
+
+        if(a1Kraj.isBefore(a2Pocetak) || a2Kraj.isBefore(a1Pocetak)){
+            return false;
+        }
+        return true;
+    }
 
 
     // Nekoristeni getteri i setteri
@@ -237,17 +253,7 @@ public class RepozitorijPodataka {
         return preklapajuciAranzmaniId;
     }
 
-    private boolean provjeriPreklapanjeDatuma(Aranzman a1, Aranzman a2){
-        LocalDate a1Pocetak = datumFormater.parseDatum(a1.getPocetniDatum());
-        LocalDate a1Kraj = datumFormater.parseDatum(a1.getZavrsniDatum());
-        LocalDate a2Pocetak = datumFormater.parseDatum(a2.getPocetniDatum());
-        LocalDate a2Kraj = datumFormater.parseDatum(a2.getZavrsniDatum());
 
-        if(a1Kraj.isBefore(a2Pocetak) || a2Kraj.isBefore(a1Pocetak)){
-            return false;
-        }
-        return true;
-    }
 
     public void prebaciURedOtkazanih(Rezervacija rezervacija){
         List<Integer> lista = rezervacijePoAranzmanu.get(rezervacija.getOznakaAranzmana());

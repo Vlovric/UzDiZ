@@ -55,7 +55,6 @@ public class Aranzman implements AranzmanKomponenta{
     @Override
     public void dodajDijete(AranzmanKomponenta komponenta){
         djeca.add(komponenta);
-        status.dodajRezervaciju(this, (Rezervacija) komponenta);
     }
 
     @Override
@@ -68,19 +67,43 @@ public class Aranzman implements AranzmanKomponenta{
         return djeca;
     }
 
+    public List<Rezervacija> dohvatiSveRezervacije(){
+        List<Rezervacija> rezervacije = new ArrayList<>();
+        for(AranzmanKomponenta k : djeca){
+            if(k instanceof Rezervacija r){
+                rezervacije.add(r);
+            }
+        }
+        return rezervacije;
+    }
+
+    public String dodajRezervaciju(Rezervacija rezervacija){
+        djeca.add(rezervacija);
+        return status.dodajRezervaciju(this, rezervacija);
+    }
+
     public void resetirajStanje(){
         djeca.clear();
         postaviUPripremi();
     }
 
-    public List<AranzmanKomponenta> dohvatiRezervacijeSaStatusom(RezervacijaStatus status){
-        List<AranzmanKomponenta> filtriraneRezervacije = new ArrayList<>();
+    public List<Rezervacija> dohvatiRezervacijeSaStatusom(RezervacijaStatus status){
+        List<Rezervacija> filtriraneRezervacije = new ArrayList<>();
         for(AranzmanKomponenta k : djeca){
             if(k instanceof Rezervacija r && r.getStatus().equals(status.getStatusNaziv())){
-                filtriraneRezervacije.add(k);
+                filtriraneRezervacije.add(r);
             }
         }
         return filtriraneRezervacije;
+    }
+
+    public boolean postojiRezervacijaKorisnikaSaStatusom(String punoIme, RezervacijaStatus status){
+        for(AranzmanKomponenta k : djeca){
+            if(k instanceof Rezervacija r && r.getPunoIme().equals(punoIme) && r.getStatus().equals(status.getStatusNaziv())){
+                return true;
+            }
+        }
+        return false;
     }
 
     public void postaviUPripremi(){
