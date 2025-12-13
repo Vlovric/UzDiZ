@@ -8,7 +8,7 @@ public class AranzmanUPripremi implements AranzmanStatus{
 
     @Override
     public void dodajRezervaciju(Aranzman aranzman, Rezervacija rezervacija) {
-        aranzman.azurirajRezervacije();
+
 
     }
 

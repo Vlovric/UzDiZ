@@ -2,8 +2,8 @@ package edu.unizg.foi.uzdiz.vlovric21.singleton;
 
 import edu.unizg.foi.uzdiz.vlovric21.composite.Aranzman;
 import edu.unizg.foi.uzdiz.vlovric21.composite.AranzmanKolekcija;
+import edu.unizg.foi.uzdiz.vlovric21.composite.AranzmanKomponenta;
 import edu.unizg.foi.uzdiz.vlovric21.composite.Rezervacija;
-import edu.unizg.foi.uzdiz.vlovric21.composite.RezervacijaStatus;
 import edu.unizg.foi.uzdiz.vlovric21.pomocne.DatumFormater;
 import edu.unizg.foi.uzdiz.vlovric21.state_rezervacija.RezervacijaNova;
 
@@ -18,10 +18,21 @@ public class RepozitorijPodataka {
     private AranzmanKolekcija aranzmanKolekcija = new AranzmanKolekcija();
 
     private Map<String, List<Integer>> rezervacijePoImenu = new HashMap<>();
-    private Map<Integer, List<Integer>> rezervacijePoAranzmanu = new HashMap<>();
+    private Map<Integer, List<Integer>> rezervacijePoAranzmanu = new HashMap<>(); // TODO ovo mozda bolje koristit nekak unutar compositea
 
+    private DatumFormater datumFormater = new DatumFormater();
 
-    public Aranzman getAranzman(int oznaka){
+    private RepozitorijPodataka() {}
+
+    public static RepozitorijPodataka getInstance() {
+        return instance;
+    }
+
+    public int getIdRezervacije(){
+        return idBrojacRezervacija++;
+    }
+
+    public Aranzman getAranzmanPoOznaci(int oznaka){
         return aranzmanKolekcija.dohvatiAranzmanPoOznaci(oznaka);
     }
 
@@ -30,7 +41,34 @@ public class RepozitorijPodataka {
     }
 
     public void dodajRezervaciju(Rezervacija rezervacija){
+        int id = getIdRezervacije();
+        rezervacija.setId(id);
+        rezervacija.setStatus(new RezervacijaNova());
+        int oznaka = rezervacija.getOznakaAranzmana();
+        Aranzman aranzman = aranzmanKolekcija.dohvatiAranzmanPoOznaci(oznaka);
 
+        rezervacijePoImenu.computeIfAbsent(rezervacija.getPunoIme(), k -> new ArrayList<>()).add(id);
+        rezervacijePoAranzmanu.computeIfAbsent(oznaka, k -> new ArrayList<>()).add(id);
+
+        List<Rezervacija> tempRezervacije = new ArrayList<>();
+        List<AranzmanKomponenta> rezervacije = aranzman.dohvatiDjecu();
+        for(AranzmanKomponenta a : rezervacije){
+            if(a instanceof Rezervacija r){
+                tempRezervacije.add(r);
+            }
+        }
+        tempRezervacije.add(rezervacija);
+        tempRezervacije.sort((r1, r2) -> {
+            LocalDateTime dt1 = datumFormater.parseDatumIVrijeme(r1.getDatumIVrijeme());
+            LocalDateTime dt2 = datumFormater.parseDatumIVrijeme(r2.getDatumIVrijeme());
+            return dt1.compareTo(dt2);
+        });
+
+        aranzman.resetirajStanje();
+
+        for(Rezervacija r : tempRezervacije) {
+            aranzman.dodajDijete(r);
+        }
     }
 
     /*
@@ -59,14 +97,20 @@ public class RepozitorijPodataka {
      */
 
 
+
+
     // Nekoristeni getteri i setteri
 
-    public List<Aranzman> getAranzmani(){
-        return aranzmani;
+    public AranzmanKolekcija getAranzmanKolekcija() {
+        return aranzmanKolekcija;
     }
 
-    public void setAranzmani(List<Aranzman> aranzmani){
-        this.aranzmani = aranzmani;
+    public void setAranzmanKolekcija(AranzmanKolekcija aranzmanKolekcija) {
+        this.aranzmanKolekcija = aranzmanKolekcija;
+    }
+
+    public void setIdBrojacRezervacija(){
+        idBrojacRezervacija = 1;
     }
 
 
@@ -81,21 +125,11 @@ public class RepozitorijPodataka {
 
     private Map<Integer, LocalDateTime> otkazaneRezervacije = new HashMap<>();
 
-    private DatumFormater datumFormater = new DatumFormater();
 
-    private RepozitorijPodataka() {}
 
-    public static RepozitorijPodataka getInstance() {
-        return instance;
-    }
 
-    public int generirajIdZaRezervaciju(){
-        return idBrojacRezervacija++;
-    }
 
-    public Aranzman getAranzmanPoOznaci(int oznaka){
-        return aranzmaniPoOznaci.get(oznaka);
-    }
+
 
     public Map<Integer, Aranzman> getAranzmaniMapu(){
         return aranzmaniPoOznaci;

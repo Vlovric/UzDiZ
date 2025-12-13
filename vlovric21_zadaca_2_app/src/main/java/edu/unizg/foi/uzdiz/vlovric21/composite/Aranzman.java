@@ -1,7 +1,10 @@
 package edu.unizg.foi.uzdiz.vlovric21.composite;
 
+import edu.unizg.foi.uzdiz.vlovric21.state_aranzman.AranzmanAktivan;
+import edu.unizg.foi.uzdiz.vlovric21.state_aranzman.AranzmanPopunjen;
 import edu.unizg.foi.uzdiz.vlovric21.state_aranzman.AranzmanStatus;
 import edu.unizg.foi.uzdiz.vlovric21.state_aranzman.AranzmanUPripremi;
+import edu.unizg.foi.uzdiz.vlovric21.state_rezervacija.RezervacijaStatus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +54,8 @@ public class Aranzman implements AranzmanKomponenta{
 
     @Override
     public void dodajDijete(AranzmanKomponenta komponenta){
-        //logika
+        djeca.add(komponenta);
+        status.dodajRezervaciju(this, (Rezervacija) komponenta);
     }
 
     @Override
@@ -62,6 +66,33 @@ public class Aranzman implements AranzmanKomponenta{
     @Override
     public List<AranzmanKomponenta> dohvatiDjecu() {
         return djeca;
+    }
+
+    public void resetirajStanje(){
+        djeca.clear();
+        postaviUPripremi();
+    }
+
+    public List<AranzmanKomponenta> dohvatiRezervacijeSaStatusom(RezervacijaStatus status){
+        List<AranzmanKomponenta> filtriraneRezervacije = new ArrayList<>();
+        for(AranzmanKomponenta k : djeca){
+            if(k instanceof Rezervacija r && r.getStatus().equals(status.getStatusNaziv())){
+                filtriraneRezervacije.add(k);
+            }
+        }
+        return filtriraneRezervacije;
+    }
+
+    public void postaviUPripremi(){
+        this.status = new AranzmanUPripremi();
+    }
+
+    public void postaviAktivan(){
+        this.status = new AranzmanAktivan();
+    }
+
+    public void postaviPopunjen(){
+        this.status = new AranzmanPopunjen();
     }
 
     public int getOznaka() {
