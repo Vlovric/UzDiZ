@@ -49,16 +49,33 @@ public class Aranzman implements AranzmanKomponenta{
         this.status = new AranzmanUPripremi();
     }
 
-    public void dodajRezervaciju(AranzmanKomponenta rezervacija){
+    public void dodajRezervaciju(Rezervacija rezervacija){
+        /* ne znam jos kak il sta
         this.rezervacije.add(rezervacija);
+        this.status.dodajRezervaciju(this, rezervacija);
+         */
     }
 
-    public void obrisiRezervaciju(AranzmanKomponenta rezervacija){
+    public void obrisiRezervaciju(Rezervacija rezervacija){
         this.rezervacije.remove(rezervacija);
     }
 
-    public List<AranzmanKomponenta> dohvatiRezervacije(){
-        return this.rezervacije;
+    public List<Rezervacija> dohvatiRezervacije(){
+        List<Rezervacija> rezervacije = new ArrayList<>();
+        for(AranzmanKomponenta komponenta : this.rezervacije){
+            rezervacije.add((Rezervacija)komponenta);
+        }
+        return rezervacije;
+    }
+
+    public Rezervacija dohvatiRezervaciju(int id){
+        for(AranzmanKomponenta komponenta : this.rezervacije){
+            Rezervacija rezervacija = (Rezervacija)komponenta;
+            if(rezervacija.getId() == id){
+                return rezervacija;
+            }
+        }
+        return null;
     }
 
     public int getOznaka() {

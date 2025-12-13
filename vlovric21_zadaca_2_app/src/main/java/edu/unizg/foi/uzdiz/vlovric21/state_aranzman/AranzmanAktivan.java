@@ -11,6 +11,16 @@ public class AranzmanAktivan implements AranzmanStatus{
     }
 
     @Override
+    public void otkaziRezervaciju(Aranzman aranzman, Rezervacija Rezervacija) {
+
+    }
+
+    @Override
+    public void otkaziAranzman(Aranzman aranzman) {
+
+    }
+
+    @Override
     public String getStatusNaziv() {
         return "AKTIVAN";
     }

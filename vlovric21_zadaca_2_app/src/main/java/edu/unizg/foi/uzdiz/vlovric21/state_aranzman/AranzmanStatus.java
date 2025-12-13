@@ -7,5 +7,9 @@ public interface AranzmanStatus {
 
     void dodajRezervaciju(Aranzman aranzman, Rezervacija rezervacija);
 
+    void otkaziRezervaciju(Aranzman aranzman, Rezervacija Rezervacija);
+
+    void otkaziAranzman(Aranzman aranzman);
+
     String getStatusNaziv();
 }
