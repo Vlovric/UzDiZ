@@ -22,6 +22,10 @@ public class AranzmanKolekcija implements AranzmanKomponenta {
         return djeca;
     }
 
+    public void ukloniSvuDjecu(){
+        djeca.clear();
+    }
+
     public Aranzman dohvatiAranzmanPoOznaci(int oznaka){
         for(AranzmanKomponenta k : djeca){
             if(k instanceof Aranzman a && a.getOznaka() == oznaka){

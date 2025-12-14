@@ -5,6 +5,7 @@ import edu.unizg.foi.uzdiz.vlovric21.composite.Rezervacija;
 import edu.unizg.foi.uzdiz.vlovric21.singleton.RepozitorijPodataka;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 
 public class IROFormater extends Formater {
@@ -14,10 +15,14 @@ public class IROFormater extends Formater {
         List<Rezervacija> rezervacije = (List<Rezervacija>) obj;
         RepozitorijPodataka repozitorij = RepozitorijPodataka.getInstance();
 
+        if(!kronoloskiRedoslijed()){
+            Collections.reverse(rezervacije);
+        }
+
         String zaglavljeFormat = "%-20s %-20s %-30s %-15s%n";
         String redFormat = "%-20s %-20d %-30s %-15s%n";
 
-        int sirinaTablice = 85;
+        int sirinaTablice = izracunajSirinuTablice(zaglavljeFormat);
 
         ispisiNaslovTablice("Popis rezervacija za osobu", sirinaTablice);
 

@@ -3,6 +3,7 @@ package edu.unizg.foi.uzdiz.vlovric21.factorymethod.formater;
 import edu.unizg.foi.uzdiz.vlovric21.composite.Aranzman;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 
 public class ITAKFormater extends Formater {
@@ -10,6 +11,10 @@ public class ITAKFormater extends Formater {
     @Override
     public void formatiraj(Object obj){
         List<Aranzman> aranzmani = (List<Aranzman>) obj;
+
+        if(!kronoloskiRedoslijed()){
+            Collections.reverse(aranzmani);
+        }
 
         String zaglavljeFormat = "%-8s %-20s %-15s %-15s %-15s %-15s %-9s %-18s %-20s %-15s%n";
         String redFormat =       "%-8d %-20s %-15s %-15s %-15s %-15s %9s %18s %20s %-15s";

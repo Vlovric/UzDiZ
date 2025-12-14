@@ -1,6 +1,7 @@
 package edu.unizg.foi.uzdiz.vlovric21.factorymethod.formater;
 
 import edu.unizg.foi.uzdiz.vlovric21.pomocne.DatumFormater;
+import edu.unizg.foi.uzdiz.vlovric21.singleton.RepozitorijPodataka;
 import edu.unizg.foi.uzdiz.vlovric21.state_rezervacija.*;
 
 import java.text.DecimalFormat;
@@ -77,5 +78,9 @@ public abstract class Formater {
         }
         sirina += format.length() - prethodniKraj;
         return sirina;
+    }
+
+    protected boolean kronoloskiRedoslijed(){
+        return RepozitorijPodataka.getInstance().getKronoloskiRedoslijed();
     }
 }

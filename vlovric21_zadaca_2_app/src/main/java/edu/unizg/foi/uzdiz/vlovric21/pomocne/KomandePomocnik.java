@@ -211,11 +211,43 @@ public class KomandePomocnik {
     }
 
     public void postavljanjeIspisaIP(String unos){
-        //TODO
+        String uzorak = "^IP\\s+([NS])$";
+
+        Pattern regex = Pattern.compile(uzorak);
+        Matcher matcher = provjeriRegex(regex, unos);
+        if(matcher == null) {
+            return;
+        }
+
+        String opcija = matcher.group(1);
+        if(opcija.equals("N")){
+            repozitorij.setKronoloskiRedoslijed(true);
+            System.out.println("Postavljen je ispis u kronološkom redoslijedu.");
+        }else{
+            repozitorij.setKronoloskiRedoslijed(false);
+            System.out.println("Postavljen je ispis u obrnuto kronološkom redoslijedu.");
+        }
+
+
     }
 
     public void brisanjePodatakaBP(String unos){
-        //TODO nakon implementacije otkazivanja aranzmana
+        String uzorak = "^BP\\s+([AR])$";
+
+        Pattern regex = Pattern.compile(uzorak);
+        Matcher matcher = provjeriRegex(regex, unos);
+        if(matcher == null) {
+            return;
+        }
+
+        String opcija = matcher.group(1);
+        if(opcija.equals("A")){
+            repozitorij.obrisiSveAranzmane();
+            System.out.println("Obrisani su svi aranžmani i njihove rezervacije.");
+        }else{
+            repozitorij.obrisiSveRezervacije();
+            System.out.println("Obrisane su sve rezervacije.");
+        }
     }
 
     public void ucitavanjePodatakaUP(String unos){

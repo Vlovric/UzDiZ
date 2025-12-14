@@ -5,6 +5,7 @@ import edu.unizg.foi.uzdiz.vlovric21.pomocne.DatumFormater;
 import edu.unizg.foi.uzdiz.vlovric21.state_rezervacija.RezervacijaOtkazana;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -15,10 +16,14 @@ public class IRTAOtkazFormater extends Formater {
     public void formatiraj(Object obj){
         List<Rezervacija> rezervacije = (List<Rezervacija>) obj;
 
+        if(!kronoloskiRedoslijed()){
+            Collections.reverse(rezervacije);
+        }
+
         String zaglavljeFormat = "%-20s %-20s %-20s %-15s %-25s%n";
         String redFormat = "%-20s %-20s %-20s %-15s %-25s%n";
 
-        int sirinaTablice = 100;
+        int sirinaTablice = izracunajSirinuTablice(zaglavljeFormat);
 
         ispisiNaslovTablice("Pregled rezervacija za aranžman", sirinaTablice);
 

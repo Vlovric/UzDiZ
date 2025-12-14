@@ -15,6 +15,7 @@ import java.util.*;
 public class RepozitorijPodataka {
     private static RepozitorijPodataka instance = new RepozitorijPodataka();
     private static int idBrojacRezervacija = 1;
+    private static boolean kronoloskiRedoslijed = true;
 
     private AranzmanKolekcija aranzmanKolekcija = new AranzmanKolekcija();
 
@@ -177,8 +178,27 @@ public class RepozitorijPodataka {
         return ""; //TODO
     }
 
+    public void obrisiSveAranzmane(){
+        aranzmanKolekcija.ukloniSvuDjecu();
+        aranzmanKolekcija = new AranzmanKolekcija();
+    }
 
-    // Nekoristeni getteri i setteri
+    public void obrisiSveRezervacije(){
+        for(AranzmanKomponenta k : aranzmanKolekcija.dohvatiDjecu()){
+            if(k instanceof Aranzman a){
+                a.resetirajStanje();
+            }
+        }
+        setIdBrojacRezervacija();
+    }
+
+    public void setKronoloskiRedoslijed(boolean kronoloski){
+        kronoloskiRedoslijed = kronoloski;
+    }
+
+    public boolean getKronoloskiRedoslijed(){
+        return kronoloskiRedoslijed;
+    }
 
     public AranzmanKolekcija getAranzmanKolekcija() {
         return aranzmanKolekcija;
