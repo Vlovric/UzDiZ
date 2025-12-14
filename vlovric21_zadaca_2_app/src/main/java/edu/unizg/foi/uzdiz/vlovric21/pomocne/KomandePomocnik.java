@@ -5,8 +5,11 @@ import edu.unizg.foi.uzdiz.vlovric21.factorymethod.formater.FormaterFactory;
 import edu.unizg.foi.uzdiz.vlovric21.factorymethod.formater.FormaterTip;
 import edu.unizg.foi.uzdiz.vlovric21.composite.Aranzman;
 import edu.unizg.foi.uzdiz.vlovric21.composite.Rezervacija;
-import edu.unizg.foi.uzdiz.vlovric21.composite.RezervacijaStatus;
 import edu.unizg.foi.uzdiz.vlovric21.singleton.RepozitorijPodataka;
+import edu.unizg.foi.uzdiz.vlovric21.state_rezervacija.RezervacijaAktivna;
+import edu.unizg.foi.uzdiz.vlovric21.state_rezervacija.RezervacijaNaCekanju;
+import edu.unizg.foi.uzdiz.vlovric21.state_rezervacija.RezervacijaOtkazana;
+import edu.unizg.foi.uzdiz.vlovric21.state_rezervacija.RezervacijaPrimljena;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -51,7 +54,7 @@ public class KomandePomocnik {
             zavrsniDatum = datumFormater.formatirajDatum(matcher.group(4), matcher.group(5), matcher.group(6));
         }
 
-        List<Aranzman> aranzmani = repozitorij.dohvatiAranzmanRazdoblje(pocetniDatum, zavrsniDatum);
+        List<Aranzman> aranzmani = repozitorij.dohvatiAranzmaneRazdoblje(pocetniDatum, zavrsniDatum);
 
         ispisi(aranzmani, FormaterTip.ITAK);
     }
@@ -93,22 +96,22 @@ public class KomandePomocnik {
         }
 
         String vrste = matcher.group(2);
-        Set<RezervacijaStatus> statusi = EnumSet.noneOf(RezervacijaStatus.class);
+        List<String> statusi = new java.util.ArrayList<>();
         boolean prikaziOtkazane = false;
 
         if(vrste == null || vrste.contains("PA")){
-            statusi.add(RezervacijaStatus.PRIMLJENA);
-            statusi.add(RezervacijaStatus.AKTIVNA);
+            statusi.add(new RezervacijaPrimljena().getStatusNaziv());
+            statusi.add(new RezervacijaAktivna().getStatusNaziv());
         }
         if(vrste == null || vrste.contains("Č")){
-            statusi.add(RezervacijaStatus.NA_CEKANJU);
+            statusi.add(new RezervacijaNaCekanju().getStatusNaziv());
         }
         if(vrste == null || vrste.contains("O")){
-            statusi.add(RezervacijaStatus.OTKAZANA);
+            statusi.add(new RezervacijaOtkazana().getStatusNaziv());
             prikaziOtkazane = true;
         }
 
-        List<Rezervacija> rezervacije = repozitorij.getRezervacijeZaAranzman(oznaka, statusi);
+        List<Rezervacija> rezervacije = repozitorij.dohvatiRezervacijeZaAranzman(oznaka, statusi);
 
         FormaterTip formaterTip = prikaziOtkazane ? FormaterTip.IRTA_OTKAZ : FormaterTip.IRTA;
 
@@ -146,7 +149,7 @@ public class KomandePomocnik {
         String prezime = matcher.group(2);
         int oznaka = Integer.parseInt(matcher.group(3));
 
-        String rezultat = rezervacijaPomocnik.otkaziRezervaciju(ime, prezime, oznaka);
+        String rezultat = repozitorij.otkaziRezervaciju(ime, prezime, oznaka);
         System.out.println(rezultat);
     }
 

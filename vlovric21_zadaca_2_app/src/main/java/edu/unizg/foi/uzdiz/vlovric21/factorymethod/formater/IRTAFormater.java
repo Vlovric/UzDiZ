@@ -22,7 +22,7 @@ public class IRTAFormater extends Formater {
                     skratiTekst(r.getIme(), 20),
                     skratiTekst(r.getPrezime(), 20),
                     formatiraniDatumVrijeme,
-                    pretvoriStatusUVrstu(r.getStatus()));
+                    r.getStatus());
         }
         System.out.println();
     }

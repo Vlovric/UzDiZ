@@ -2,6 +2,8 @@ package edu.unizg.foi.uzdiz.vlovric21.composite;
 
 import edu.unizg.foi.uzdiz.vlovric21.state_rezervacija.RezervacijaStatus;
 
+import java.time.LocalDateTime;
+
 public class Rezervacija implements AranzmanKomponenta{
     private int id;
     private String ime;
@@ -10,6 +12,7 @@ public class Rezervacija implements AranzmanKomponenta{
     private String datumIVrijeme;
 
     private RezervacijaStatus status;
+    private LocalDateTime vrijemeOtkaza;
 
     public Rezervacija(){}
     public Rezervacija(String ime, String prezime, int oznakaAranzmana, String datumIVrijeme) {
@@ -68,5 +71,13 @@ public class Rezervacija implements AranzmanKomponenta{
     }
     public void setStatus(RezervacijaStatus status) {
         this.status = status;
+    }
+
+    public LocalDateTime getVrijemeOtkaza() {
+        return vrijemeOtkaza;
+    }
+
+    public void setVrijemeOtkaza(LocalDateTime vrijemeOtkaza) {
+        this.vrijemeOtkaza = vrijemeOtkaza;
     }
 }

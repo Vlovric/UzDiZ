@@ -6,8 +6,6 @@ import edu.unizg.foi.uzdiz.vlovric21.factorymethod.unos_objekta.CsvObjectCreator
 import edu.unizg.foi.uzdiz.vlovric21.factorymethod.unos_objekta.CsvRezervacijaUnositeljCreator;
 import edu.unizg.foi.uzdiz.vlovric21.parser.ArgumentParser;
 import edu.unizg.foi.uzdiz.vlovric21.pomocne.KomandePomocnik;
-import edu.unizg.foi.uzdiz.vlovric21.pomocne.RezervacijaPomocnik;
-import edu.unizg.foi.uzdiz.vlovric21.singleton.RepozitorijPodataka;
 
 import java.util.List;
 import java.util.Map;

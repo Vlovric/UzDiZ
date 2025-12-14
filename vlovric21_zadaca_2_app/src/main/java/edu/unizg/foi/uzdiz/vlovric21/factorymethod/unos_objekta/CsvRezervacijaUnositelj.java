@@ -11,7 +11,7 @@ public class CsvRezervacijaUnositelj extends CsvObjectUnositelj {
     protected boolean validirajObjekt(Map<String, String> red) {
         RepozitorijPodataka repozitorij = RepozitorijPodataka.getInstance();
         int oznakaAranzmana = Integer.parseInt(red.get("Oznaka aranžmana"));
-        if (!repozitorij.getAranzmaniMapu().containsKey(oznakaAranzmana)) {
+        if (!repozitorij.postojiAranzmanPoOznaci(oznakaAranzmana)) {
             System.out.println("Ne postoji aranžman s oznakom: " + oznakaAranzmana);
             return false;
         }

@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Set;
 
 public class RezervacijaPomocnik {
-    private static RepozitorijPodataka repozitorij = RepozitorijPodataka.getInstance();
 
     /*
 

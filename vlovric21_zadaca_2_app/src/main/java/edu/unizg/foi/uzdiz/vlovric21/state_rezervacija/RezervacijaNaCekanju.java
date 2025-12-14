@@ -11,6 +11,6 @@ public class RezervacijaNaCekanju implements RezervacijaStatus{
 
     @Override
     public String getStatusNaziv() {
-        return "NA_CEKANJU";
+        return "NA ČEKANJU";
     }
 }

@@ -77,9 +77,9 @@ public class Aranzman implements AranzmanKomponenta{
         return rezervacije;
     }
 
-    public String dodajRezervaciju(Rezervacija rezervacija){
+    public void dodajRezervaciju(Rezervacija rezervacija){
         djeca.add(rezervacija);
-        return status.dodajRezervaciju(this, rezervacija);
+        status.dodajRezervaciju(this, rezervacija);
     }
 
     public void resetirajStanje(){

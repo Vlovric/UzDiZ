@@ -13,7 +13,7 @@ public class CsvAranzmanUnositelj extends CsvObjectUnositelj {
         RepozitorijPodataka repozitorij = RepozitorijPodataka.getInstance();
         int oznaka = Integer.parseInt(red.get("Oznaka"));
 
-        if(repozitorij.getAranzmaniMapu().containsKey(oznaka)){
+        if(repozitorij.postojiAranzmanPoOznaci(oznaka)){
             System.out.println("Aranžman s oznakom " + oznaka + " već postoji.");
             return false;
         }

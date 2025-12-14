@@ -1,15 +1,14 @@
 package edu.unizg.foi.uzdiz.vlovric21.factorymethod.formater;
 
 import edu.unizg.foi.uzdiz.vlovric21.composite.Rezervacija;
-import edu.unizg.foi.uzdiz.vlovric21.composite.RezervacijaStatus;
 import edu.unizg.foi.uzdiz.vlovric21.pomocne.DatumFormater;
-import edu.unizg.foi.uzdiz.vlovric21.singleton.RepozitorijPodataka;
+import edu.unizg.foi.uzdiz.vlovric21.state_rezervacija.RezervacijaOtkazana;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 public class IRTAOtkazFormater extends Formater {
-    private RepozitorijPodataka repozitorij = RepozitorijPodataka.getInstance();
     private DatumFormater datumFormater = new DatumFormater();
 
     @Override
@@ -24,8 +23,8 @@ public class IRTAOtkazFormater extends Formater {
             String formatiraniDatumVrijeme = datumFormater.formatirajDatumVrijemeIspis(dt);
 
             String datumOtkaza = "";
-            if(r.getStatus() == RezervacijaStatus.OTKAZANA){
-                LocalDateTime dtOtkaza = repozitorij.dohvatiVrijemeOtkazivanjaRezervacije(r.getId());
+            if(Objects.equals(r.getStatus(), new RezervacijaOtkazana().getStatusNaziv())){
+                LocalDateTime dtOtkaza = r.getVrijemeOtkaza();
                 datumOtkaza = dtOtkaza != null ? datumFormater.formatirajDatumVrijemeIspis(dtOtkaza) : "";
             }
 
@@ -33,7 +32,7 @@ public class IRTAOtkazFormater extends Formater {
                     skratiTekst(r.getIme(), 20),
                     skratiTekst(r.getPrezime(), 20),
                     formatiraniDatumVrijeme,
-                    pretvoriStatusUVrstu(r.getStatus()),
+                    r.getStatus(),
                     datumOtkaza);
         }
         System.out.println();

@@ -28,7 +28,7 @@ public class IROFormater extends Formater {
                     formatiraniDatumVrijeme,
                     r.getOznakaAranzmana(),
                     skratiTekst(nazivAranzmana, 30),
-                    pretvoriStatusUVrstu(r.getStatus()));
+                    r.getStatus());
         }
         System.out.println();
     }

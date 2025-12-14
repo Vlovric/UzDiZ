@@ -18,9 +18,6 @@ public class RepozitorijPodataka {
 
     private AranzmanKolekcija aranzmanKolekcija = new AranzmanKolekcija();
 
-    private Map<String, List<Integer>> rezervacijePoImenu = new HashMap<>();
-    private Map<Integer, List<Integer>> rezervacijePoAranzmanu = new HashMap<>(); // TODO ovo mozda bolje koristit nekak unutar compositea
-
     private DatumFormater datumFormater = new DatumFormater();
 
     private RepozitorijPodataka() {}
@@ -37,6 +34,10 @@ public class RepozitorijPodataka {
         return aranzmanKolekcija.dohvatiAranzmanPoOznaci(oznaka);
     }
 
+    public boolean postojiAranzmanPoOznaci(int oznaka){
+        return aranzmanKolekcija.dohvatiAranzmanPoOznaci(oznaka) != null;
+    }
+
     public void dodajAranzman(Aranzman ar){
         aranzmanKolekcija.dodajDijete(ar);
     }
@@ -47,9 +48,6 @@ public class RepozitorijPodataka {
         rezervacija.setStatus(new RezervacijaNova());
         int oznaka = rezervacija.getOznakaAranzmana();
         Aranzman aranzman = aranzmanKolekcija.dohvatiAranzmanPoOznaci(oznaka);
-
-        rezervacijePoImenu.computeIfAbsent(rezervacija.getPunoIme(), k -> new ArrayList<>()).add(id);
-        rezervacijePoAranzmanu.computeIfAbsent(oznaka, k -> new ArrayList<>()).add(id);
 
         List<Rezervacija> tempRezervacije = new ArrayList<>();
         List<AranzmanKomponenta> rezervacije = aranzman.dohvatiDjecu();
@@ -68,11 +66,11 @@ public class RepozitorijPodataka {
 
         aranzman.resetirajStanje();
 
-        String rezultat = "";
+        String rezultat = ""; //TODO
 
         for(Rezervacija r : tempRezervacije) {
             if(r.getId() == id){
-                rezultat = aranzman.dodajRezervaciju(r);
+                aranzman.dodajRezervaciju(r);
             }else{
                 aranzman.dodajRezervaciju(r);
             }
@@ -116,6 +114,69 @@ public class RepozitorijPodataka {
         return true;
     }
 
+    public List<Aranzman> dohvatiAranzmaneRazdoblje(String pocetniDatum, String zavrsniDatum){
+        List<AranzmanKomponenta> aranzmani = aranzmanKolekcija.dohvatiDjecu();
+
+        if(pocetniDatum == null && zavrsniDatum == null){
+            List<Aranzman> rezultat = new ArrayList<>();
+            for(AranzmanKomponenta k : aranzmani){
+                if(k instanceof Aranzman a){
+                    rezultat.add(a);
+                }
+            }
+            return rezultat;
+        }
+
+        LocalDate pocDatum = datumFormater.parseDatum(pocetniDatum);
+        LocalDate zavDatum = datumFormater.parseDatum(zavrsniDatum);
+
+        List<Aranzman> rezultat = new ArrayList<>();
+        for(AranzmanKomponenta k : aranzmani){
+            if(!(k instanceof Aranzman a)){
+                continue;
+            }
+            LocalDate aPocDatum = datumFormater.parseDatum(a.getPocetniDatum());
+            LocalDate aZavDatum = datumFormater.parseDatum(a.getZavrsniDatum());
+
+            if(aPocDatum.isBefore(pocDatum) || aZavDatum.isAfter(zavDatum)){
+                continue;
+            }
+            rezultat.add(a);
+        }
+        return rezultat;
+    }
+
+    public List<Rezervacija> dohvatiRezervacijePoImenu(String punoIme){
+        List<Rezervacija> rezultat = new ArrayList<>();
+        for(AranzmanKomponenta k : aranzmanKolekcija.dohvatiDjecu()){
+            if(!(k instanceof Aranzman a)){
+                continue;
+            }
+            for(Rezervacija r : a.dohvatiSveRezervacije()){
+                if(r.getPunoIme().equals(punoIme)){
+                    rezultat.add(r);
+                }
+            }
+        }
+        return rezultat;
+    }
+
+    public List<Rezervacija> dohvatiRezervacijeZaAranzman(int oznakaAranzmana, List<String> statusi){
+        Aranzman aranzman = aranzmanKolekcija.dohvatiAranzmanPoOznaci(oznakaAranzmana);
+        List<Rezervacija> sveRezervacije = aranzman.dohvatiSveRezervacije();
+        List<Rezervacija> rezultat = new ArrayList<>();
+        for(Rezervacija r : sveRezervacije){
+            if(statusi.contains(r.getStatus())){
+                rezultat.add(r);
+            }
+        }
+        return rezultat;
+    }
+
+    public String otkaziRezervaciju(String ime, String prezime, int oznaka){
+        return ""; //TODO
+    }
+
 
     // Nekoristeni getteri i setteri
 
@@ -134,6 +195,7 @@ public class RepozitorijPodataka {
 
     // ------------------------ Staro ------------------------
 
+    /*
     private List<Rezervacija> inicijalneRezervacije = new ArrayList<>();
 
 
@@ -142,24 +204,22 @@ public class RepozitorijPodataka {
 
 
     private Map<Integer, LocalDateTime> otkazaneRezervacije = new HashMap<>();
+    */
 
 
 
 
-
-
+    /*
 
     public Map<Integer, Aranzman> getAranzmaniMapu(){
         return aranzmaniPoOznaci;
     }
 
-    /*
     public void dodajAranzman(Aranzman aranzman){
         int oznaka = aranzman.getOznaka();
         aranzmaniPoOznaci.put(oznaka, aranzman);
         rezervacijePoAranzmanu.computeIfAbsent(oznaka, k  -> new ArrayList<>());
     }
-     */
 
     public void dodajInicijalnuRezervaciju(Rezervacija rezervacija){
         inicijalneRezervacije.add(rezervacija);
@@ -273,30 +333,7 @@ public class RepozitorijPodataka {
         return rezervacije;
     }
 
-    public List<Aranzman> dohvatiAranzmanRazdoblje(String pocetniDatum, String zavrsniDatum){
-        List<Aranzman> rezultat = new ArrayList<>();
 
-        if(pocetniDatum == null && zavrsniDatum == null){
-            for(Aranzman a : aranzmaniPoOznaci.values()){
-                rezultat.add(a);
-            }
-            return rezultat;
-        }
-
-        LocalDate pocDatum = datumFormater.parseDatum(pocetniDatum);
-        LocalDate zavDatum = datumFormater.parseDatum(zavrsniDatum);
-
-        for(Aranzman a : aranzmaniPoOznaci.values()){
-            LocalDate aPocDatum = datumFormater.parseDatum(a.getPocetniDatum());
-            LocalDate aZavDatum = datumFormater.parseDatum(a.getZavrsniDatum());
-
-            if(aPocDatum.isBefore(pocDatum) || aZavDatum.isAfter(zavDatum)){
-                continue;
-            }
-            rezultat.add(a);
-        }
-        return rezultat;
-    }
 
     public void obrisiRezervacijuIzAranzmana(Rezervacija rezervacija){
         List<Integer> lista = rezervacijePoAranzmanu.get(rezervacija.getOznakaAranzmana());
@@ -305,4 +342,5 @@ public class RepozitorijPodataka {
         List<Integer> listaImena = rezervacijePoImenu.get(rezervacija.getPunoIme());
         listaImena.remove(Integer.valueOf(rezervacija.getId()));
     }
+    */
 }
