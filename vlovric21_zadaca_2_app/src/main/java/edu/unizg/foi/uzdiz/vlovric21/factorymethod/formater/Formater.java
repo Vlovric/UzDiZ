@@ -7,11 +7,14 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Dictionary;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public abstract class Formater {
     protected DatumFormater datumFormater = new DatumFormater();
     private static final DecimalFormatSymbols simboli;
     private static final DecimalFormat df;
+    private static final Pattern sirinaFormat = Pattern.compile("%([-+ 0,(]*)?(\\d+)?(\\.\\d+)?[a-zA-Z%]");
 
     static{
         simboli = new DecimalFormatSymbols(Locale.getDefault());
@@ -49,5 +52,30 @@ public abstract class Formater {
             return b.substring(0, b.length() - 3);
         }
         return df.format(broj);
+    }
+
+    protected int izracunajSirinuTablice(String format){
+        int sirina = 0;
+        Matcher matcher = sirinaFormat.matcher(format);
+        int prethodniKraj = 0;
+
+        while(matcher.find()){
+            sirina += matcher.start() - prethodniKraj;
+
+            String grupa = matcher.group();
+            if("%n".equals(grupa)){
+
+            }else if("%%".equals(grupa)){
+                sirina += 1;
+            }else{
+                String sirinaKonkretno = matcher.group(2);
+                if(sirinaKonkretno != null){
+                    sirina += Integer.parseInt(sirinaKonkretno);
+                }
+            }
+            prethodniKraj = matcher.end();
+        }
+        sirina += format.length() - prethodniKraj;
+        return sirina;
     }
 }

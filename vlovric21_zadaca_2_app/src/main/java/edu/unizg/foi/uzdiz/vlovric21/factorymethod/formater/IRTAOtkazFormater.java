@@ -14,14 +14,15 @@ public class IRTAOtkazFormater extends Formater {
     @Override
     public void formatiraj(Object obj){
         List<Rezervacija> rezervacije = (List<Rezervacija>) obj;
+
+        String zaglavljeFormat = "%-20s %-20s %-20s %-15s %-25s%n";
+        String redFormat = "%-20s %-20s %-20s %-15s %-25s%n";
+
         int sirinaTablice = 100;
 
         ispisiNaslovTablice("Pregled rezervacija za aranžman", sirinaTablice);
 
-        String zaglavljeFormat = "%-20s %-20s %-20s %-15s %-25s%n";
         ispisiZaglavlje(zaglavljeFormat, sirinaTablice, "Ime", "Prezime", "Datum i vrijeme", "Vrsta", "Datum i vrijeme otkaza");
-
-        String redFormat = "%-20s %-20s %-20s %-15s %-25s%n";
 
         for(Rezervacija r : rezervacije){
             LocalDateTime dt = datumFormater.parseDatumIVrijeme(r.getDatumIVrijeme());

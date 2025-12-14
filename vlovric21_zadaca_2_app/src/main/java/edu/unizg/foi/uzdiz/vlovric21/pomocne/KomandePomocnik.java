@@ -205,4 +205,24 @@ public class KomandePomocnik {
         String rezultat = repozitorij.dodajRezervaciju(novaRezervacija);
         System.out.println(rezultat);
     }
+
+    public void otkazAranzmanaOTA(String unos){
+        //TODO nakon implementacije otkazivanja aranzmana
+    }
+
+    public void postavljanjeIspisaIP(String unos){
+        //TODO
+    }
+
+    public void brisanjePodatakaBP(String unos){
+        //TODO nakon implementacije otkazivanja aranzmana
+    }
+
+    public void ucitavanjePodatakaUP(String unos){
+        //TODO
+    }
+
+    public void ispisStatistikeITAS(String unos){
+        //TODO
+    }
 }

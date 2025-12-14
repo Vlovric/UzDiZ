@@ -13,14 +13,15 @@ public class IROFormater extends Formater {
     public void formatiraj(Object obj) {
         List<Rezervacija> rezervacije = (List<Rezervacija>) obj;
         RepozitorijPodataka repozitorij = RepozitorijPodataka.getInstance();
+
+        String zaglavljeFormat = "%-20s %-20s %-30s %-15s%n";
+        String redFormat = "%-20s %-20d %-30s %-15s%n";
+
         int sirinaTablice = 85;
 
         ispisiNaslovTablice("Popis rezervacija za osobu", sirinaTablice);
 
-        String zaglavljeFormat = "%-20s %-20s %-30s %-15s%n";
         ispisiZaglavlje(zaglavljeFormat, sirinaTablice, "Datum i vrijeme", "Oznaka aranžmana", "Naziv aranžmana", "Vrsta");
-
-        String redFormat = "%-20s %-20d %-30s %-15s%n";
 
         for(Rezervacija r : rezervacije){
             Aranzman aranzman = repozitorij.getAranzmanPoOznaci(r.getOznakaAranzmana());

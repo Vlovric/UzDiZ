@@ -70,6 +70,21 @@ public class Main {
                 case "DRTA":
                     komandePomocnik.dodavanjeRezervacijeDRTA(unos);
                     break;
+                case "OTA":
+                    komandePomocnik.otkazAranzmanaOTA(unos);
+                    break;
+                case "IP":
+                    komandePomocnik.postavljanjeIspisaIP(unos);
+                    break;
+                case "BP":
+                    komandePomocnik.brisanjePodatakaBP(unos);
+                    break;
+                case "UP":
+                    komandePomocnik.ucitavanjePodatakaUP(unos);
+                    break;
+                case "ITAS":
+                    komandePomocnik.ispisStatistikeITAS(unos);
+                    break;
                 case "Q":
                     return;
                 default:

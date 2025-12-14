@@ -5,7 +5,6 @@ import edu.unizg.foi.uzdiz.vlovric21.composite.Aranzman;
 import java.time.LocalDate;
 
 public class ITAPFormater extends Formater {
-    private static int brojCrtica = 75;
 
     @Override
     public void formatiraj(Object obj) {
@@ -13,6 +12,8 @@ public class ITAPFormater extends Formater {
 
         LocalDate pocDatum = datumFormater.parseDatum(aranzman.getPocetniDatum());
         LocalDate zavDatum = datumFormater.parseDatum(aranzman.getZavrsniDatum());
+
+        String naziv = skratiTekst(aranzman.getNaziv(), 20);
 
         String cijena = formatirajBroj(aranzman.getCijena());
         String doplata = aranzman.getDoplataZaJednokrevetnuSobu() != null ?
@@ -27,44 +28,46 @@ public class ITAPFormater extends Formater {
         String brojVecera = aranzman.getBrojVecera() != null ?
                 formatirajBroj(aranzman.getBrojVecera()) : "";
 
+        String redFormat = "%-20s: %20s%n";
+        int brojCrtica = izracunajSirinuTablice(redFormat);
+
         ispisiNaslovTablice("Detalji aranžmana", brojCrtica);
 
-        System.out.printf("%-25s: %d%n", "Oznaka", aranzman.getOznaka());
-        System.out.println("-".repeat(brojCrtica));
-        System.out.printf("%-25s: %s%n", "Naziv", aranzman.getNaziv());
-        System.out.println("-".repeat(brojCrtica));
-        System.out.printf("%-25s: %s%n", "Program", aranzman.getProgram());
-        System.out.println("-".repeat(brojCrtica));
-        System.out.printf("%-25s: %s%n", "Početni datum", datumFormater.formatirajDatumIspis(pocDatum));
-        System.out.println("-".repeat(brojCrtica));
-        System.out.printf("%-25s: %s%n", "Završni datum", datumFormater.formatirajDatumIspis(zavDatum));
-        System.out.println("-".repeat(brojCrtica));
-        System.out.printf("%-25s: %s%n", "Vrijeme kretanja",
+        System.out.printf("%-20s: %d%n", "Oznaka", aranzman.getOznaka());
+        ispisiLiniju(brojCrtica);
+        System.out.printf("%-20s: %s%n", "Naziv", aranzman.getNaziv());
+        ispisiLiniju(brojCrtica);
+        System.out.printf("%-20s: %s%n", "Program", aranzman.getProgram());
+        ispisiLiniju(brojCrtica);
+        System.out.printf("%-20s: %s%n", "Početni datum", datumFormater.formatirajDatumIspis(pocDatum));
+        ispisiLiniju(brojCrtica);
+        System.out.printf("%-20s: %s%n", "Završni datum", datumFormater.formatirajDatumIspis(zavDatum));
+        ispisiLiniju(brojCrtica);
+        System.out.printf("%-20s: %s%n", "Vrijeme kretanja",
                 aranzman.getVrijemeKretanja() != null ? aranzman.getVrijemeKretanja() : "");
-        System.out.println("-".repeat(brojCrtica));
-        System.out.printf("%-25s: %s%n", "Vrijeme povratka",
+        ispisiLiniju(brojCrtica);
+        System.out.printf("%-20s: %s%n", "Vrijeme povratka",
                 aranzman.getVrijemePovratka() != null ? aranzman.getVrijemePovratka() : "");
-        System.out.println("-".repeat(brojCrtica));
-        System.out.printf("%-25s: %25s%n", "Cijena", cijena);
-        System.out.println("-".repeat(brojCrtica));
-        System.out.printf("%-25s: %25s%n", "Doplata za 1/1 sobu", doplata);
-        System.out.println("-".repeat(brojCrtica));
-        System.out.printf("%-25s: %25s%n", "Min broj putnika", minBrojPutnika);
-        System.out.println("-".repeat(brojCrtica));
-        System.out.printf("%-25s: %25s%n", "Maks broj putnika", maxBrojPutnika);
-        System.out.println("-".repeat(brojCrtica));
-        System.out.printf("%-25s: %25s%n", "Broj noćenja", brojNocenja);
-        System.out.println("-".repeat(brojCrtica));
-        System.out.printf("%-25s: %s%n", "Prijevoz",
+        ispisiLiniju(brojCrtica);
+        System.out.printf("%-20s: %20s%n", "Cijena", cijena);
+        ispisiLiniju(brojCrtica);
+        System.out.printf("%-20s: %20s%n", "Doplata za 1/1 sobu", doplata);
+        ispisiLiniju(brojCrtica);
+        System.out.printf("%-20s: %20s%n", "Min broj putnika", minBrojPutnika);
+        ispisiLiniju(brojCrtica);
+        System.out.printf("%-20s: %20s%n", "Maks broj putnika", maxBrojPutnika);
+        ispisiLiniju(brojCrtica);
+        System.out.printf("%-20s: %20s%n", "Broj noćenja", brojNocenja);
+        ispisiLiniju(brojCrtica);
+        System.out.printf("%-20s: %s%n", "Prijevoz",
                 aranzman.getPrijevoz() != null ? aranzman.getPrijevoz() : "");
-        System.out.println("-".repeat(brojCrtica));
-        System.out.printf("%-25s: %25s%n", "Broj doručka", brojDorucka);
-        System.out.println("-".repeat(brojCrtica));
-        System.out.printf("%-25s: %25s%n", "Broj ručkova", brojRuckova);
-        System.out.println("-".repeat(brojCrtica));
-        System.out.printf("%-25s: %25s%n", "Broj večera", brojVecera);
-        System.out.println("-".repeat(brojCrtica));
-        System.out.printf("%-25s: %s%n", "Status", aranzman.getStatus());
-        System.out.println();
+        ispisiLiniju(brojCrtica);
+        System.out.printf("%-20s: %20s%n", "Broj doručka", brojDorucka);
+        ispisiLiniju(brojCrtica);
+        System.out.printf("%-20s: %20s%n", "Broj ručkova", brojRuckova);
+        ispisiLiniju(brojCrtica);
+        System.out.printf("%-20s: %20s%n", "Broj večera", brojVecera);
+        ispisiLiniju(brojCrtica);
+        System.out.printf("%-20s: %s%n", "Status", aranzman.getStatus());
     }
 }

@@ -10,15 +10,16 @@ public class ITAKFormater extends Formater {
     @Override
     public void formatiraj(Object obj){
         List<Aranzman> aranzmani = (List<Aranzman>) obj;
-        int sirinaTablice = 170;
+
+        String zaglavljeFormat = "%-8s %-20s %-15s %-15s %-15s %-15s %-9s %-18s %-20s %-15s%n";
+        String redFormat =       "%-8d %-20s %-15s %-15s %-15s %-15s %9s %18s %20s %-15s";
+
+        int sirinaTablice = izracunajSirinuTablice(zaglavljeFormat);
 
         ispisiNaslovTablice("Popis aranžmana", sirinaTablice);
 
-        String zaglavljeFormat = "%-8s %-30s %-18s %-18s %-18s %-18s %-10s %-18s %-18s %-15s%n";
         ispisiZaglavlje(zaglavljeFormat, sirinaTablice, "Oznaka", "Naziv", "Početni datum", "Završni datum", "Vrijeme kretanja",
                 "Vrijeme povratka", "Cijena", "Min broj putnika", "Maks broj putnika", "Status");
-
-        String redFormat = "%-8d %-30s %-18s %-18s %-18s %-18s %10s %18s %18s %-15s";
 
         for(Aranzman a : aranzmani) {
             LocalDate pocDatum = datumFormater.parseDatum(a.getPocetniDatum());
@@ -30,7 +31,7 @@ public class ITAKFormater extends Formater {
 
             System.out.printf(redFormat + "%n",
                     a.getOznaka(),
-                    skratiTekst(a.getNaziv(), 30),
+                    skratiTekst(a.getNaziv(), 20),
                     datumFormater.formatirajDatumIspis(pocDatum),
                     datumFormater.formatirajDatumIspis(zavDatum),
                     a.getVrijemeKretanja() != null ? a.getVrijemeKretanja() : "",

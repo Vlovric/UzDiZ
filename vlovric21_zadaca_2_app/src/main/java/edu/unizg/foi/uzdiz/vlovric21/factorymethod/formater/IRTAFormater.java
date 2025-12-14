@@ -10,14 +10,15 @@ public class IRTAFormater extends Formater {
     @Override
     public void formatiraj(Object obj) {
         List<Rezervacija> rezervacije = (List<Rezervacija>) obj;
+
+        String zaglavljeFormat = "%-20s %-20s %-20s %-15s%n";
+        String redFormat = "%-20s %-20s %-20s %-15s%n";
+
         int sirinaTablice = 85;
 
         ispisiNaslovTablice("Pregled rezervacija za aranžman", sirinaTablice);
 
-        String zaglavljeFormat = "%-20s %-20s %-20s %-15s%n";
         ispisiZaglavlje(zaglavljeFormat, sirinaTablice, "Ime", "Prezime", "Datum i vrijeme", "Vrsta");
-
-        String redFormat = "%-20s %-20s %-20s %-15s%n";
 
         for(Rezervacija r : rezervacije) {
             LocalDateTime dt = datumFormater.parseDatumIVrijeme(r.getDatumIVrijeme());
