@@ -1,5 +1,6 @@
 package edu.unizg.foi.uzdiz.vlovric21.composite;
 
+import edu.unizg.foi.uzdiz.vlovric21.singleton.RepozitorijPodataka;
 import edu.unizg.foi.uzdiz.vlovric21.state_rezervacija.RezervacijaStatus;
 
 import java.time.LocalDateTime;
@@ -23,7 +24,9 @@ public class Rezervacija implements AranzmanKomponenta{
     }
 
     public void otkazi(){
-        this.status.otkazi(this);
+        RepozitorijPodataka repozitorij = RepozitorijPodataka.getInstance();
+        Aranzman aranzman = repozitorij.getAranzmanPoOznaci(this.oznakaAranzmana);
+        this.status.otkazi(aranzman, this);
     }
     
     public int getId() {
