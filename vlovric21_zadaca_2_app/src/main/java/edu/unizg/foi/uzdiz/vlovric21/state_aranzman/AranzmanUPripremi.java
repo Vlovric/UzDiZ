@@ -80,6 +80,6 @@ public class AranzmanUPripremi implements AranzmanStatus{
 
     @Override
     public String getStatusNaziv() {
-        return "U_PRIPREMI";
+        return "U PRIPREMI";
     }
 }

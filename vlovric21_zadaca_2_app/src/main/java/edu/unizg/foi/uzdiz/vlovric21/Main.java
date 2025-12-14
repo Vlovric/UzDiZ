@@ -42,10 +42,14 @@ public class Main {
         KomandePomocnik komandePomocnik = new KomandePomocnik();
 
         while(true){
+            System.out.println();
+            System.out.print("> ");
             String unos = scanner.nextLine();
 
             String[] dijeloviUnosa = unos.split(" ");
             String komanda = dijeloviUnosa[0];
+
+            System.out.println("Pozvano: " + unos);
 
             switch(komanda){
                 case "ITAK":

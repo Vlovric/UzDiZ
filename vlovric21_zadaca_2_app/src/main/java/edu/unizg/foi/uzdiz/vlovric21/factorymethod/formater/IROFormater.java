@@ -13,9 +13,14 @@ public class IROFormater extends Formater {
     public void formatiraj(Object obj) {
         List<Rezervacija> rezervacije = (List<Rezervacija>) obj;
         RepozitorijPodataka repozitorij = RepozitorijPodataka.getInstance();
-        System.out.printf("%-20s %-20s %-30s %-15s%n",
-                "Datum i vrijeme", "Oznaka aranžmana", "Naziv aranžmana", "Vrsta");
-        System.out.println("-".repeat(85));
+        int sirinaTablice = 85;
+
+        ispisiNaslovTablice("Popis rezervacija za osobu", sirinaTablice);
+
+        String zaglavljeFormat = "%-20s %-20s %-30s %-15s%n";
+        ispisiZaglavlje(zaglavljeFormat, sirinaTablice, "Datum i vrijeme", "Oznaka aranžmana", "Naziv aranžmana", "Vrsta");
+
+        String redFormat = "%-20s %-20d %-30s %-15s%n";
 
         for(Rezervacija r : rezervacije){
             Aranzman aranzman = repozitorij.getAranzmanPoOznaci(r.getOznakaAranzmana());
@@ -24,12 +29,11 @@ public class IROFormater extends Formater {
             LocalDateTime dt = datumFormater.parseDatumIVrijeme(r.getDatumIVrijeme());
             String formatiraniDatumVrijeme = datumFormater.formatirajDatumVrijemeIspis(dt);
 
-            System.out.printf("%-20s %-20d %-30s %-15s%n",
+            System.out.printf(redFormat,
                     formatiraniDatumVrijeme,
                     r.getOznakaAranzmana(),
                     skratiTekst(nazivAranzmana, 30),
                     r.getStatus());
         }
-        System.out.println();
     }
 }

@@ -14,9 +14,14 @@ public class IRTAOtkazFormater extends Formater {
     @Override
     public void formatiraj(Object obj){
         List<Rezervacija> rezervacije = (List<Rezervacija>) obj;
-        System.out.printf("%-20s %-20s %-20s %-15s %-25s%n",
-                "Ime", "Prezime", "Datum i vrijeme", "Vrsta", "Datum i vrijeme otkaza");
-        System.out.println("-".repeat(100));
+        int sirinaTablice = 100;
+
+        ispisiNaslovTablice("Pregled rezervacija za aranžman", sirinaTablice);
+
+        String zaglavljeFormat = "%-20s %-20s %-20s %-15s %-25s%n";
+        ispisiZaglavlje(zaglavljeFormat, sirinaTablice, "Ime", "Prezime", "Datum i vrijeme", "Vrsta", "Datum i vrijeme otkaza");
+
+        String redFormat = "%-20s %-20s %-20s %-15s %-25s%n";
 
         for(Rezervacija r : rezervacije){
             LocalDateTime dt = datumFormater.parseDatumIVrijeme(r.getDatumIVrijeme());
@@ -28,13 +33,12 @@ public class IRTAOtkazFormater extends Formater {
                 datumOtkaza = dtOtkaza != null ? datumFormater.formatirajDatumVrijemeIspis(dtOtkaza) : "";
             }
 
-            System.out.printf("%-20s %-20s %-20s %-15s %-25s%n",
+            System.out.printf(redFormat,
                     skratiTekst(r.getIme(), 20),
                     skratiTekst(r.getPrezime(), 20),
                     formatiraniDatumVrijeme,
                     r.getStatus(),
                     datumOtkaza);
         }
-        System.out.println();
     }
 }
