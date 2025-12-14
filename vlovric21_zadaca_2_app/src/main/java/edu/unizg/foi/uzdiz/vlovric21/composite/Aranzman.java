@@ -78,7 +78,6 @@ public class Aranzman implements AranzmanKomponenta{
     }
 
     public void dodajRezervaciju(Rezervacija rezervacija){
-        djeca.add(rezervacija);
         status.dodajRezervaciju(this, rezervacija);
     }
 

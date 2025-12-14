@@ -44,8 +44,6 @@ public class RepozitorijPodataka {
     }
 
     public String dodajRezervaciju(Rezervacija rezervacija){
-        int id = getIdRezervacije();
-        rezervacija.setId(id);
         rezervacija.setStatus(new RezervacijaNova());
         int oznaka = rezervacija.getOznakaAranzmana();
         Aranzman aranzman = aranzmanKolekcija.dohvatiAranzmanPoOznaci(oznaka);
@@ -70,11 +68,7 @@ public class RepozitorijPodataka {
         String rezultat = ""; //TODO
 
         for(Rezervacija r : tempRezervacije) {
-            if(r.getId() == id){
-                aranzman.dodajRezervaciju(r);
-            }else{
-                aranzman.dodajRezervaciju(r);
-            }
+            aranzman.dodajRezervaciju(r);
         }
 
         return rezultat;
