@@ -8,16 +8,13 @@ import edu.unizg.foi.uzdiz.vlovric21.composite.Rezervacija;
 import edu.unizg.foi.uzdiz.vlovric21.singleton.RepozitorijPodataka;
 import edu.unizg.foi.uzdiz.vlovric21.state_rezervacija.*;
 
-import java.util.EnumSet;
 import java.util.List;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class KomandePomocnik {
     private static String porukaPogreske = "Neispravani ili nedostajući parametri za komandu.";
     private static RepozitorijPodataka repozitorij = RepozitorijPodataka.getInstance();
-    private static RezervacijaPomocnik rezervacijaPomocnik = new RezervacijaPomocnik();
     private static DatumFormater datumFormater = new DatumFormater();
 
     private Matcher provjeriRegex(Pattern regex, String unos){
@@ -249,7 +246,24 @@ public class KomandePomocnik {
     }
 
     public void ucitavanjePodatakaUP(String unos){
-        //TODO
+        String uzorak = "^UP\\s+([AR])\\s+(.+)$";
+
+        Pattern regex = Pattern.compile(uzorak);
+        Matcher matcher = provjeriRegex(regex, unos);
+        if(matcher == null) {
+            return;
+        }
+
+        String opcija = matcher.group(1);
+        String datoteka = matcher.group(2);
+
+        if(opcija.equals("A")){
+            repozitorij.ucitajAranzmaneIzDatoteke(datoteka);
+            System.out.println("Učitavanje aranžmana iz datoteke: " + datoteka);
+        }else{
+            repozitorij.ucitajRezervacijeIzDatoteke(datoteka);
+            System.out.println("Učitavanje rezervacija iz datoteke: " + datoteka);
+        }
     }
 
     public void ispisStatistikeITAS(String unos){

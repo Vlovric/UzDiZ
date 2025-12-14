@@ -4,6 +4,10 @@ import edu.unizg.foi.uzdiz.vlovric21.composite.Aranzman;
 import edu.unizg.foi.uzdiz.vlovric21.composite.AranzmanKolekcija;
 import edu.unizg.foi.uzdiz.vlovric21.composite.AranzmanKomponenta;
 import edu.unizg.foi.uzdiz.vlovric21.composite.Rezervacija;
+import edu.unizg.foi.uzdiz.vlovric21.facade.CsvParsiranjeFacade;
+import edu.unizg.foi.uzdiz.vlovric21.factorymethod.unos_objekta.CsvAranzmanUnositeljCreator;
+import edu.unizg.foi.uzdiz.vlovric21.factorymethod.unos_objekta.CsvObjectCreator;
+import edu.unizg.foi.uzdiz.vlovric21.factorymethod.unos_objekta.CsvRezervacijaUnositeljCreator;
 import edu.unizg.foi.uzdiz.vlovric21.pomocne.DatumFormater;
 import edu.unizg.foi.uzdiz.vlovric21.state_rezervacija.RezervacijaAktivna;
 import edu.unizg.foi.uzdiz.vlovric21.state_rezervacija.RezervacijaNova;
@@ -184,6 +188,19 @@ public class RepozitorijPodataka {
             }
         }
         setIdBrojacRezervacija();
+    }
+
+    public void ucitajAranzmaneIzDatoteke(String datoteka){
+        List<Map<String, String>> aranzmanRedovi = CsvParsiranjeFacade.ucitajAranzmane(datoteka);
+        CsvObjectCreator aranzmanCreator = new CsvAranzmanUnositeljCreator();
+        aranzmanCreator.validirajUnesiObjekte(aranzmanRedovi);
+    }
+
+    public void ucitajRezervacijeIzDatoteke(String datoteka){
+        List<Map<String, String>> rezervacijaRedovi = CsvParsiranjeFacade.ucitajRezervacije(datoteka);
+
+        CsvObjectCreator rezervacijaCreator = new CsvRezervacijaUnositeljCreator();
+        rezervacijaCreator.validirajUnesiObjekte(rezervacijaRedovi);
     }
 
     public void setKronoloskiRedoslijed(boolean kronoloski){

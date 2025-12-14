@@ -6,6 +6,7 @@ import edu.unizg.foi.uzdiz.vlovric21.factorymethod.unos_objekta.CsvObjectCreator
 import edu.unizg.foi.uzdiz.vlovric21.factorymethod.unos_objekta.CsvRezervacijaUnositeljCreator;
 import edu.unizg.foi.uzdiz.vlovric21.parser.ArgumentParser;
 import edu.unizg.foi.uzdiz.vlovric21.pomocne.KomandePomocnik;
+import edu.unizg.foi.uzdiz.vlovric21.singleton.RepozitorijPodataka;
 
 import java.util.List;
 import java.util.Map;
@@ -26,14 +27,8 @@ public class Main {
 
     static void ucitajPodatke(String aranzmaniDatoteka, String rezervacijeDatoteka){
 
-        List<Map<String, String>> aranzmanRedovi = CsvParsiranjeFacade.ucitajAranzmane(aranzmaniDatoteka);
-        List<Map<String, String>> rezervacijaRedovi = CsvParsiranjeFacade.ucitajRezervacije(rezervacijeDatoteka);
-
-        CsvObjectCreator aranzmanCreator = new CsvAranzmanUnositeljCreator();
-        aranzmanCreator.validirajUnesiObjekte(aranzmanRedovi);
-        
-        CsvObjectCreator rezervacijaCreator = new CsvRezervacijaUnositeljCreator();
-        rezervacijaCreator.validirajUnesiObjekte(rezervacijaRedovi);
+        RepozitorijPodataka.getInstance().ucitajAranzmaneIzDatoteke(aranzmaniDatoteka);
+        RepozitorijPodataka.getInstance().ucitajRezervacijeIzDatoteke(rezervacijeDatoteka);
     }
 
     static void interaktivniNacinRada(){
