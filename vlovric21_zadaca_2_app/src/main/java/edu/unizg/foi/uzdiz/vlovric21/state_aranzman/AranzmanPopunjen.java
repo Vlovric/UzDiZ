@@ -6,20 +6,21 @@ import edu.unizg.foi.uzdiz.vlovric21.state_rezervacija.RezervacijaNaCekanju;
 
 public class AranzmanPopunjen implements AranzmanStatus{
     @Override
-    public String dodajRezervaciju(Aranzman aranzman, Rezervacija rezervacija) {
+    public void dodajRezervaciju(Aranzman aranzman, Rezervacija rezervacija) {
         rezervacija.setStatus(new RezervacijaNaCekanju());
         aranzman.dodajRezervaciju(rezervacija);
-        return "Rezervacija dodana NA ČEKANJE jer je aranžman POPUNJEN.";
+        //return "Rezervacija dodana NA ČEKANJE jer je aranžman POPUNJEN.";
+        return;
     }
 
     @Override
-    public String otkaziRezervaciju(Aranzman aranzman, Rezervacija Rezervacija) {
-        return "";
+    public void otkaziRezervaciju(Aranzman aranzman, Rezervacija Rezervacija) {
+        return;
     }
 
     @Override
-    public String otkaziAranzman(Aranzman aranzman) {
-        return "";
+    public void otkaziAranzman(Aranzman aranzman) {
+        return;
     }
 
     @Override

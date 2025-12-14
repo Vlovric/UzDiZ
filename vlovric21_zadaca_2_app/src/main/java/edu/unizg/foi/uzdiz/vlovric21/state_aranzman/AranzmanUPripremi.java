@@ -13,14 +13,14 @@ public class AranzmanUPripremi implements AranzmanStatus{
 
 
     @Override
-    public String dodajRezervaciju(Aranzman aranzman, Rezervacija rezervacija) {
+    public void dodajRezervaciju(Aranzman aranzman, Rezervacija rezervacija) {
         int min = aranzman.getMinBrojPutnika();
         int brojPrimljenihRezervacija = aranzman.dohvatiRezervacijeSaStatusom(new RezervacijaPrimljena()).size();
 
         if(brojPrimljenihRezervacija < min){
             rezervacija.setStatus(new RezervacijaPrimljena());
             aranzman.dodajDijete(rezervacija);
-            return "Rezervacija uspješno dodana";
+            return;
         }
 
         boolean postojiPrimljenaKorisnika = aranzman.postojiRezervacijaKorisnikaSaStatusom(rezervacija.getPunoIme(), new RezervacijaPrimljena());
@@ -30,7 +30,8 @@ public class AranzmanUPripremi implements AranzmanStatus{
         if(postojiPrimljenaKorisnika || postojiAktivnaPreklapanje){
             rezervacija.setStatus(new RezervacijaOdgodena());
             aranzman.dodajDijete(rezervacija);
-            return "Rezervacija dodana sa statusom: " + rezervacija.getStatus();
+            //return "Rezervacija dodana sa statusom: " + rezervacija.getStatus();
+            return;
         }
 
         List<Rezervacija> rezervacijePostojece = aranzman.dohvatiRezervacijeSaStatusom(new RezervacijaPrimljena());
@@ -42,20 +43,18 @@ public class AranzmanUPripremi implements AranzmanStatus{
             boolean postojiPrimljenaKorisnikaPostojece = aranzman.postojiRezervacijaKorisnikaSaStatusom(r.getPunoIme(), new RezervacijaPrimljena());
             if(postojiPrimljenaKorisnikaPostojece){
                 r.setStatus(new RezervacijaOdgodena());
-                System.out.println("Rezervacija korisnika " + r.getPunoIme() + "mijenja se u status ODGOĐENA jer već ima primljenu rezervaciju" +
-                        "koja treba postati aktivna.");
+                //System.out.println("Rezervacija korisnika " + r.getPunoIme() + "mijenja se u status ODGOĐENA jer već ima primljenu rezervaciju koja treba postati aktivna.");
             }
             boolean postojiAktivnaPreklapanjePostojece = repozitorij.postojiAktivnaRezervacijaPreklapanjeKorisnik(aranzman, r);
             if(postojiAktivnaPreklapanjePostojece){
                 r.setStatus(new RezervacijaOdgodena());
-                System.out.println("Rezervacija korisnika " + r.getPunoIme() + "mijenja se u status ODGOĐENA jer već ima aktivnu rezervaciju" +
-                        "koja se preklapa.");
+                //System.out.println("Rezervacija korisnika " + r.getPunoIme() + "mijenja se u status ODGOĐENA jer već ima aktivnu rezervaciju koja se preklapa.");
             }
         }
 
         brojPrimljenihRezervacija = aranzman.dohvatiRezervacijeSaStatusom(new RezervacijaPrimljena()).size();
         if(!(brojPrimljenihRezervacija == min)){
-            return "Rezervacija uspješno dodana";
+            return;
         }
 
         rezervacijePostojece = aranzman.dohvatiRezervacijeSaStatusom(new RezervacijaPrimljena());
@@ -63,7 +62,7 @@ public class AranzmanUPripremi implements AranzmanStatus{
             r.setStatus(new RezervacijaAktivna());
         }
         aranzman.postaviAktivan();
-        return "Rezervacija uspješno dodana.";
+        return;
 
 
 
@@ -72,13 +71,11 @@ public class AranzmanUPripremi implements AranzmanStatus{
     }
 
     @Override
-    public String otkaziRezervaciju(Aranzman aranzman, Rezervacija Rezervacija) {
-        return "";
+    public void otkaziRezervaciju(Aranzman aranzman, Rezervacija Rezervacija) {
     }
 
     @Override
-    public String otkaziAranzman(Aranzman aranzman) {
-        return "";
+    public void otkaziAranzman(Aranzman aranzman) {
     }
 
     @Override
