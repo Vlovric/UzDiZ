@@ -6,10 +6,7 @@ import edu.unizg.foi.uzdiz.vlovric21.factorymethod.formater.FormaterTip;
 import edu.unizg.foi.uzdiz.vlovric21.composite.Aranzman;
 import edu.unizg.foi.uzdiz.vlovric21.composite.Rezervacija;
 import edu.unizg.foi.uzdiz.vlovric21.singleton.RepozitorijPodataka;
-import edu.unizg.foi.uzdiz.vlovric21.state_rezervacija.RezervacijaAktivna;
-import edu.unizg.foi.uzdiz.vlovric21.state_rezervacija.RezervacijaNaCekanju;
-import edu.unizg.foi.uzdiz.vlovric21.state_rezervacija.RezervacijaOtkazana;
-import edu.unizg.foi.uzdiz.vlovric21.state_rezervacija.RezervacijaPrimljena;
+import edu.unizg.foi.uzdiz.vlovric21.state_rezervacija.*;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -79,7 +76,7 @@ public class KomandePomocnik {
     }
 
     public void pregledRezervacijaAranzmanIRTA(String unos){
-        String uzorak = "^IRTA\\s+(\\d+)(?:\\s+(PA|Č|O|PAČ|PAO|ČO|PAČO))?$";
+        String uzorak = "^IRTA\\s+(\\d+)(?:\\s+([A-ZČĆĐŠŽa-zčćđšž]+))?$";
 
         Pattern regex = Pattern.compile(uzorak);
         Matcher matcher = provjeriRegex(regex, unos);
@@ -99,16 +96,40 @@ public class KomandePomocnik {
         List<String> statusi = new java.util.ArrayList<>();
         boolean prikaziOtkazane = false;
 
-        if(vrste == null || vrste.contains("PA")){
+        if(vrste == null){
             statusi.add(new RezervacijaPrimljena().getStatusNaziv());
             statusi.add(new RezervacijaAktivna().getStatusNaziv());
-        }
-        if(vrste == null || vrste.contains("Č")){
             statusi.add(new RezervacijaNaCekanju().getStatusNaziv());
-        }
-        if(vrste == null || vrste.contains("O")){
             statusi.add(new RezervacijaOtkazana().getStatusNaziv());
+            statusi.add(new RezervacijaOdgodena().getStatusNaziv());
             prikaziOtkazane = true;
+        }else{
+            String temp = vrste;
+
+            while(!temp.isEmpty()){
+                if(temp.startsWith("PA")){
+                    statusi.add(new RezervacijaPrimljena().getStatusNaziv());
+                    statusi.add(new RezervacijaAktivna().getStatusNaziv());
+                    temp = temp.substring(2);
+
+                }else if(temp.startsWith("Č")){
+                    statusi.add(new RezervacijaNaCekanju().getStatusNaziv());
+                    temp = temp.substring(1);
+
+                } else if(temp.startsWith("OD")){
+                    statusi.add(new RezervacijaOdgodena().getStatusNaziv());
+                    temp = temp.substring(2);
+
+                }else if(temp.startsWith("O")){
+                    statusi.add(new RezervacijaOtkazana().getStatusNaziv());
+                    prikaziOtkazane = true;
+                    temp = temp.substring(1);
+
+                }else{
+                    System.out.println("Neispravni parametri za komandu.");
+                    return;
+                }
+            }
         }
 
         List<Rezervacija> rezervacije = repozitorij.dohvatiRezervacijeZaAranzman(oznaka, statusi);

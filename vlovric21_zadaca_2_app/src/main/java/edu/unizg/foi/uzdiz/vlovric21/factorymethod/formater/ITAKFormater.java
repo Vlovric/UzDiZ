@@ -14,11 +14,11 @@ public class ITAKFormater extends Formater {
 
         ispisiNaslovTablice("Popis aranžmana", sirinaTablice);
 
-        String zaglavljeFormat = "%-8s %-30s %-18s %-18s %-18s %-18s %-10s %-18s %-18s%n";
+        String zaglavljeFormat = "%-8s %-30s %-18s %-18s %-18s %-18s %-10s %-18s %-18s %-15s%n";
         ispisiZaglavlje(zaglavljeFormat, sirinaTablice, "Oznaka", "Naziv", "Početni datum", "Završni datum", "Vrijeme kretanja",
-                "Vrijeme povratka", "Cijena", "Min broj putnika", "Maks broj putnika");
+                "Vrijeme povratka", "Cijena", "Min broj putnika", "Maks broj putnika", "Status");
 
-        String redFormat = "%-8d %-30s %-18s %-18s %-18s %-18s %10s %18s %18s";
+        String redFormat = "%-8d %-30s %-18s %-18s %-18s %-18s %10s %18s %18s %-15s";
 
         for(Aranzman a : aranzmani) {
             LocalDate pocDatum = datumFormater.parseDatum(a.getPocetniDatum());
@@ -37,7 +37,8 @@ public class ITAKFormater extends Formater {
                     a.getVrijemePovratka() != null ? a.getVrijemePovratka() : "",
                     cijena,
                     minBrojPutnika,
-                    maxBrojPutnika);
+                    maxBrojPutnika,
+                    a.getStatus());
         }
     }
 }

@@ -63,6 +63,8 @@ public class ITAPFormater extends Formater {
         System.out.printf("%-25s: %25s%n", "Broj ručkova", brojRuckova);
         System.out.println("-".repeat(brojCrtica));
         System.out.printf("%-25s: %25s%n", "Broj večera", brojVecera);
+        System.out.println("-".repeat(brojCrtica));
+        System.out.printf("%-25s: %s%n", "Status", aranzman.getStatus());
         System.out.println();
     }
 }
