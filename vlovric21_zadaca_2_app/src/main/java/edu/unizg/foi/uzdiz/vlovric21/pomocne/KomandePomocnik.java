@@ -227,8 +227,6 @@ public class KomandePomocnik {
             repozitorij.setKronoloskiRedoslijed(false);
             System.out.println("Postavljen je ispis u obrnuto kronološkom redoslijedu.");
         }
-
-
     }
 
     public void brisanjePodatakaBP(String unos){
@@ -255,6 +253,24 @@ public class KomandePomocnik {
     }
 
     public void ispisStatistikeITAS(String unos){
-        //TODO
+        String uzorak = "^ITAS(?:\\s+(0[1-9]|[12]\\d|3[01])\\.(0[1-9]|1[0-2])\\.(\\d{4})\\.\\s+(0[1-9]|[12]\\d|3[01])\\.(0[1-9]|1[0-2])\\.(\\d{4})\\.)?$";
+
+        Pattern regex = Pattern.compile(uzorak);
+        Matcher matcher = provjeriRegex(regex, unos);
+        if(matcher == null){
+            return;
+        }
+
+        String pocetniDatum = null;
+        String zavrsniDatum = null;
+
+        if(matcher.group(1) != null){
+            pocetniDatum = datumFormater.formatirajDatum(matcher.group(1), matcher.group(2), matcher.group(3));
+            zavrsniDatum = datumFormater.formatirajDatum(matcher.group(4), matcher.group(5), matcher.group(6));
+        }
+
+        List<Aranzman> aranzmani = repozitorij.dohvatiAranzmaneRazdoblje(pocetniDatum, zavrsniDatum);
+
+        ispisi(aranzmani, FormaterTip.ITAS);
     }
 }

@@ -5,5 +5,6 @@ public enum FormaterTip {
     ITAP,
     IRTA,
     IRTA_OTKAZ,
-    IRO
+    IRO,
+    ITAS
 }

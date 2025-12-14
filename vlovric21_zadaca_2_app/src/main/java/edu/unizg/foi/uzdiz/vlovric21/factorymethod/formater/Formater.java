@@ -42,7 +42,7 @@ public abstract class Formater {
     }
 
     protected void ispisiZaglavlje(String format, int sirina, Object... stupci){
-        System.out.printf(format + "%n", stupci);
+        System.out.printf(format, stupci);
         ispisiLiniju(sirina);
     }
 

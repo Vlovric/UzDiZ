@@ -12,6 +12,8 @@ public class FormaterFactory {
                 return new IRTAOtkazFormaterCreator();
             case IRTA:
                 return new IRTAFormaterCreator();
+            case ITAS:
+                return new ITASFormaterCreator();
             default:
                 return new IROFormaterCreator();
 
