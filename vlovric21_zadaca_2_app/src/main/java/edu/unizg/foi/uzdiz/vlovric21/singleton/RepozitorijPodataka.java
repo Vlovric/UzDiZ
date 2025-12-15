@@ -90,7 +90,7 @@ public class RepozitorijPodataka {
         }
     }
 
-    public boolean postojiAktivnaRezervacijaPreklapanjeKorisnik(Aranzman aranzman, Rezervacija rezervacija){
+    public boolean postojiKronoloskiAktivnaRezervacijaPreklapanjeKorisnik(Aranzman aranzman, Rezervacija rezervacija){
         String punoIme = rezervacija.getPunoIme();
 
         for(AranzmanKomponenta k : aranzmanKolekcija.dohvatiDjecu()){
@@ -104,13 +104,55 @@ public class RepozitorijPodataka {
                 if(!r.getPunoIme().equals(punoIme)){
                     continue;
                 }
-                if(r.getStatus().equals(new RezervacijaAktivna().getStatusNaziv())){
+                if(r.getStatus().equals(new RezervacijaAktivna().getStatusNaziv()) && rezervacijaPrijeDruge(r, rezervacija)){
                     return true;
                 }
             }
         }
         return false;
     }
+
+    public boolean rezervacijaPrijeDruge(Rezervacija r1, Rezervacija r2){
+        LocalDateTime dt1 = datumFormater.parseDatumIVrijeme(r1.getDatumIVrijeme());
+        LocalDateTime dt2 = datumFormater.parseDatumIVrijeme(r2.getDatumIVrijeme());
+        return dt1.isBefore(dt2);
+    }
+
+    public boolean postojiNeKronoloskiAktivnaRezervacijaPreklapanjeKorisnik(Aranzman aranzman, Rezervacija rezervacija){
+        String punoIme = rezervacija.getPunoIme();
+
+        for(AranzmanKomponenta k : aranzmanKolekcija.dohvatiDjecu()){
+            if(!(k instanceof Aranzman a) || a.getOznaka() == aranzman.getOznaka()){
+                continue;
+            }
+            if(!provjeriPreklapanjeDatuma(aranzman, a)){
+                continue;
+            }
+            for(Rezervacija r : a.dohvatiSveRezervacije()){
+                if(!r.getPunoIme().equals(punoIme)){
+                    continue;
+                }
+                if(r.getStatus().equals(new RezervacijaAktivna().getStatusNaziv()) && rezervacijaPrijeDruge(rezervacija, r)){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public void resetirajRezervacije(Rezervacija rezervacija){
+        setIdBrojacRezervacija();
+        List<Rezervacija> sveRezervacije = new ArrayList<>();
+        for(AranzmanKomponenta a : aranzmanKolekcija.dohvatiDjecu()){
+            if(a instanceof Aranzman ar){
+                sveRezervacije.addAll(ar.dohvatiSveRezervacije());
+            }
+        }
+        //resetira stanje cijele apk
+        //sortira rezervacije kronoloski, sve ih postavi na nove (osim otkazane) i da im ID (uzme ID od nase)
+        //inserta ih u njihov aranzman kronoloski i samo ispisuje za nasu novo dodanu status
+    }
+
 
     private boolean provjeriPreklapanjeDatuma(Aranzman a1, Aranzman a2){
         LocalDate a1Pocetak = datumFormater.parseDatum(a1.getPocetniDatum());

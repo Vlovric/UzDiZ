@@ -31,7 +31,7 @@ public class AranzmanUPripremi implements AranzmanStatus{
 
         boolean postojiPrimljenaKorisnika = aranzman.postojiRezervacijaKorisnikaSaStatusom(rezervacija.getPunoIme(), new RezervacijaPrimljena());
         RepozitorijPodataka repozitorij = RepozitorijPodataka.getInstance();
-        boolean postojiAktivnaPreklapanje = repozitorij.postojiAktivnaRezervacijaPreklapanjeKorisnik(aranzman, rezervacija);
+        boolean postojiAktivnaPreklapanje = repozitorij.postojiKronoloskiAktivnaRezervacijaPreklapanjeKorisnik(aranzman, rezervacija);
 
         if(postojiPrimljenaKorisnika || postojiAktivnaPreklapanje){
             rezervacija.setStatus(new RezervacijaOdgodena());
@@ -50,7 +50,7 @@ public class AranzmanUPripremi implements AranzmanStatus{
                 r.setStatus(new RezervacijaOdgodena());
                 //System.out.println("Rezervacija korisnika " + r.getPunoIme() + "mijenja se u status ODGOĐENA jer već ima primljenu rezervaciju koja treba postati aktivna.");
             }
-            boolean postojiAktivnaPreklapanjePostojece = repozitorij.postojiAktivnaRezervacijaPreklapanjeKorisnik(aranzman, r);
+            boolean postojiAktivnaPreklapanjePostojece = repozitorij.postojiKronoloskiAktivnaRezervacijaPreklapanjeKorisnik(aranzman, r);
             if(postojiAktivnaPreklapanjePostojece){
                 r.setStatus(new RezervacijaOdgodena());
                 //System.out.println("Rezervacija korisnika " + r.getPunoIme() + "mijenja se u status ODGOĐENA jer već ima aktivnu rezervaciju koja se preklapa.");

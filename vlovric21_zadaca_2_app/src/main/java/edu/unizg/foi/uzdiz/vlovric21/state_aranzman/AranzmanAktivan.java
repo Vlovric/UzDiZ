@@ -18,7 +18,7 @@ public class AranzmanAktivan implements AranzmanStatus{
 
         boolean postojiAktivnaKorisnika = aranzman.postojiRezervacijaKorisnikaSaStatusom(rezervacija.getPunoIme(), new RezervacijaAktivna());
         RepozitorijPodataka repozitorij = RepozitorijPodataka.getInstance();
-        boolean postojiAktivnaPreklapanje = repozitorij.postojiAktivnaRezervacijaPreklapanjeKorisnik(aranzman, rezervacija);
+        boolean postojiAktivnaPreklapanje = repozitorij.postojiKronoloskiAktivnaRezervacijaPreklapanjeKorisnik(aranzman, rezervacija);
 
         if(postojiAktivnaKorisnika || postojiAktivnaPreklapanje){
             rezervacija.setStatus(new RezervacijaOdgodena());
