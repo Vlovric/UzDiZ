@@ -10,11 +10,7 @@ public class ITAKFormater extends Formater {
 
     @Override
     public void formatiraj(Object obj){
-        List<Aranzman> aranzmani = (List<Aranzman>) obj;
-
-        if(!kronoloskiRedoslijed()){
-            Collections.reverse(aranzmani);
-        }
+        List<Aranzman> aranzmani = sortirajAranzmane((List<Aranzman>) obj);
 
         String zaglavljeFormat = "%-8s %-20s %-15s %-15s %-15s %-15s %-9s %-18s %-20s %-15s%n";
         String redFormat =       "%-8d %-20s %-15s %-15s %-15s %-15s %9s %18s %20s %-15s";

@@ -1,12 +1,18 @@
 package edu.unizg.foi.uzdiz.vlovric21.factorymethod.formater;
 
+import edu.unizg.foi.uzdiz.vlovric21.composite.Aranzman;
 import edu.unizg.foi.uzdiz.vlovric21.pomocne.DatumFormater;
 import edu.unizg.foi.uzdiz.vlovric21.singleton.RepozitorijPodataka;
 import edu.unizg.foi.uzdiz.vlovric21.state_rezervacija.*;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Dictionary;
+import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -82,5 +88,46 @@ public abstract class Formater {
 
     protected boolean kronoloskiRedoslijed(){
         return RepozitorijPodataka.getInstance().getKronoloskiRedoslijed();
+    }
+
+    protected List<Aranzman> sortirajAranzmane(List<Aranzman> aranzmani){
+
+        List<Aranzman> sortiraniAranzmani = new ArrayList<>(aranzmani);
+
+        sortiraniAranzmani.sort((a1, a2) -> {
+
+            LocalDate d1 = datumFormater.parseDatum(a1.getPocetniDatum());
+            LocalDate d2 = datumFormater.parseDatum(a2.getPocetniDatum());
+
+            int usporedba = d1.compareTo(d2);
+            if(usporedba != 0){
+                return usporedba;
+            }
+
+            LocalTime t1 = LocalTime.MAX;
+            LocalTime t2 = LocalTime.MAX;
+
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("H:mm");
+
+            try{
+                if(!a1.getVrijemeKretanja().isEmpty()) {
+                    t1 = LocalTime.parse(a1.getVrijemeKretanja(), dtf);
+                }
+            }catch(Exception ex){}
+
+            try{
+                if(!a2.getVrijemeKretanja().isEmpty()) {
+                    t2 = LocalTime.parse(a2.getVrijemeKretanja(), dtf);
+                }
+            }catch(Exception ex){}
+
+            return t1.compareTo(t2);
+        });
+
+        if(kronoloskiRedoslijed()){
+            return sortiraniAranzmani;
+        }else{
+            return sortiraniAranzmani.reversed();
+        }
     }
 }

@@ -15,11 +15,7 @@ public class ITASFormater extends Formater {
 
     @Override
     public void formatiraj(Object obj) {
-        List<Aranzman> aranzmani = (List<Aranzman>) obj;
-
-        if(!kronoloskiRedoslijed()){
-            Collections.reverse(aranzmani);
-        }
+        List<Aranzman> aranzmani = sortirajAranzmane((List<Aranzman>) obj);
 
         String zaglavljeFormat = "%-8s %-10s %-10s %-12s %-10s %-10s %-15s%n";
         String redFormat =       "%-8d %-10d %-10d %-12d %-10d %-10d %15s";
