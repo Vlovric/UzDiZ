@@ -77,8 +77,17 @@ public class Aranzman implements AranzmanKomponenta{
         return rezervacije;
     }
 
-    public void dodajRezervaciju(Rezervacija rezervacija){
-        status.dodajRezervaciju(this, rezervacija);
+    public Rezervacija dohvatiRezervacijuPoID(int id){
+        for(AranzmanKomponenta k : djeca){
+            if(k instanceof Rezervacija r && r.getId() == id){
+                return r;
+            }
+        }
+        return null;
+    }
+
+    public String dodajRezervaciju(Rezervacija rezervacija){
+        return status.dodajRezervaciju(this, rezervacija);
     }
 
     public void resetirajStanje(){
@@ -100,6 +109,19 @@ public class Aranzman implements AranzmanKomponenta{
         for(AranzmanKomponenta k : djeca){
             if(k instanceof Rezervacija r && r.getPunoIme().equals(punoIme) && r.getStatus().equals(status.getStatusNaziv())){
                 return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean postojiViseRezervacijaKorisnikaStatusom(String punoIme, RezervacijaStatus status){
+        int count = 0;
+        for(AranzmanKomponenta k : djeca){
+            if(k instanceof Rezervacija r && r.getPunoIme().equals(punoIme) && r.getStatus().equals(status.getStatusNaziv())){
+                count++;
+                if(count > 1){
+                    return true;
+                }
             }
         }
         return false;

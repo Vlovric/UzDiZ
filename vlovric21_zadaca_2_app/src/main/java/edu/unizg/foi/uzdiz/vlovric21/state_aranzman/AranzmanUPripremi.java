@@ -13,14 +13,14 @@ public class AranzmanUPripremi implements AranzmanStatus{
 
 
     @Override
-    public void dodajRezervaciju(Aranzman aranzman, Rezervacija rezervacija) {
+    public String dodajRezervaciju(Aranzman aranzman, Rezervacija rezervacija) {
         int min = aranzman.getMinBrojPutnika();
-        int brojPrimljenihRezervacija = aranzman.dohvatiRezervacijeSaStatusom(new RezervacijaPrimljena()).size();
+        int brojPrimljenihRezervacija = aranzman.dohvatiRezervacijeSaStatusom(new RezervacijaPrimljena()).size() +1;
 
         if(brojPrimljenihRezervacija < min){
             rezervacija.setStatus(new RezervacijaPrimljena());
             aranzman.dodajDijete(rezervacija);
-            return;
+            return "";
         }
 
         boolean postojiPrimljenaKorisnika = aranzman.postojiRezervacijaKorisnikaSaStatusom(rezervacija.getPunoIme(), new RezervacijaPrimljena());
@@ -30,8 +30,7 @@ public class AranzmanUPripremi implements AranzmanStatus{
         if(postojiPrimljenaKorisnika || postojiAktivnaPreklapanje){
             rezervacija.setStatus(new RezervacijaOdgodena());
             aranzman.dodajDijete(rezervacija);
-            //return "Rezervacija dodana sa statusom: " + rezervacija.getStatus();
-            return;
+            return "";
         }
 
         List<Rezervacija> rezervacijePostojece = aranzman.dohvatiRezervacijeSaStatusom(new RezervacijaPrimljena());
@@ -40,7 +39,7 @@ public class AranzmanUPripremi implements AranzmanStatus{
         aranzman.dodajDijete(rezervacija);
 
         for(Rezervacija r : rezervacijePostojece){
-            boolean postojiPrimljenaKorisnikaPostojece = aranzman.postojiRezervacijaKorisnikaSaStatusom(r.getPunoIme(), new RezervacijaPrimljena());
+            boolean postojiPrimljenaKorisnikaPostojece = aranzman.postojiViseRezervacijaKorisnikaStatusom(r.getPunoIme(), new RezervacijaPrimljena());
             if(postojiPrimljenaKorisnikaPostojece){
                 r.setStatus(new RezervacijaOdgodena());
                 //System.out.println("Rezervacija korisnika " + r.getPunoIme() + "mijenja se u status ODGOĐENA jer već ima primljenu rezervaciju koja treba postati aktivna.");
@@ -54,7 +53,7 @@ public class AranzmanUPripremi implements AranzmanStatus{
 
         brojPrimljenihRezervacija = aranzman.dohvatiRezervacijeSaStatusom(new RezervacijaPrimljena()).size();
         if(!(brojPrimljenihRezervacija == min)){
-            return;
+            return "";
         }
 
         rezervacijePostojece = aranzman.dohvatiRezervacijeSaStatusom(new RezervacijaPrimljena());
@@ -62,7 +61,7 @@ public class AranzmanUPripremi implements AranzmanStatus{
             r.setStatus(new RezervacijaAktivna());
         }
         aranzman.postaviAktivan();
-        return;
+        return "";
 
 
 

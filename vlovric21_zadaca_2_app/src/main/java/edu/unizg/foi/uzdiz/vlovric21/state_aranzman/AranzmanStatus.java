@@ -5,7 +5,7 @@ import edu.unizg.foi.uzdiz.vlovric21.composite.Rezervacija;
 
 public interface AranzmanStatus {
 
-    void dodajRezervaciju(Aranzman aranzman, Rezervacija rezervacija);
+    String dodajRezervaciju(Aranzman aranzman, Rezervacija rezervacija);
 
     void otkaziRezervaciju(Aranzman aranzman, Rezervacija Rezervacija);
 

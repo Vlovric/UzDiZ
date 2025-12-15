@@ -9,7 +9,7 @@ import edu.unizg.foi.uzdiz.vlovric21.state_rezervacija.RezervacijaOdgodena;
 public class AranzmanAktivan implements AranzmanStatus{
 
     @Override
-    public void dodajRezervaciju(Aranzman aranzman, Rezervacija rezervacija) {
+    public String dodajRezervaciju(Aranzman aranzman, Rezervacija rezervacija) {
 
         boolean postojiAktivnaKorisnika = aranzman.postojiRezervacijaKorisnikaSaStatusom(rezervacija.getPunoIme(), new RezervacijaAktivna());
         RepozitorijPodataka repozitorij = RepozitorijPodataka.getInstance();
@@ -18,7 +18,7 @@ public class AranzmanAktivan implements AranzmanStatus{
         if(postojiAktivnaKorisnika || postojiAktivnaPreklapanje){
             rezervacija.setStatus(new RezervacijaOdgodena());
             aranzman.dodajDijete(rezervacija);
-            //return "Rezervacija dodana sa statusom: " + rezervacija.getStatus();
+            return "";
         }
         rezervacija.setStatus(new RezervacijaAktivna());
         aranzman.dodajDijete(rezervacija);
@@ -29,7 +29,7 @@ public class AranzmanAktivan implements AranzmanStatus{
             aranzman.postaviPopunjen();
         }
 
-        return;
+        return "";
     }
 
     @Override

@@ -48,8 +48,10 @@ public class RepozitorijPodataka {
     }
 
     public String dodajRezervaciju(Rezervacija rezervacija){
-        rezervacija.setStatus(new RezervacijaNova());
         int oznaka = rezervacija.getOznakaAranzmana();
+        int id = getIdRezervacije();
+        rezervacija.setId(id);
+        rezervacija.setStatus(new RezervacijaNova());
         Aranzman aranzman = aranzmanKolekcija.dohvatiAranzmanPoOznaci(oznaka);
 
         List<Rezervacija> tempRezervacije = new ArrayList<>();
@@ -68,15 +70,19 @@ public class RepozitorijPodataka {
         });
 
         aranzman.resetirajStanje();
-
-        String rezultat = ""; //TODO
+        String rezultatDodavanja = "";
 
         for(Rezervacija r : tempRezervacije) {
-            aranzman.dodajRezervaciju(r);
+            rezultatDodavanja = aranzman.dodajRezervaciju(r);
         }
 
-        return rezultat;
-        //na kraju na rezultat appendat stanje rezervacije, ako jedino moze bit odgodena u worst case, a ne obrisana
+        String statusRezervacije = aranzmanKolekcija.dohvatiAranzmanPoOznaci(oznaka).dohvatiRezervacijuPoID(id).getStatus();
+
+        if(!rezultatDodavanja.isEmpty()){
+            return rezultatDodavanja;
+        }else{
+            return "Rezervacija uspješno dodana. Status rezervacije: " + statusRezervacije;
+        }
     }
 
     public boolean postojiAktivnaRezervacijaPreklapanjeKorisnik(Aranzman aranzman, Rezervacija rezervacija){
