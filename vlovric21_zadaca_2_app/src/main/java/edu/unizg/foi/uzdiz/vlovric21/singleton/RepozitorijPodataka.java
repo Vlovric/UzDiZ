@@ -11,6 +11,7 @@ import edu.unizg.foi.uzdiz.vlovric21.factorymethod.unos_objekta.CsvRezervacijaUn
 import edu.unizg.foi.uzdiz.vlovric21.pomocne.DatumFormater;
 import edu.unizg.foi.uzdiz.vlovric21.state_rezervacija.RezervacijaAktivna;
 import edu.unizg.foi.uzdiz.vlovric21.state_rezervacija.RezervacijaNova;
+import edu.unizg.foi.uzdiz.vlovric21.state_rezervacija.RezervacijaOtkazana;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -58,8 +59,12 @@ public class RepozitorijPodataka {
         List<AranzmanKomponenta> rezervacije = aranzman.dohvatiDjecu();
         for(AranzmanKomponenta a : rezervacije){
             if(a instanceof Rezervacija r){
-                r.setStatus(new RezervacijaNova());
-                tempRezervacije.add(r);
+                if(r.getStatus().equals(new RezervacijaOtkazana().getStatusNaziv())){
+                    tempRezervacije.add(r);
+                }else{
+                    r.setStatus(new RezervacijaNova());
+                    tempRezervacije.add(r);
+                }
             }
         }
         tempRezervacije.add(rezervacija);

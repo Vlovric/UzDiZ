@@ -5,11 +5,16 @@ import edu.unizg.foi.uzdiz.vlovric21.composite.Rezervacija;
 import edu.unizg.foi.uzdiz.vlovric21.singleton.RepozitorijPodataka;
 import edu.unizg.foi.uzdiz.vlovric21.state_rezervacija.RezervacijaAktivna;
 import edu.unizg.foi.uzdiz.vlovric21.state_rezervacija.RezervacijaOdgodena;
+import edu.unizg.foi.uzdiz.vlovric21.state_rezervacija.RezervacijaOtkazana;
 
 public class AranzmanAktivan implements AranzmanStatus{
 
     @Override
     public String dodajRezervaciju(Aranzman aranzman, Rezervacija rezervacija) {
+        if(rezervacija.getStatus().equals(new RezervacijaOtkazana().getStatusNaziv())){
+            aranzman.dodajDijete(rezervacija);
+            return "";
+        }
 
         boolean postojiAktivnaKorisnika = aranzman.postojiRezervacijaKorisnikaSaStatusom(rezervacija.getPunoIme(), new RezervacijaAktivna());
         RepozitorijPodataka repozitorij = RepozitorijPodataka.getInstance();

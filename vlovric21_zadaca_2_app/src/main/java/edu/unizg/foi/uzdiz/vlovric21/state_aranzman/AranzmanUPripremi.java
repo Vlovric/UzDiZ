@@ -5,6 +5,7 @@ import edu.unizg.foi.uzdiz.vlovric21.composite.Rezervacija;
 import edu.unizg.foi.uzdiz.vlovric21.singleton.RepozitorijPodataka;
 import edu.unizg.foi.uzdiz.vlovric21.state_rezervacija.RezervacijaAktivna;
 import edu.unizg.foi.uzdiz.vlovric21.state_rezervacija.RezervacijaOdgodena;
+import edu.unizg.foi.uzdiz.vlovric21.state_rezervacija.RezervacijaOtkazana;
 import edu.unizg.foi.uzdiz.vlovric21.state_rezervacija.RezervacijaPrimljena;
 
 import java.util.List;
@@ -14,6 +15,11 @@ public class AranzmanUPripremi implements AranzmanStatus{
 
     @Override
     public String dodajRezervaciju(Aranzman aranzman, Rezervacija rezervacija) {
+        if(rezervacija.getStatus().equals(new RezervacijaOtkazana().getStatusNaziv())){
+            aranzman.dodajDijete(rezervacija);
+            return "";
+        }
+
         int min = aranzman.getMinBrojPutnika();
         int brojPrimljenihRezervacija = aranzman.dohvatiRezervacijeSaStatusom(new RezervacijaPrimljena()).size() +1;
 
