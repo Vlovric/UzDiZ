@@ -4,6 +4,7 @@ import edu.unizg.foi.uzdiz.vlovric21.state_aranzman.AranzmanAktivan;
 import edu.unizg.foi.uzdiz.vlovric21.state_aranzman.AranzmanPopunjen;
 import edu.unizg.foi.uzdiz.vlovric21.state_aranzman.AranzmanStatus;
 import edu.unizg.foi.uzdiz.vlovric21.state_aranzman.AranzmanUPripremi;
+import edu.unizg.foi.uzdiz.vlovric21.state_rezervacija.RezervacijaOtkazana;
 import edu.unizg.foi.uzdiz.vlovric21.state_rezervacija.RezervacijaStatus;
 
 import java.util.ArrayList;
@@ -127,10 +128,10 @@ public class Aranzman implements AranzmanKomponenta{
         return false;
     }
 
-    public Rezervacija dohvatiRezervacijuPunoIme(String ime, String prezime){
+    public Rezervacija dohvatiRezervacijuPunoImeNeOtkazanu(String ime, String prezime){
         String punoIme = ime + " " + prezime;
         for(AranzmanKomponenta k : djeca){
-            if(k instanceof Rezervacija r && r.getPunoIme().equals(punoIme)){
+            if(k instanceof Rezervacija r && r.getPunoIme().equals(punoIme) && !r.getStatus().equals(new RezervacijaOtkazana().getStatusNaziv())){
                 return r;
             }
         }

@@ -21,6 +21,7 @@ public class RepozitorijPodataka {
     private static RepozitorijPodataka instance = new RepozitorijPodataka();
     private static int idBrojacRezervacija = 1;
     private static boolean kronoloskiRedoslijed = true;
+    private List<Integer> aranzmaniKronologija = new ArrayList<>();
 
     private AranzmanKolekcija aranzmanKolekcija = new AranzmanKolekcija();
 
@@ -79,18 +80,50 @@ public class RepozitorijPodataka {
 
         for(Rezervacija r : tempRezervacije) {
             rezultatDodavanja = aranzman.dodajRezervaciju(r);
-            if(r.getId() == id && rezultatDodavanja.equals("Resetiranje")){
-                return resetirajRezervacije(rezervacija);
-            }
         }
 
         String statusRezervacije = aranzmanKolekcija.dohvatiAranzmanPoOznaci(oznaka).dohvatiRezervacijuPoID(id).getStatus();
 
-        if(!rezultatDodavanja.isEmpty()){
+        if(!aranzmaniKronologija.isEmpty()){
+            popraviKronologiju();
+        }
+
+         if(!rezultatDodavanja.isEmpty()){
             return rezultatDodavanja;
         }else{
             return "Rezervacija uspješno dodana. Status rezervacije: " + statusRezervacije;
         }
+    }
+
+    private void popraviKronologiju(){
+        for(int oznaka : aranzmaniKronologija){
+            Aranzman aranzman = aranzmanKolekcija.dohvatiAranzmanPoOznaci(oznaka);
+
+            List<Rezervacija> tempRezervacije = new ArrayList<>();
+            List<AranzmanKomponenta> rezervacije = aranzman.dohvatiDjecu();
+            for(AranzmanKomponenta a : rezervacije){
+                if(a instanceof Rezervacija r){
+                    if(r.getStatus().equals(new RezervacijaOtkazana().getStatusNaziv())){
+                        tempRezervacije.add(r);
+                    }else{
+                        r.setStatus(new RezervacijaNova());
+                        tempRezervacije.add(r);
+                    }
+                }
+            }
+            tempRezervacije.sort((r1, r2) -> {
+                LocalDateTime dt1 = datumFormater.parseDatumIVrijeme(r1.getDatumIVrijeme());
+                LocalDateTime dt2 = datumFormater.parseDatumIVrijeme(r2.getDatumIVrijeme());
+                return dt1.compareTo(dt2);
+            });
+
+            aranzman.resetirajStanje();
+
+            for(Rezervacija r : tempRezervacije) {
+                aranzman.dodajRezervaciju(r);
+            }
+        }
+        aranzmaniKronologija.clear();
     }
 
     public boolean postojiKronoloskiAktivnaRezervacijaPreklapanjeKorisnik(Aranzman aranzman, Rezervacija rezervacija){
@@ -121,7 +154,7 @@ public class RepozitorijPodataka {
         return dt1.isBefore(dt2);
     }
 
-    public boolean postojiNeKronoloskiAktivnaRezervacijaPreklapanjeKorisnik(Aranzman aranzman, Rezervacija rezervacija){
+    public int postojiNeKronoloskiAktivnaRezervacijaPreklapanjeKorisnik(Aranzman aranzman, Rezervacija rezervacija){
         String punoIme = rezervacija.getPunoIme();
 
         for(AranzmanKomponenta k : aranzmanKolekcija.dohvatiDjecu()){
@@ -136,11 +169,11 @@ public class RepozitorijPodataka {
                     continue;
                 }
                 if(r.getStatus().equals(new RezervacijaAktivna().getStatusNaziv()) && rezervacijaPrijeDruge(rezervacija, r)){
-                    return true;
+                    return r.getOznakaAranzmana();
                 }
             }
         }
-        return false;
+        return -1;
     }
 
     public String resetirajRezervacije(Rezervacija rezervacija){
@@ -291,11 +324,16 @@ public class RepozitorijPodataka {
     }
 
     public String otkaziRezervaciju(String ime, String prezime, int oznaka){
-        Rezervacija rezervacija = aranzmanKolekcija.dohvatiAranzmanPoOznaci(oznaka).dohvatiRezervacijuPunoIme(ime, prezime);
+        Rezervacija rezervacija = aranzmanKolekcija.dohvatiAranzmanPoOznaci(oznaka).dohvatiRezervacijuPunoImeNeOtkazanu(ime, prezime);
         if(rezervacija == null){
             return "Ne postoji rezervacija za uneseno ime i prezime na odabranom aranžmanu.";
         }
-        return rezervacija.otkazi();
+        rezervacija.setVrijemeOtkaza(LocalDateTime.now());
+        String rezultat = rezervacija.otkazi();
+        if(rezultat.isEmpty()) {
+            return "Rezervacija uspješno otkazana.";
+        }
+        return rezultat;
     }
 
     public void obrisiSveAranzmane(){
@@ -343,6 +381,14 @@ public class RepozitorijPodataka {
 
     public void setIdBrojacRezervacija(){
         idBrojacRezervacija = 1;
+    }
+
+    public List<Integer> getAranzmaniKronologija(){
+        return aranzmaniKronologija;
+    }
+
+    public void dodajAranzmanKronologija(int oznaka){
+        aranzmaniKronologija.add(oznaka);
     }
 
 

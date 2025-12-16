@@ -30,9 +30,9 @@ public class AranzmanUPripremi implements AranzmanStatus{
             return "";
         }
 
-        boolean postojiNeKronoloskiPreklapanje = repozitorij.postojiNeKronoloskiAktivnaRezervacijaPreklapanjeKorisnik(aranzman, rezervacija);
-        if(postojiNeKronoloskiPreklapanje){
-            return "Resetiranje";
+        int neKronoloskoPreklapanje = repozitorij.postojiNeKronoloskiAktivnaRezervacijaPreklapanjeKorisnik(aranzman, rezervacija);
+        if(neKronoloskoPreklapanje != -1){
+            repozitorij.dodajAranzmanKronologija(neKronoloskoPreklapanje);
         }
         boolean postojiPrimljenaKorisnika = aranzman.postojiRezervacijaKorisnikaSaStatusom(rezervacija.getPunoIme(), new RezervacijaPrimljena());
         boolean postojiAktivnaPreklapanje = repozitorij.postojiKronoloskiAktivnaRezervacijaPreklapanjeKorisnik(aranzman, rezervacija);
@@ -45,10 +45,11 @@ public class AranzmanUPripremi implements AranzmanStatus{
 
         List<Rezervacija> rezervacijePostojece = aranzman.dohvatiRezervacijeSaStatusom(new RezervacijaPrimljena());
 
-        rezervacija.setStatus(new RezervacijaPrimljena());
-        aranzman.dodajDijete(rezervacija);
-
         for(Rezervacija r : rezervacijePostojece){
+            neKronoloskoPreklapanje = repozitorij.postojiNeKronoloskiAktivnaRezervacijaPreklapanjeKorisnik(aranzman, r);
+            if(neKronoloskoPreklapanje != -1){
+                repozitorij.dodajAranzmanKronologija(neKronoloskoPreklapanje);
+            }
             boolean postojiPrimljenaKorisnikaPostojece = aranzman.postojiViseRezervacijaKorisnikaStatusom(r.getPunoIme(), new RezervacijaPrimljena());
             if(postojiPrimljenaKorisnikaPostojece){
                 r.setStatus(new RezervacijaOdgodena());
@@ -60,6 +61,9 @@ public class AranzmanUPripremi implements AranzmanStatus{
                 //System.out.println("Rezervacija korisnika " + r.getPunoIme() + "mijenja se u status ODGOĐENA jer već ima aktivnu rezervaciju koja se preklapa.");
             }
         }
+
+        rezervacija.setStatus(new RezervacijaPrimljena());
+        aranzman.dodajDijete(rezervacija);
 
         brojPrimljenihRezervacija = aranzman.dohvatiRezervacijeSaStatusom(new RezervacijaPrimljena()).size();
         if(!(brojPrimljenihRezervacija == min)){
