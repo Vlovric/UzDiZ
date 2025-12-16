@@ -176,49 +176,13 @@ public class RepozitorijPodataka {
         return -1;
     }
 
-    public String resetirajRezervacije(Rezervacija rezervacija){
-        setIdBrojacRezervacija();
-        int id = rezervacija.getId();
-        int oznaka = rezervacija.getOznakaAranzmana();
-
-        List<Rezervacija> sveRezervacije = new ArrayList<>();
-        for(AranzmanKomponenta a : aranzmanKolekcija.dohvatiDjecu()){
-            if(a instanceof Aranzman ar){
-                sveRezervacije.addAll(ar.dohvatiSveRezervacije());
-                ar.resetirajStanje();
-            }
-        }
-
-        sveRezervacije.add(rezervacija);
-        sveRezervacije.sort((r1, r2) -> {
-            LocalDateTime dt1 = datumFormater.parseDatumIVrijeme(r1.getDatumIVrijeme());
-            LocalDateTime dt2 = datumFormater.parseDatumIVrijeme(r2.getDatumIVrijeme());
-            return dt1.compareTo(dt2);
-        });
-
-        String rezultat = "";
+    public String otkaziSveRezervacijeAranzmana(int oznaka){
+        List<Rezervacija> sveRezervacije = aranzmanKolekcija.dohvatiAranzmanPoOznaci(oznaka).dohvatiSveRezervacije();
         for(Rezervacija r : sveRezervacije){
-            int noviId = getIdRezervacije();
-            if(r.getId() == id){
-                id = noviId;
-            }
-            if(r.getStatus().equals(new RezervacijaOtkazana().getStatusNaziv())){
-                r.setId(noviId);
-            }else{
-                r.setId(noviId);
-                r.setStatus(new RezervacijaNova());
-            }
-            Aranzman aranzman = aranzmanKolekcija.dohvatiAranzmanPoOznaci(r.getOznakaAranzmana());
-            rezultat = aranzman.dodajRezervaciju(r);
+            r.setVrijemeOtkaza(LocalDateTime.now());
+            r.otkazi(); //TODO ovo realno moze ic u invdividualni aranzman da obavi za sebe. Refaktorirat takve metode sve vidjet sta treba ic u decorator il stanja
         }
-
-        String statusRezervacije = aranzmanKolekcija.dohvatiAranzmanPoOznaci(oznaka).dohvatiRezervacijuPoID(id).getStatus();
-
-        if(!rezultat.isEmpty()){
-            return rezultat;
-        }else{
-            return "Rezervacija uspješno dodana. Status rezervacije: " + statusRezervacije;
-        }
+        return "Otkazan aranžman " + oznaka + " i sve njegove rezervacije.";
     }
 
     public void resetirajRezervacijeOtkaz(){

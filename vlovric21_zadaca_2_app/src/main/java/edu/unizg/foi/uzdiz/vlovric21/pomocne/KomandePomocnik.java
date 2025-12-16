@@ -6,6 +6,7 @@ import edu.unizg.foi.uzdiz.vlovric21.factorymethod.formater.FormaterTip;
 import edu.unizg.foi.uzdiz.vlovric21.composite.Aranzman;
 import edu.unizg.foi.uzdiz.vlovric21.composite.Rezervacija;
 import edu.unizg.foi.uzdiz.vlovric21.singleton.RepozitorijPodataka;
+import edu.unizg.foi.uzdiz.vlovric21.state_aranzman.AranzmanOtkazan;
 import edu.unizg.foi.uzdiz.vlovric21.state_rezervacija.*;
 
 import java.util.List;
@@ -195,6 +196,10 @@ public class KomandePomocnik {
             System.out.println("Neuspješno dodavanje rezervacije: Aranžman s oznakom " + oznaka + " ne postoji.");
             return;
         }
+        if(aranzman.getStatus().equals(new AranzmanOtkazan().getStatusNaziv())){
+            System.out.println("Neuspješno dodavanje rezervacije: Aranžman s oznakom " + oznaka + " je otkazan.");
+            return;
+        } //TODO refaktorirat
 
         String datumIVrijeme = datumFormater.formatirajDatumVrijeme(dan, mjesec, godina, sat, minuta, sekunda);
 
@@ -204,7 +209,26 @@ public class KomandePomocnik {
     }
 
     public void otkazAranzmanaOTA(String unos){
-        //TODO nakon implementacije otkazivanja aranzmana
+        String uzorak = "^OTA\\s+(\\d+)$";
+
+        Pattern regex = Pattern.compile(uzorak);
+        Matcher matcher = provjeriRegex(regex, unos);
+        if(matcher == null) {
+            return;
+        }
+
+        int oznaka = Integer.parseInt(matcher.group(1));
+        Aranzman aranzman = repozitorij.getAranzmanPoOznaci(oznaka);
+        if(aranzman == null){
+            System.out.println("Neuspješno otkazivanje aranžmana: Aranžman s oznakom " + oznaka + " ne postoji.");
+            return;
+        }
+        if(aranzman.getStatus().equals(new AranzmanOtkazan().getStatusNaziv())){
+            System.out.println("Neuspješno otkazivanje aranžmana: Aranžman s oznakom " + oznaka + " je već otkazan.");
+            return;
+        } //TODO refaktorirat
+        String rezultat = repozitorij.otkaziSveRezervacijeAranzmana(oznaka);
+        System.out.println(rezultat);
     }
 
     public void postavljanjeIspisaIP(String unos){
