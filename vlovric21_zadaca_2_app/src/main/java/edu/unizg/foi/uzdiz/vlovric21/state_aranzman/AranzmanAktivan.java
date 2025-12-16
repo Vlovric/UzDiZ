@@ -16,8 +16,12 @@ public class AranzmanAktivan implements AranzmanStatus{
             return "";
         }
 
-        boolean postojiAktivnaKorisnika = aranzman.postojiRezervacijaKorisnikaSaStatusom(rezervacija.getPunoIme(), new RezervacijaAktivna());
         RepozitorijPodataka repozitorij = RepozitorijPodataka.getInstance();
+        boolean postojiNeKronoloskiPreklapanje = repozitorij.postojiNeKronoloskiAktivnaRezervacijaPreklapanjeKorisnik(aranzman, rezervacija);
+        if(postojiNeKronoloskiPreklapanje){
+            return "Resetiranje";
+        }
+        boolean postojiAktivnaKorisnika = aranzman.postojiRezervacijaKorisnikaSaStatusom(rezervacija.getPunoIme(), new RezervacijaAktivna());
         boolean postojiAktivnaPreklapanje = repozitorij.postojiKronoloskiAktivnaRezervacijaPreklapanjeKorisnik(aranzman, rezervacija);
 
         if(postojiAktivnaKorisnika || postojiAktivnaPreklapanje){

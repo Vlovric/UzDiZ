@@ -15,6 +15,7 @@ public class AranzmanUPripremi implements AranzmanStatus{
 
     @Override
     public String dodajRezervaciju(Aranzman aranzman, Rezervacija rezervacija) {
+        RepozitorijPodataka repozitorij = RepozitorijPodataka.getInstance();
         if(rezervacija.getStatus().equals(new RezervacijaOtkazana().getStatusNaziv())){
             aranzman.dodajDijete(rezervacija);
             return "";
@@ -29,8 +30,11 @@ public class AranzmanUPripremi implements AranzmanStatus{
             return "";
         }
 
+        boolean postojiNeKronoloskiPreklapanje = repozitorij.postojiNeKronoloskiAktivnaRezervacijaPreklapanjeKorisnik(aranzman, rezervacija);
+        if(postojiNeKronoloskiPreklapanje){
+            return "Resetiranje";
+        }
         boolean postojiPrimljenaKorisnika = aranzman.postojiRezervacijaKorisnikaSaStatusom(rezervacija.getPunoIme(), new RezervacijaPrimljena());
-        RepozitorijPodataka repozitorij = RepozitorijPodataka.getInstance();
         boolean postojiAktivnaPreklapanje = repozitorij.postojiKronoloskiAktivnaRezervacijaPreklapanjeKorisnik(aranzman, rezervacija);
 
         if(postojiPrimljenaKorisnika || postojiAktivnaPreklapanje){

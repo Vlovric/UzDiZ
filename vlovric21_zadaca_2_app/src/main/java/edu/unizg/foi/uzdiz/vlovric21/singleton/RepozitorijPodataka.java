@@ -79,6 +79,9 @@ public class RepozitorijPodataka {
 
         for(Rezervacija r : tempRezervacije) {
             rezultatDodavanja = aranzman.dodajRezervaciju(r);
+            if(r.getId() == id && rezultatDodavanja.equals("Resetiranje")){
+                return resetirajRezervacije(rezervacija);
+            }
         }
 
         String statusRezervacije = aranzmanKolekcija.dohvatiAranzmanPoOznaci(oznaka).dohvatiRezervacijuPoID(id).getStatus();
@@ -140,17 +143,49 @@ public class RepozitorijPodataka {
         return false;
     }
 
-    public void resetirajRezervacije(Rezervacija rezervacija){
+    public String resetirajRezervacije(Rezervacija rezervacija){
         setIdBrojacRezervacija();
+        int id = rezervacija.getId();
+        int oznaka = rezervacija.getOznakaAranzmana();
+
         List<Rezervacija> sveRezervacije = new ArrayList<>();
         for(AranzmanKomponenta a : aranzmanKolekcija.dohvatiDjecu()){
             if(a instanceof Aranzman ar){
                 sveRezervacije.addAll(ar.dohvatiSveRezervacije());
+                ar.resetirajStanje();
             }
         }
-        //resetira stanje cijele apk
-        //sortira rezervacije kronoloski, sve ih postavi na nove (osim otkazane) i da im ID (uzme ID od nase)
-        //inserta ih u njihov aranzman kronoloski i samo ispisuje za nasu novo dodanu status
+
+        sveRezervacije.add(rezervacija);
+        sveRezervacije.sort((r1, r2) -> {
+            LocalDateTime dt1 = datumFormater.parseDatumIVrijeme(r1.getDatumIVrijeme());
+            LocalDateTime dt2 = datumFormater.parseDatumIVrijeme(r2.getDatumIVrijeme());
+            return dt1.compareTo(dt2);
+        });
+
+        String rezultat = "";
+        for(Rezervacija r : sveRezervacije){
+            int noviId = getIdRezervacije();
+            if(r.getId() == id){
+                id = noviId;
+            }
+            if(r.getStatus().equals(new RezervacijaOtkazana().getStatusNaziv())){
+                r.setId(noviId);
+            }else{
+                r.setId(noviId);
+                r.setStatus(new RezervacijaNova());
+            }
+            Aranzman aranzman = aranzmanKolekcija.dohvatiAranzmanPoOznaci(r.getOznakaAranzmana());
+            rezultat = aranzman.dodajRezervaciju(r);
+        }
+
+        String statusRezervacije = aranzmanKolekcija.dohvatiAranzmanPoOznaci(oznaka).dohvatiRezervacijuPoID(id).getStatus();
+
+        if(!rezultat.isEmpty()){
+            return rezultat;
+        }else{
+            return "Rezervacija uspješno dodana. Status rezervacije: " + statusRezervacije;
+        }
     }
 
 
