@@ -6,8 +6,9 @@ import edu.unizg.foi.uzdiz.vlovric21.composite.Rezervacija;
 public class RezervacijaNova implements RezervacijaStatus{
 
     @Override
-    public void otkazi(Aranzman aranzman, Rezervacija kontekst){
+    public String otkazi(Aranzman aranzman, Rezervacija kontekst){
         kontekst.setStatus(new RezervacijaOtkazana());
+        return "";
     }
 
     @Override

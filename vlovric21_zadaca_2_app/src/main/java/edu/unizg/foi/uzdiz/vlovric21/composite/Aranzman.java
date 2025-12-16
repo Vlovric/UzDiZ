@@ -127,6 +127,16 @@ public class Aranzman implements AranzmanKomponenta{
         return false;
     }
 
+    public Rezervacija dohvatiRezervacijuPunoIme(String ime, String prezime){
+        String punoIme = ime + " " + prezime;
+        for(AranzmanKomponenta k : djeca){
+            if(k instanceof Rezervacija r && r.getPunoIme().equals(punoIme)){
+                return r;
+            }
+        }
+        return null;
+    }
+
     public void postaviUPripremi(){
         this.status = new AranzmanUPripremi();
     }

@@ -23,10 +23,10 @@ public class Rezervacija implements AranzmanKomponenta{
         this.datumIVrijeme = datumIVrijeme;
     }
 
-    public void otkazi(){
+    public String otkazi(){
         RepozitorijPodataka repozitorij = RepozitorijPodataka.getInstance();
         Aranzman aranzman = repozitorij.getAranzmanPoOznaci(this.oznakaAranzmana);
-        this.status.otkazi(aranzman, this);
+        return this.status.otkazi(aranzman, this);
     }
     
     public int getId() {

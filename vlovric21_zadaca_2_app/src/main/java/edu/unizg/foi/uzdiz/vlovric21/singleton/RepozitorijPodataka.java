@@ -188,6 +188,36 @@ public class RepozitorijPodataka {
         }
     }
 
+    public void resetirajRezervacijeOtkaz(){
+        setIdBrojacRezervacija();
+
+        List<Rezervacija> sveRezervacije = new ArrayList<>();
+        for(AranzmanKomponenta a : aranzmanKolekcija.dohvatiDjecu()){
+            if(a instanceof Aranzman ar){
+                sveRezervacije.addAll(ar.dohvatiSveRezervacije());
+                ar.resetirajStanje();
+            }
+        }
+
+        sveRezervacije.sort((r1, r2) -> {
+            LocalDateTime dt1 = datumFormater.parseDatumIVrijeme(r1.getDatumIVrijeme());
+            LocalDateTime dt2 = datumFormater.parseDatumIVrijeme(r2.getDatumIVrijeme());
+            return dt1.compareTo(dt2);
+        });
+
+        for(Rezervacija r : sveRezervacije){
+            int noviId = getIdRezervacije();
+            if(r.getStatus().equals(new RezervacijaOtkazana().getStatusNaziv())){
+                r.setId(noviId);
+            }else{
+                r.setId(noviId);
+                r.setStatus(new RezervacijaNova());
+            }
+            Aranzman aranzman = aranzmanKolekcija.dohvatiAranzmanPoOznaci(r.getOznakaAranzmana());
+            aranzman.dodajRezervaciju(r);
+        }
+    }
+
 
     private boolean provjeriPreklapanjeDatuma(Aranzman a1, Aranzman a2){
         LocalDate a1Pocetak = datumFormater.parseDatum(a1.getPocetniDatum());
@@ -261,7 +291,11 @@ public class RepozitorijPodataka {
     }
 
     public String otkaziRezervaciju(String ime, String prezime, int oznaka){
-        return ""; //TODO
+        Rezervacija rezervacija = aranzmanKolekcija.dohvatiAranzmanPoOznaci(oznaka).dohvatiRezervacijuPunoIme(ime, prezime);
+        if(rezervacija == null){
+            return "Ne postoji rezervacija za uneseno ime i prezime na odabranom aranžmanu.";
+        }
+        return rezervacija.otkazi();
     }
 
     public void obrisiSveAranzmane(){
