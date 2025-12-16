@@ -6,20 +6,22 @@ public class ArgumentParser {
 
     public boolean parsirajArgumente(String[] args){
 
-        if(args.length != 4){
-            return false;
-        }
-
-        for(int i = 0; i < args.length; i+=2){
-            String zastavica = args[i];
-            String datoteka = args[i+1];
-
-            switch(zastavica){
+        for(int i=0; i< args.length; i++){
+            String arg = args[i];
+            switch(arg){
                 case "--ta":
-                    aranzmaniDatoteka = datoteka;
+                    if(i+1 >= args.length){
+                        return false;
+                    }
+                    aranzmaniDatoteka = args[i+1];
+                    i++;
                     break;
                 case "--rta":
-                    rezervacijeDatoteka = datoteka;
+                    if(i+1 >= args.length){
+                        return false;
+                    }
+                    rezervacijeDatoteka = args[i+1];
+                    i++;
                     break;
                 default:
                     return false;

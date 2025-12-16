@@ -17,7 +17,7 @@ public class Main {
         ArgumentParser parser = new ArgumentParser();
 
         if(!parser.parsirajArgumente(args)){
-            System.out.println("Neispravni argumenti");
+            System.out.println("Upisane nepoznate opcije");
             return;
         }
 
@@ -27,8 +27,12 @@ public class Main {
 
     static void ucitajPodatke(String aranzmaniDatoteka, String rezervacijeDatoteka){
 
-        RepozitorijPodataka.getInstance().ucitajAranzmaneIzDatoteke(aranzmaniDatoteka);
-        RepozitorijPodataka.getInstance().ucitajRezervacijeIzDatoteke(rezervacijeDatoteka);
+        if(aranzmaniDatoteka != null){
+            RepozitorijPodataka.getInstance().ucitajAranzmaneIzDatoteke(aranzmaniDatoteka);
+        }
+        if(rezervacijeDatoteka != null){
+            RepozitorijPodataka.getInstance().ucitajRezervacijeIzDatoteke(rezervacijeDatoteka);
+        }
     }
 
     static void interaktivniNacinRada(){
