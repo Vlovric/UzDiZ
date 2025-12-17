@@ -1,6 +1,7 @@
 package edu.unizg.foi.uzdiz.vlovric21.factorymethod.unos_objekta;
 
-import edu.unizg.foi.uzdiz.vlovric21.builder.AranzmanDirector;
+import edu.unizg.foi.uzdiz.vlovric21.builder.AranzmanBuilder;
+import edu.unizg.foi.uzdiz.vlovric21.builder.AranzmanBuilderConcrete;
 import edu.unizg.foi.uzdiz.vlovric21.composite.Aranzman;
 import edu.unizg.foi.uzdiz.vlovric21.singleton.RepozitorijPodataka;
 
@@ -40,25 +41,18 @@ public class CsvAranzmanUnositelj extends CsvObjectUnositelj {
         Integer brojRuckova = parseOpcionalniInt(red.get("Broj ručkova"));
         Integer brojVecera = parseOpcionalniInt(red.get("Broj večera"));
 
-        AranzmanDirector direktor = new AranzmanDirector();
-        Aranzman ar = direktor.stvoriKompletanAranzman(
-                oznaka,
-                naziv,
-                program,
-                pocetniDatum,
-                zavrsniDatum,
-                cijena,
-                minBrojPutnika,
-                maxBrojPutnika,
-                brojNocenja,
-                vrijemeKretanja,
-                vrijemePovratka,
-                doplata,
-                prijevoz,
-                brojDorucka,
-                brojRuckova,
-                brojVecera
-        );
+        AranzmanBuilder builder = new AranzmanBuilderConcrete();
+        builder.stvoriMinimalanAranzman(oznaka, naziv, program, pocetniDatum, zavrsniDatum, cijena, minBrojPutnika, maxBrojPutnika)
+                .postaviVrijemeKretanja(vrijemeKretanja)
+                .postaviVrijemePovratka(vrijemePovratka)
+                .postaviBrojNocenja(brojNocenja)
+                .postaviDoplataZaJednokrevetnuSobu(doplata)
+                .postaviPrijevoz(prijevoz)
+                .postaviBrojDorucka(brojDorucka)
+                .postaviBrojRuckova(brojRuckova)
+                .postaviBrojVecera(brojVecera);
+
+        Aranzman ar = builder.dohvatiAranzman();
         RepozitorijPodataka.getInstance().dodajAranzman(ar);
     }
 }
