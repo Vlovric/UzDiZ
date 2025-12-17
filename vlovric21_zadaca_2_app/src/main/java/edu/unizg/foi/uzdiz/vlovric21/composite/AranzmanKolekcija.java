@@ -90,7 +90,10 @@ public class AranzmanKolekcija implements AranzmanKomponenta {
     }
 
     private void popraviKronologiju(){
-        for(int oznaka : aranzmaniKronologija){
+        List<Integer> kopijaKronologije = new ArrayList<>(aranzmaniKronologija);
+        aranzmaniKronologija.clear();
+
+        for(int oznaka : kopijaKronologije){
             Aranzman aranzman = dohvatiAranzmanPoOznaci(oznaka);
 
             List<Rezervacija> tempRezervacije = new ArrayList<>();
@@ -118,7 +121,9 @@ public class AranzmanKolekcija implements AranzmanKomponenta {
                 aranzman.dodajRezervaciju(r);
             }
         }
-        aranzmaniKronologija.clear();
+        if(!aranzmaniKronologija.isEmpty()){
+            popraviKronologiju();
+        }
     }
 
     public void otkaziSveRezervacijeAranzmana(int oznaka){
