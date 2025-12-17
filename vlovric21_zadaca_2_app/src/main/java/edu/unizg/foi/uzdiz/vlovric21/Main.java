@@ -78,6 +78,9 @@ public class Main {
                 case "ITAS":
                     komandePomocnik.ispisStatistikeITAS(unos);
                     break;
+                case "POD":
+                    komandePomocnik.dodavanjePodnozjaPOD();
+                    break;
                 case "Q":
                     return;
                 default:

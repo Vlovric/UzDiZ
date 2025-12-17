@@ -293,4 +293,15 @@ public class KomandePomocnik {
 
         ispisi(aranzmani, FormaterTip.ITAS);
     }
+
+    public void dodavanjePodnozjaPOD(){
+        RepozitorijPodataka repo = RepozitorijPodataka.getInstance();
+        if(repo.isPodnozje()){
+            repo.setPodnozje(false);
+            System.out.println("Podnožje je isključeno.");
+        }else{
+            repo.setPodnozje(true);
+            System.out.println("Podnožje je uključeno.");
+        }
+    }
 }

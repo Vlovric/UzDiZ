@@ -13,7 +13,6 @@ public class IROFormater extends Formater {
     @Override
     public void formatiraj(Object obj) {
         List<Rezervacija> rezervacije = (List<Rezervacija>) obj;
-        RepozitorijPodataka repozitorij = RepozitorijPodataka.getInstance();
 
         if(!kronoloskiRedoslijed()){
             Collections.reverse(rezervacije);

@@ -21,6 +21,7 @@ public class RepozitorijPodataka {
     private static RepozitorijPodataka instance = new RepozitorijPodataka();
     private static int idBrojacRezervacija = 1;
     private static boolean kronoloskiRedoslijed = true;
+    private static boolean podnozje = false;
 
     private AranzmanKolekcija aranzmanKolekcija = new AranzmanKolekcija();
 
@@ -173,6 +174,14 @@ public class RepozitorijPodataka {
 
     public void setDatumFormater(DatumFormater datumFormater){
         this.datumFormater = datumFormater;
+    }
+
+    public boolean isPodnozje() {
+        return podnozje;
+    }
+
+    public void setPodnozje(boolean podnozje) {
+        this.podnozje = podnozje;
     }
 
 }
