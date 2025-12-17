@@ -191,16 +191,6 @@ public class KomandePomocnik {
         String minuta = matcher.group(8);
         String sekunda = matcher.group(9);
 
-        Aranzman aranzman = repozitorij.getAranzmanPoOznaci(oznaka);
-        if(aranzman == null){
-            System.out.println("Neuspješno dodavanje rezervacije: Aranžman s oznakom " + oznaka + " ne postoji.");
-            return;
-        }
-        if(aranzman.jeOtkazan()){
-            System.out.println("Neuspješno dodavanje rezervacije: Aranžman s oznakom " + oznaka + " je otkazan.");
-            return;
-        }
-
         String datumIVrijeme = datumFormater.formatirajDatumVrijeme(dan, mjesec, godina, sat, minuta, sekunda);
 
         Rezervacija novaRezervacija = new Rezervacija(ime, prezime, oznaka, datumIVrijeme);
@@ -218,15 +208,7 @@ public class KomandePomocnik {
         }
 
         int oznaka = Integer.parseInt(matcher.group(1));
-        Aranzman aranzman = repozitorij.getAranzmanPoOznaci(oznaka);
-        if(aranzman == null){
-            System.out.println("Neuspješno otkazivanje aranžmana: Aranžman s oznakom " + oznaka + " ne postoji.");
-            return;
-        }
-        if(aranzman.jeOtkazan()){
-            System.out.println("Neuspješno otkazivanje aranžmana: Aranžman s oznakom " + oznaka + " je već otkazan.");
-            return;
-        }
+
         String rezultat = repozitorij.otkaziSveRezervacijeAranzmana(oznaka);
         System.out.println(rezultat);
     }

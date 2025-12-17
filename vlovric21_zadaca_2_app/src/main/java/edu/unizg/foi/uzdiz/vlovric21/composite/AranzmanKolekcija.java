@@ -14,12 +14,16 @@ import java.util.List;
 
 public class AranzmanKolekcija implements AranzmanKomponenta {
 
-    private final List<AranzmanKomponenta> djeca = new ArrayList<>();
+    private final List<Aranzman> djeca = new ArrayList<>();
     private List<Integer> aranzmaniKronologija = new ArrayList<>();
 
     @Override
     public void dodajDijete(AranzmanKomponenta komponenta){
-        djeca.add(komponenta);
+        if(komponenta instanceof Aranzman a){
+            djeca.add(a);
+        }else{
+            throw new UnsupportedOperationException("U kolekciju se mogu dodavati samo aranžmani.");
+        }
     }
 
     @Override
@@ -29,14 +33,14 @@ public class AranzmanKolekcija implements AranzmanKomponenta {
 
     @Override
     public List<AranzmanKomponenta> dohvatiDjecu() {
-        return djeca;
+        return new ArrayList<>(djeca);
     }
 
     @Override
     public List<Rezervacija> dohvatiSveRezervacije() {
         List<Rezervacija> rezultat = new ArrayList<>();
-        for(AranzmanKomponenta k : djeca){
-            rezultat.addAll(k.dohvatiSveRezervacije());
+        for(Aranzman a : djeca){
+            rezultat.addAll(a.dohvatiSveRezervacije());
         }
         return rezultat;
     }
@@ -47,8 +51,8 @@ public class AranzmanKolekcija implements AranzmanKomponenta {
     }
 
     public Aranzman dohvatiAranzmanPoOznaci(int oznaka){
-        for(AranzmanKomponenta k : djeca){
-            if(k instanceof Aranzman a && a.getOznaka() == oznaka){
+        for(Aranzman a : djeca){
+            if(a.getOznaka() == oznaka){
                 return a;
             }
         }
@@ -64,13 +68,11 @@ public class AranzmanKolekcija implements AranzmanKomponenta {
 
     private String ponovnoUnosenjeRezervacija(Aranzman aranzman, Rezervacija rezervacija){
         List<Rezervacija> rezervacije = new ArrayList<>();
-        for(AranzmanKomponenta k : aranzman.dohvatiDjecu()){
-            if(k instanceof Rezervacija r){
-                if(!r.jeOtkazana()){
-                    r.setStatus(new RezervacijaNova());
-                }
-                rezervacije.add(r);
+        for(Rezervacija r : aranzman.dohvatiSveRezervacije()){
+            if(!r.jeOtkazana()){
+                r.setStatus(new RezervacijaNova());
             }
+            rezervacije.add(r);
         }
 
         if(rezervacija != null){
@@ -91,6 +93,12 @@ public class AranzmanKolekcija implements AranzmanKomponenta {
     public String dodajRezervaciju(Rezervacija rezervacija){
         int id = rezervacija.getId();
         Aranzman aranzman = dohvatiAranzmanPoOznaci(rezervacija.getOznakaAranzmana());
+        if(aranzman == null){
+            return "Aranžman s oznakom " + rezervacija.getOznakaAranzmana() + " ne postoji.";
+        }
+        if(aranzman.jeOtkazan()){
+            return "Ne može se dodati rezervacija na otkazan aranžman.";
+        }
         rezervacija.setAranzman(aranzman);
 
         String rezultatDodavanja = ponovnoUnosenjeRezervacija(aranzman, rezervacija);
@@ -121,17 +129,24 @@ public class AranzmanKolekcija implements AranzmanKomponenta {
         }
     }
 
-    public void otkaziSveRezervacijeAranzmana(int oznaka){
+    public String otkaziSveRezervacijeAranzmana(int oznaka){
         Aranzman aranzman = dohvatiAranzmanPoOznaci(oznaka);
+        if(aranzman == null){
+            return "Aranžman s oznakom " + oznaka + " ne postoji.";
+        }
+        if(aranzman.jeOtkazan()){
+            return "Aranžman" + oznaka + " je već otkazan.";
+        }
         aranzman.otkazi();
+        return "";
     }
 
     private int dohvatiPreklapajuciAranzman(Aranzman aranzman, Rezervacija rezervacija, boolean kronoloski){
         String punoIme = rezervacija.getPunoIme();
         RepozitorijPodataka repo = RepozitorijPodataka.getInstance();
 
-        for(AranzmanKomponenta k : dohvatiDjecu()) {
-            if (!(k instanceof Aranzman a) || a.getOznaka() == aranzman.getOznaka()) {
+        for(Aranzman a : djeca) {
+            if (a.getOznaka() == aranzman.getOznaka()) {
                 continue;
             }
             if (!repo.provjeriPreklapanjeDatuma(aranzman, a)) {
@@ -165,26 +180,17 @@ public class AranzmanKolekcija implements AranzmanKomponenta {
     }
 
     public List<Aranzman> dohvatiAranzmaneRazdoblje(String pocetniDatum, String zavrsniDatum){
-        List<AranzmanKomponenta> aranzmani = dohvatiDjecu();
         List<Aranzman> rezultat = new ArrayList<>();
 
         if(pocetniDatum == null && zavrsniDatum == null){
-            for(AranzmanKomponenta k : aranzmani){
-                if(k instanceof Aranzman a){
-                    rezultat.add(a);
-                }
-            }
-            return rezultat;
+            return djeca;
         }
 
         DatumFormater datumFormater = RepozitorijPodataka.getInstance().getDatumFormater();
         LocalDate pocDatum = datumFormater.parseDatum(pocetniDatum);
         LocalDate zavDatum = datumFormater.parseDatum(zavrsniDatum);
 
-        for(AranzmanKomponenta k : aranzmani){
-            if(!(k instanceof Aranzman a)){
-                continue;
-            }
+        for(Aranzman a : djeca){
             LocalDate aPocDatum = datumFormater.parseDatum(a.getPocetniDatum());
             LocalDate aZavDatum = datumFormater.parseDatum(a.getZavrsniDatum());
 
@@ -198,11 +204,9 @@ public class AranzmanKolekcija implements AranzmanKomponenta {
 
     public void resetirajRezervacijeOtkaz(){
         List<Rezervacija> sveRezervacije = new ArrayList<>();
-        for(AranzmanKomponenta a : dohvatiDjecu()){
-            if(a instanceof Aranzman ar){
-                sveRezervacije.addAll(ar.dohvatiSveRezervacije());
-                ar.resetirajStanje();
-            }
+        for(Aranzman a : djeca){
+            sveRezervacije.addAll(a.dohvatiSveRezervacije());
+            a.resetirajStanje();
         }
 
         sveRezervacije.sort(rezervacijaPrijeDruge);
@@ -220,14 +224,9 @@ public class AranzmanKolekcija implements AranzmanKomponenta {
 
     public List<Rezervacija> dohvatiRezervacijePoImenu(String punoIme){
         List<Rezervacija> rezultat = new ArrayList<>();
-        for(AranzmanKomponenta k : dohvatiDjecu()){
-            if(!(k instanceof Aranzman a)){
-                continue;
-            }
-            for(Rezervacija r : a.dohvatiSveRezervacije()){
-                if(r.getPunoIme().equals(punoIme)){
-                    rezultat.add(r);
-                }
+        for(Rezervacija r : dohvatiSveRezervacije()){
+            if(r.getPunoIme().equals(punoIme)){
+                rezultat.add(r);
             }
         }
         return rezultat;
@@ -246,10 +245,8 @@ public class AranzmanKolekcija implements AranzmanKomponenta {
     }
 
     public void obrisiSveRezervacije(){
-        for(AranzmanKomponenta k : dohvatiDjecu()){
-            if(k instanceof Aranzman a){
-                a.resetirajStanje();
-            }
+        for(Aranzman a : djeca){
+            a.resetirajStanje();
         }
     }
 

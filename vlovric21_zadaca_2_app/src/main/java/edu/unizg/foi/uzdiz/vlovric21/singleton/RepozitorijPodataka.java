@@ -64,7 +64,10 @@ public class RepozitorijPodataka {
     }
 
     public String otkaziSveRezervacijeAranzmana(int oznaka){
-        aranzmanKolekcija.otkaziSveRezervacijeAranzmana(oznaka);
+        String rezultat = aranzmanKolekcija.otkaziSveRezervacijeAranzmana(oznaka);
+        if(!rezultat.isEmpty()){
+            return rezultat;
+        }
         return "Otkazan aranžman " + oznaka + " i sve njegove rezervacije.";
     }
 
