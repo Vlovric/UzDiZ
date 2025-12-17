@@ -56,25 +56,7 @@ public class RepozitorijPodataka {
     }
 
     public boolean postojiKronoloskiAktivnaRezervacijaPreklapanjeKorisnik(Aranzman aranzman, Rezervacija rezervacija){
-        String punoIme = rezervacija.getPunoIme();
-
-        for(AranzmanKomponenta k : aranzmanKolekcija.dohvatiDjecu()){
-            if(!(k instanceof Aranzman a) || a.getOznaka() == aranzman.getOznaka()){
-                continue;
-            }
-            if(!provjeriPreklapanjeDatuma(aranzman, a)){
-                continue;
-            }
-            for(Rezervacija r : a.dohvatiSveRezervacije()){
-                if(!r.getPunoIme().equals(punoIme)){
-                    continue;
-                }
-                if(r.getStatus().equals(new RezervacijaAktivna().getStatusNaziv()) && rezervacijaPrijeDruge(r, rezervacija)){
-                    return true;
-                }
-            }
-        }
-        return false;
+        return aranzmanKolekcija.postojiKronoloskiAktivnaRezervacijaPreklapanjeKorisnik(aranzman, rezervacija);
     }
 
     public boolean rezervacijaPrijeDruge(Rezervacija r1, Rezervacija r2){
@@ -84,25 +66,7 @@ public class RepozitorijPodataka {
     }
 
     public int postojiNeKronoloskiAktivnaRezervacijaPreklapanjeKorisnik(Aranzman aranzman, Rezervacija rezervacija){
-        String punoIme = rezervacija.getPunoIme();
-
-        for(AranzmanKomponenta k : aranzmanKolekcija.dohvatiDjecu()){
-            if(!(k instanceof Aranzman a) || a.getOznaka() == aranzman.getOznaka()){
-                continue;
-            }
-            if(!provjeriPreklapanjeDatuma(aranzman, a)){
-                continue;
-            }
-            for(Rezervacija r : a.dohvatiSveRezervacije()){
-                if(!r.getPunoIme().equals(punoIme)){
-                    continue;
-                }
-                if(r.getStatus().equals(new RezervacijaAktivna().getStatusNaziv()) && rezervacijaPrijeDruge(rezervacija, r)){
-                    return r.getOznakaAranzmana();
-                }
-            }
-        }
-        return -1;
+        return aranzmanKolekcija.postojiNeKronoloskiAktivnaRezervacijaPreklapanjeKorisnik(aranzman, rezervacija);
     }
 
     public String otkaziSveRezervacijeAranzmana(int oznaka){
@@ -112,36 +76,11 @@ public class RepozitorijPodataka {
 
     public void resetirajRezervacijeOtkaz(){
         setIdBrojacRezervacija();
-
-        List<Rezervacija> sveRezervacije = new ArrayList<>();
-        for(AranzmanKomponenta a : aranzmanKolekcija.dohvatiDjecu()){
-            if(a instanceof Aranzman ar){
-                sveRezervacije.addAll(ar.dohvatiSveRezervacije());
-                ar.resetirajStanje();
-            }
-        }
-
-        sveRezervacije.sort((r1, r2) -> {
-            LocalDateTime dt1 = datumFormater.parseDatumIVrijeme(r1.getDatumIVrijeme());
-            LocalDateTime dt2 = datumFormater.parseDatumIVrijeme(r2.getDatumIVrijeme());
-            return dt1.compareTo(dt2);
-        });
-
-        for(Rezervacija r : sveRezervacije){
-            int noviId = getIdRezervacije();
-            if(r.getStatus().equals(new RezervacijaOtkazana().getStatusNaziv())){
-                r.setId(noviId);
-            }else{
-                r.setId(noviId);
-                r.setStatus(new RezervacijaNova());
-            }
-            Aranzman aranzman = r.getAranzman();
-            aranzman.dodajRezervaciju(r);
-        }
+        aranzmanKolekcija.resetirajRezervacijeOtkaz();
     }
 
 
-    private boolean provjeriPreklapanjeDatuma(Aranzman a1, Aranzman a2){
+    public boolean provjeriPreklapanjeDatuma(Aranzman a1, Aranzman a2){
         LocalDate a1Pocetak = datumFormater.parseDatum(a1.getPocetniDatum());
         LocalDate a1Kraj = datumFormater.parseDatum(a1.getZavrsniDatum());
         LocalDate a2Pocetak = datumFormater.parseDatum(a2.getPocetniDatum());
@@ -154,62 +93,15 @@ public class RepozitorijPodataka {
     }
 
     public List<Aranzman> dohvatiAranzmaneRazdoblje(String pocetniDatum, String zavrsniDatum){
-        List<AranzmanKomponenta> aranzmani = aranzmanKolekcija.dohvatiDjecu();
-
-        if(pocetniDatum == null && zavrsniDatum == null){
-            List<Aranzman> rezultat = new ArrayList<>();
-            for(AranzmanKomponenta k : aranzmani){
-                if(k instanceof Aranzman a){
-                    rezultat.add(a);
-                }
-            }
-            return rezultat;
-        }
-
-        LocalDate pocDatum = datumFormater.parseDatum(pocetniDatum);
-        LocalDate zavDatum = datumFormater.parseDatum(zavrsniDatum);
-
-        List<Aranzman> rezultat = new ArrayList<>();
-        for(AranzmanKomponenta k : aranzmani){
-            if(!(k instanceof Aranzman a)){
-                continue;
-            }
-            LocalDate aPocDatum = datumFormater.parseDatum(a.getPocetniDatum());
-            LocalDate aZavDatum = datumFormater.parseDatum(a.getZavrsniDatum());
-
-            if(aPocDatum.isBefore(pocDatum) || aZavDatum.isAfter(zavDatum)){
-                continue;
-            }
-            rezultat.add(a);
-        }
-        return rezultat;
+        return aranzmanKolekcija.dohvatiAranzmaneRazdoblje(pocetniDatum, zavrsniDatum);
     }
 
     public List<Rezervacija> dohvatiRezervacijePoImenu(String punoIme){
-        List<Rezervacija> rezultat = new ArrayList<>();
-        for(AranzmanKomponenta k : aranzmanKolekcija.dohvatiDjecu()){
-            if(!(k instanceof Aranzman a)){
-                continue;
-            }
-            for(Rezervacija r : a.dohvatiSveRezervacije()){
-                if(r.getPunoIme().equals(punoIme)){
-                    rezultat.add(r);
-                }
-            }
-        }
-        return rezultat;
+        return aranzmanKolekcija.dohvatiRezervacijePoImenu(punoIme);
     }
 
     public List<Rezervacija> dohvatiRezervacijeZaAranzman(int oznakaAranzmana, List<String> statusi){
-        Aranzman aranzman = aranzmanKolekcija.dohvatiAranzmanPoOznaci(oznakaAranzmana);
-        List<Rezervacija> sveRezervacije = aranzman.dohvatiSveRezervacije();
-        List<Rezervacija> rezultat = new ArrayList<>();
-        for(Rezervacija r : sveRezervacije){
-            if(statusi.contains(r.getStatus())){
-                rezultat.add(r);
-            }
-        }
-        return rezultat;
+        return aranzmanKolekcija.dohvatiRezervacijeZaAranzman(oznakaAranzmana, statusi);
     }
 
     public String otkaziRezervaciju(String ime, String prezime, int oznaka){
@@ -231,11 +123,7 @@ public class RepozitorijPodataka {
     }
 
     public void obrisiSveRezervacije(){
-        for(AranzmanKomponenta k : aranzmanKolekcija.dohvatiDjecu()){
-            if(k instanceof Aranzman a){
-                a.resetirajStanje();
-            }
-        }
+        aranzmanKolekcija.obrisiSveRezervacije();
         setIdBrojacRezervacija();
     }
 

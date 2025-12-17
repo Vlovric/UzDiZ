@@ -1,9 +1,6 @@
 package edu.unizg.foi.uzdiz.vlovric21.composite;
 
-import edu.unizg.foi.uzdiz.vlovric21.state_aranzman.AranzmanAktivan;
-import edu.unizg.foi.uzdiz.vlovric21.state_aranzman.AranzmanPopunjen;
-import edu.unizg.foi.uzdiz.vlovric21.state_aranzman.AranzmanStatus;
-import edu.unizg.foi.uzdiz.vlovric21.state_aranzman.AranzmanUPripremi;
+import edu.unizg.foi.uzdiz.vlovric21.state_aranzman.*;
 import edu.unizg.foi.uzdiz.vlovric21.state_rezervacija.RezervacijaOtkazana;
 import edu.unizg.foi.uzdiz.vlovric21.state_rezervacija.RezervacijaStatus;
 
@@ -93,12 +90,13 @@ public class Aranzman implements AranzmanKomponenta{
     }
 
     public void otkaziSveRezervacije(){
-        for(AranzmanKomponenta k : djeca){
+        for(AranzmanKomponenta k : new ArrayList<>(djeca)){
             if(k instanceof Rezervacija r){
                 r.setVrijemeOtkaza(LocalDateTime.now());
                 r.otkazi();
             }
         }
+        setStatus(new AranzmanOtkazan());
     }
 
     public void resetirajStanje(){
