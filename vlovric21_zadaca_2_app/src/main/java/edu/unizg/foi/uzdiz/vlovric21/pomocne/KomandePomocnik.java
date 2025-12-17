@@ -199,7 +199,7 @@ public class KomandePomocnik {
         if(aranzman.getStatus().equals(new AranzmanOtkazan().getStatusNaziv())){
             System.out.println("Neuspješno dodavanje rezervacije: Aranžman s oznakom " + oznaka + " je otkazan.");
             return;
-        } //TODO refaktorirat
+        }
 
         String datumIVrijeme = datumFormater.formatirajDatumVrijeme(dan, mjesec, godina, sat, minuta, sekunda);
 
@@ -226,7 +226,7 @@ public class KomandePomocnik {
         if(aranzman.getStatus().equals(new AranzmanOtkazan().getStatusNaziv())){
             System.out.println("Neuspješno otkazivanje aranžmana: Aranžman s oznakom " + oznaka + " je već otkazan.");
             return;
-        } //TODO refaktorirat
+        }
         String rezultat = repozitorij.otkaziSveRezervacijeAranzmana(oznaka);
         System.out.println(rezultat);
     }

@@ -15,6 +15,8 @@ public class Rezervacija implements AranzmanKomponenta{
     private RezervacijaStatus status;
     private LocalDateTime vrijemeOtkaza;
 
+    private Aranzman aranzman;
+
     public Rezervacija(){}
     public Rezervacija(String ime, String prezime, int oznakaAranzmana, String datumIVrijeme) {
         this.ime = ime;
@@ -82,5 +84,13 @@ public class Rezervacija implements AranzmanKomponenta{
 
     public void setVrijemeOtkaza(LocalDateTime vrijemeOtkaza) {
         this.vrijemeOtkaza = vrijemeOtkaza;
+    }
+
+    public Aranzman getAranzman() {
+        return aranzman;
+    }
+
+    public void setAranzman(Aranzman aranzman) {
+        this.aranzman = aranzman;
     }
 }

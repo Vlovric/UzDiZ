@@ -1,15 +1,9 @@
 package edu.unizg.foi.uzdiz.vlovric21;
 
-import edu.unizg.foi.uzdiz.vlovric21.facade.CsvParsiranjeFacade;
-import edu.unizg.foi.uzdiz.vlovric21.factorymethod.unos_objekta.CsvAranzmanUnositeljCreator;
-import edu.unizg.foi.uzdiz.vlovric21.factorymethod.unos_objekta.CsvObjectCreator;
-import edu.unizg.foi.uzdiz.vlovric21.factorymethod.unos_objekta.CsvRezervacijaUnositeljCreator;
 import edu.unizg.foi.uzdiz.vlovric21.parser.ArgumentParser;
 import edu.unizg.foi.uzdiz.vlovric21.pomocne.KomandePomocnik;
 import edu.unizg.foi.uzdiz.vlovric21.singleton.RepozitorijPodataka;
 
-import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
 
 public class Main {

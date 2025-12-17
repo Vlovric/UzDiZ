@@ -21,7 +21,6 @@ public class RepozitorijPodataka {
     private static RepozitorijPodataka instance = new RepozitorijPodataka();
     private static int idBrojacRezervacija = 1;
     private static boolean kronoloskiRedoslijed = true;
-    private List<Integer> aranzmaniKronologija = new ArrayList<>();
 
     private AranzmanKolekcija aranzmanKolekcija = new AranzmanKolekcija();
 
@@ -49,81 +48,11 @@ public class RepozitorijPodataka {
         aranzmanKolekcija.dodajDijete(ar);
     }
 
-    public String dodajRezervaciju(Rezervacija rezervacija){
-        int oznaka = rezervacija.getOznakaAranzmana();
+    public String dodajRezervaciju(Rezervacija rezervacija) {
         int id = getIdRezervacije();
         rezervacija.setId(id);
         rezervacija.setStatus(new RezervacijaNova());
-        Aranzman aranzman = aranzmanKolekcija.dohvatiAranzmanPoOznaci(oznaka);
-
-        List<Rezervacija> tempRezervacije = new ArrayList<>();
-        List<AranzmanKomponenta> rezervacije = aranzman.dohvatiDjecu();
-        for(AranzmanKomponenta a : rezervacije){
-            if(a instanceof Rezervacija r){
-                if(r.getStatus().equals(new RezervacijaOtkazana().getStatusNaziv())){
-                    tempRezervacije.add(r);
-                }else{
-                    r.setStatus(new RezervacijaNova());
-                    tempRezervacije.add(r);
-                }
-            }
-        }
-        tempRezervacije.add(rezervacija);
-        tempRezervacije.sort((r1, r2) -> {
-            LocalDateTime dt1 = datumFormater.parseDatumIVrijeme(r1.getDatumIVrijeme());
-            LocalDateTime dt2 = datumFormater.parseDatumIVrijeme(r2.getDatumIVrijeme());
-            return dt1.compareTo(dt2);
-        });
-
-        aranzman.resetirajStanje();
-        String rezultatDodavanja = "";
-
-        for(Rezervacija r : tempRezervacije) {
-            rezultatDodavanja = aranzman.dodajRezervaciju(r);
-        }
-
-        String statusRezervacije = aranzmanKolekcija.dohvatiAranzmanPoOznaci(oznaka).dohvatiRezervacijuPoID(id).getStatus();
-
-        if(!aranzmaniKronologija.isEmpty()){
-            popraviKronologiju();
-        }
-
-         if(!rezultatDodavanja.isEmpty()){
-            return rezultatDodavanja;
-        }else{
-            return "Rezervacija uspješno dodana. Status rezervacije: " + statusRezervacije;
-        }
-    }
-
-    private void popraviKronologiju(){
-        for(int oznaka : aranzmaniKronologija){
-            Aranzman aranzman = aranzmanKolekcija.dohvatiAranzmanPoOznaci(oznaka);
-
-            List<Rezervacija> tempRezervacije = new ArrayList<>();
-            List<AranzmanKomponenta> rezervacije = aranzman.dohvatiDjecu();
-            for(AranzmanKomponenta a : rezervacije){
-                if(a instanceof Rezervacija r){
-                    if(r.getStatus().equals(new RezervacijaOtkazana().getStatusNaziv())){
-                        tempRezervacije.add(r);
-                    }else{
-                        r.setStatus(new RezervacijaNova());
-                        tempRezervacije.add(r);
-                    }
-                }
-            }
-            tempRezervacije.sort((r1, r2) -> {
-                LocalDateTime dt1 = datumFormater.parseDatumIVrijeme(r1.getDatumIVrijeme());
-                LocalDateTime dt2 = datumFormater.parseDatumIVrijeme(r2.getDatumIVrijeme());
-                return dt1.compareTo(dt2);
-            });
-
-            aranzman.resetirajStanje();
-
-            for(Rezervacija r : tempRezervacije) {
-                aranzman.dodajRezervaciju(r);
-            }
-        }
-        aranzmaniKronologija.clear();
+        return aranzmanKolekcija.dodajRezervaciju(rezervacija);
     }
 
     public boolean postojiKronoloskiAktivnaRezervacijaPreklapanjeKorisnik(Aranzman aranzman, Rezervacija rezervacija){
@@ -347,12 +276,16 @@ public class RepozitorijPodataka {
         idBrojacRezervacija = 1;
     }
 
-    public List<Integer> getAranzmaniKronologija(){
-        return aranzmaniKronologija;
+    public void dodajAranzmanKronologija(int oznaka){
+        aranzmanKolekcija.dodajAranzmanUKronologiju(oznaka);
     }
 
-    public void dodajAranzmanKronologija(int oznaka){
-        aranzmaniKronologija.add(oznaka);
+    public DatumFormater getDatumFormater(){
+        return datumFormater;
+    }
+
+    public void setDatumFormater(DatumFormater datumFormater){
+        this.datumFormater = datumFormater;
     }
 
 
