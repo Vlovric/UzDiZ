@@ -59,12 +59,6 @@ public class RepozitorijPodataka {
         return aranzmanKolekcija.postojiKronoloskiAktivnaRezervacijaPreklapanjeKorisnik(aranzman, rezervacija);
     }
 
-    public boolean rezervacijaPrijeDruge(Rezervacija r1, Rezervacija r2){
-        LocalDateTime dt1 = datumFormater.parseDatumIVrijeme(r1.getDatumIVrijeme());
-        LocalDateTime dt2 = datumFormater.parseDatumIVrijeme(r2.getDatumIVrijeme());
-        return dt1.isBefore(dt2);
-    }
-
     public int postojiNeKronoloskiAktivnaRezervacijaPreklapanjeKorisnik(Aranzman aranzman, Rezervacija rezervacija){
         return aranzmanKolekcija.postojiNeKronoloskiAktivnaRezervacijaPreklapanjeKorisnik(aranzman, rezervacija);
     }
@@ -79,7 +73,6 @@ public class RepozitorijPodataka {
         aranzmanKolekcija.resetirajRezervacijeOtkaz();
     }
 
-
     public boolean provjeriPreklapanjeDatuma(Aranzman a1, Aranzman a2){
         LocalDate a1Pocetak = datumFormater.parseDatum(a1.getPocetniDatum());
         LocalDate a1Kraj = datumFormater.parseDatum(a1.getZavrsniDatum());
@@ -91,6 +84,13 @@ public class RepozitorijPodataka {
         }
         return true;
     }
+
+    public boolean rezervacijaPrijeDruge(Rezervacija r1, Rezervacija r2){
+        DatumFormater datumFormater = RepozitorijPodataka.getInstance().getDatumFormater();
+        LocalDateTime dt1 = datumFormater.parseDatumIVrijeme(r1.getDatumIVrijeme());
+        LocalDateTime dt2 = datumFormater.parseDatumIVrijeme(r2.getDatumIVrijeme());
+        return dt1.isBefore(dt2);
+    };
 
     public List<Aranzman> dohvatiAranzmaneRazdoblje(String pocetniDatum, String zavrsniDatum){
         return aranzmanKolekcija.dohvatiAranzmaneRazdoblje(pocetniDatum, zavrsniDatum);
