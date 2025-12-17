@@ -29,7 +29,7 @@ public class IROFormater extends Formater {
         ispisiZaglavlje(zaglavljeFormat, sirinaTablice, "Datum i vrijeme", "Oznaka aranžmana", "Naziv aranžmana", "Vrsta");
 
         for(Rezervacija r : rezervacije){
-            Aranzman aranzman = repozitorij.getAranzmanPoOznaci(r.getOznakaAranzmana());
+            Aranzman aranzman = r.getAranzman();
             String nazivAranzmana = aranzman != null ? aranzman.getNaziv() : "";
 
             LocalDateTime dt = datumFormater.parseDatumIVrijeme(r.getDatumIVrijeme());

@@ -45,6 +45,7 @@ public class AranzmanKolekcija implements AranzmanKomponenta {
     public String dodajRezervaciju(Rezervacija rezervacija){
         int id = rezervacija.getId();
         Aranzman aranzman = dohvatiAranzmanPoOznaci(rezervacija.getOznakaAranzmana());
+        rezervacija.setAranzman(aranzman);
 
         List<Rezervacija> tempRezervacije = new ArrayList<>();
         List<AranzmanKomponenta> rezervacije = aranzman.dohvatiDjecu();
@@ -116,6 +117,11 @@ public class AranzmanKolekcija implements AranzmanKomponenta {
             }
         }
         aranzmaniKronologija.clear();
+    }
+
+    public void otkaziSveRezervacijeAranzmana(int oznaka){
+        Aranzman aranzman = dohvatiAranzmanPoOznaci(oznaka);
+        aranzman.otkaziSveRezervacije();
     }
 
     public void dodajAranzmanUKronologiju(int oznaka){

@@ -7,6 +7,7 @@ import edu.unizg.foi.uzdiz.vlovric21.state_aranzman.AranzmanUPripremi;
 import edu.unizg.foi.uzdiz.vlovric21.state_rezervacija.RezervacijaOtkazana;
 import edu.unizg.foi.uzdiz.vlovric21.state_rezervacija.RezervacijaStatus;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -89,6 +90,15 @@ public class Aranzman implements AranzmanKomponenta{
 
     public String dodajRezervaciju(Rezervacija rezervacija){
         return status.dodajRezervaciju(this, rezervacija);
+    }
+
+    public void otkaziSveRezervacije(){
+        for(AranzmanKomponenta k : djeca){
+            if(k instanceof Rezervacija r){
+                r.setVrijemeOtkaza(LocalDateTime.now());
+                r.otkazi();
+            }
+        }
     }
 
     public void resetirajStanje(){

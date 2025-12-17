@@ -26,8 +26,7 @@ public class Rezervacija implements AranzmanKomponenta{
     }
 
     public String otkazi(){
-        RepozitorijPodataka repozitorij = RepozitorijPodataka.getInstance();
-        Aranzman aranzman = repozitorij.getAranzmanPoOznaci(this.oznakaAranzmana);
+        Aranzman aranzman = this.aranzman;
         return this.status.otkazi(aranzman, this);
     }
     

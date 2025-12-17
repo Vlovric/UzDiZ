@@ -106,11 +106,7 @@ public class RepozitorijPodataka {
     }
 
     public String otkaziSveRezervacijeAranzmana(int oznaka){
-        List<Rezervacija> sveRezervacije = aranzmanKolekcija.dohvatiAranzmanPoOznaci(oznaka).dohvatiSveRezervacije();
-        for(Rezervacija r : sveRezervacije){
-            r.setVrijemeOtkaza(LocalDateTime.now());
-            r.otkazi(); //TODO ovo realno moze ic u invdividualni aranzman da obavi za sebe. Refaktorirat takve metode sve vidjet sta treba ic u decorator il stanja
-        }
+        aranzmanKolekcija.otkaziSveRezervacijeAranzmana(oznaka);
         return "Otkazan aranžman " + oznaka + " i sve njegove rezervacije.";
     }
 
@@ -139,7 +135,7 @@ public class RepozitorijPodataka {
                 r.setId(noviId);
                 r.setStatus(new RezervacijaNova());
             }
-            Aranzman aranzman = aranzmanKolekcija.dohvatiAranzmanPoOznaci(r.getOznakaAranzmana());
+            Aranzman aranzman = r.getAranzman();
             aranzman.dodajRezervaciju(r);
         }
     }
