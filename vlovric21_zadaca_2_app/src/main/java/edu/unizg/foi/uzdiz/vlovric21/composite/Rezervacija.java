@@ -4,6 +4,7 @@ import edu.unizg.foi.uzdiz.vlovric21.singleton.RepozitorijPodataka;
 import edu.unizg.foi.uzdiz.vlovric21.state_rezervacija.RezervacijaStatus;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class Rezervacija implements AranzmanKomponenta{
     private int id;
@@ -25,6 +26,12 @@ public class Rezervacija implements AranzmanKomponenta{
         this.datumIVrijeme = datumIVrijeme;
     }
 
+    @Override
+    public List<Rezervacija> dohvatiSveRezervacije() {
+        return List.of(this);
+    }
+
+    @Override
     public String otkazi(){
         Aranzman aranzman = this.aranzman;
         return this.status.otkazi(aranzman, this);

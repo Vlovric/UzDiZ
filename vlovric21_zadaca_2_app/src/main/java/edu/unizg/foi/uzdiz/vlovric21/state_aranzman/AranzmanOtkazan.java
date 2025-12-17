@@ -11,13 +11,8 @@ public class AranzmanOtkazan implements AranzmanStatus{
     }
 
     @Override
-    public void otkaziRezervaciju(Aranzman aranzman, Rezervacija Rezervacija) {
-        return;
-    }
-
-    @Override
-    public void otkaziAranzman(Aranzman aranzman) {
-        return;
+    public String otkaziAranzman(Aranzman aranzman) {
+        return "Nije moguće otkazati aražman jer je  već OTKAZAN.";
     }
 
     @Override

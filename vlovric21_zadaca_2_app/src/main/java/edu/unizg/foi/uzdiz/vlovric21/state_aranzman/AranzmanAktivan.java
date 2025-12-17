@@ -1,11 +1,14 @@
 package edu.unizg.foi.uzdiz.vlovric21.state_aranzman;
 
 import edu.unizg.foi.uzdiz.vlovric21.composite.Aranzman;
+import edu.unizg.foi.uzdiz.vlovric21.composite.AranzmanKomponenta;
 import edu.unizg.foi.uzdiz.vlovric21.composite.Rezervacija;
 import edu.unizg.foi.uzdiz.vlovric21.singleton.RepozitorijPodataka;
 import edu.unizg.foi.uzdiz.vlovric21.state_rezervacija.RezervacijaAktivna;
 import edu.unizg.foi.uzdiz.vlovric21.state_rezervacija.RezervacijaOdgodena;
 import edu.unizg.foi.uzdiz.vlovric21.state_rezervacija.RezervacijaOtkazana;
+
+import java.time.LocalDateTime;
 
 public class AranzmanAktivan implements AranzmanStatus{
 
@@ -42,13 +45,15 @@ public class AranzmanAktivan implements AranzmanStatus{
     }
 
     @Override
-    public void otkaziRezervaciju(Aranzman aranzman, Rezervacija Rezervacija) {
-        return;
-    }
-
-    @Override
-    public void otkaziAranzman(Aranzman aranzman) {
-        return;
+    public String otkaziAranzman(Aranzman aranzman) {
+        for(AranzmanKomponenta k : aranzman.dohvatiDjecu()){
+            try{
+                k.otkazi();
+            }catch(Exception ignored){
+            }
+        }
+        aranzman.setStatus(new AranzmanOtkazan());
+        return "";
     }
 
     @Override

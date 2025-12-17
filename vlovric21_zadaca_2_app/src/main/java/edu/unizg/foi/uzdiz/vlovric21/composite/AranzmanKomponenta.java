@@ -16,4 +16,10 @@ public interface AranzmanKomponenta {
     default List<AranzmanKomponenta> dohvatiDjecu(){
         return Collections.emptyList();
     }
+
+    List<Rezervacija> dohvatiSveRezervacije();
+
+    default String otkazi(){
+        throw new UnsupportedOperationException("Nije podrzano otkazivanje.");
+    }
 }

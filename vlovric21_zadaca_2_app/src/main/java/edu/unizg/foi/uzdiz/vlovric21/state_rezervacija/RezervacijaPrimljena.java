@@ -4,11 +4,14 @@ import edu.unizg.foi.uzdiz.vlovric21.composite.Aranzman;
 import edu.unizg.foi.uzdiz.vlovric21.composite.Rezervacija;
 import edu.unizg.foi.uzdiz.vlovric21.singleton.RepozitorijPodataka;
 
+import java.time.LocalDateTime;
+
 public class RezervacijaPrimljena implements RezervacijaStatus{
 
     @Override
     public String otkazi(Aranzman aranzman, Rezervacija kontekst){
         kontekst.setStatus(new RezervacijaOtkazana());
+        kontekst.setVrijemeOtkaza(LocalDateTime.now());
         RepozitorijPodataka.getInstance().resetirajRezervacijeOtkaz();
         return "";
     }

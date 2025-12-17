@@ -32,6 +32,8 @@ public class AranzmanKolekcija implements AranzmanKomponenta {
         return djeca;
     }
 
+
+
     public void ukloniSvuDjecu(){
         djeca.clear();
     }
@@ -113,7 +115,7 @@ public class AranzmanKolekcija implements AranzmanKomponenta {
 
     public void otkaziSveRezervacijeAranzmana(int oznaka){
         Aranzman aranzman = dohvatiAranzmanPoOznaci(oznaka);
-        aranzman.otkaziSveRezervacije();
+        aranzman.otkazi();
     }
 
     private int dohvatiPreklapajuciAranzman(Aranzman aranzman, Rezervacija rezervacija, boolean kronoloski){
