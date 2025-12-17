@@ -32,6 +32,14 @@ public class AranzmanKolekcija implements AranzmanKomponenta {
         return djeca;
     }
 
+    @Override
+    public List<Rezervacija> dohvatiSveRezervacije() {
+        List<Rezervacija> rezultat = new ArrayList<>();
+        for(AranzmanKomponenta k : djeca){
+            rezultat.addAll(k.dohvatiSveRezervacije());
+        }
+        return rezultat;
+    }
 
 
     public void ukloniSvuDjecu(){

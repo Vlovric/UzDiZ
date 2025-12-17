@@ -7,6 +7,8 @@ import edu.unizg.foi.uzdiz.vlovric21.state_rezervacija.RezervacijaNaCekanju;
 import edu.unizg.foi.uzdiz.vlovric21.state_rezervacija.RezervacijaOtkazana;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AranzmanPopunjen implements AranzmanStatus{
     @Override
@@ -22,7 +24,8 @@ public class AranzmanPopunjen implements AranzmanStatus{
 
     @Override
     public String otkaziAranzman(Aranzman aranzman) {
-        for(AranzmanKomponenta k : aranzman.dohvatiDjecu()){
+        List<AranzmanKomponenta> djeca = new ArrayList<>(aranzman.dohvatiDjecu());
+        for(AranzmanKomponenta k : djeca){
             try{
                 k.otkazi();
             }catch(Exception ignored){
