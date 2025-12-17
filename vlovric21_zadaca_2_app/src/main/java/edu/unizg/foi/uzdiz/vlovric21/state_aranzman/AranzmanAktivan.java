@@ -11,7 +11,7 @@ public class AranzmanAktivan implements AranzmanStatus{
 
     @Override
     public String dodajRezervaciju(Aranzman aranzman, Rezervacija rezervacija) {
-        if(rezervacija.getStatus().equals(new RezervacijaOtkazana().getStatusNaziv())){
+        if(rezervacija.jeOtkazana()){
             aranzman.dodajDijete(rezervacija);
             return "";
         }
@@ -54,5 +54,10 @@ public class AranzmanAktivan implements AranzmanStatus{
     @Override
     public String getStatusNaziv() {
         return "AKTIVAN";
+    }
+
+    @Override
+    public boolean jeOtkazan() {
+        return false;
     }
 }

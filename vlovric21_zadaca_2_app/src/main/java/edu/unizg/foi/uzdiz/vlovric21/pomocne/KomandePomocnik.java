@@ -196,7 +196,7 @@ public class KomandePomocnik {
             System.out.println("Neuspješno dodavanje rezervacije: Aranžman s oznakom " + oznaka + " ne postoji.");
             return;
         }
-        if(aranzman.getStatus().equals(new AranzmanOtkazan().getStatusNaziv())){
+        if(aranzman.jeOtkazan()){
             System.out.println("Neuspješno dodavanje rezervacije: Aranžman s oznakom " + oznaka + " je otkazan.");
             return;
         }
@@ -223,7 +223,7 @@ public class KomandePomocnik {
             System.out.println("Neuspješno otkazivanje aranžmana: Aranžman s oznakom " + oznaka + " ne postoji.");
             return;
         }
-        if(aranzman.getStatus().equals(new AranzmanOtkazan().getStatusNaziv())){
+        if(aranzman.jeOtkazan()){
             System.out.println("Neuspješno otkazivanje aranžmana: Aranžman s oznakom " + oznaka + " je već otkazan.");
             return;
         }

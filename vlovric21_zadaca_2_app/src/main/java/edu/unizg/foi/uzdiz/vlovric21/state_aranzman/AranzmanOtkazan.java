@@ -24,4 +24,9 @@ public class AranzmanOtkazan implements AranzmanStatus{
     public String getStatusNaziv() {
         return "OTKAZAN";
     }
+
+    @Override
+    public boolean jeOtkazan() {
+        return true;
+    }
 }

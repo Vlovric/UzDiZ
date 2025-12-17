@@ -8,4 +8,6 @@ public interface RezervacijaStatus {
     String otkazi(Aranzman aranzman, Rezervacija kontekst);
 
     String getStatusNaziv();
+
+    boolean jeOtkazana();
 }

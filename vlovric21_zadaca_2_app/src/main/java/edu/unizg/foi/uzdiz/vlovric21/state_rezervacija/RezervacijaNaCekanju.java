@@ -15,4 +15,9 @@ public class RezervacijaNaCekanju implements RezervacijaStatus{
     public String getStatusNaziv() {
         return "NA ČEKANJU";
     }
+
+    @Override
+    public boolean jeOtkazana() {
+        return false;
+    }
 }

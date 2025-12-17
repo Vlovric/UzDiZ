@@ -15,4 +15,9 @@ public class RezervacijaNova implements RezervacijaStatus{
     public String getStatusNaziv() {
         return "NOVA";
     }
+
+    @Override
+    public boolean jeOtkazana() {
+        return false;
+    }
 }

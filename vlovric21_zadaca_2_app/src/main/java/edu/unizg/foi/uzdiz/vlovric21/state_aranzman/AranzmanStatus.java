@@ -12,4 +12,6 @@ public interface AranzmanStatus {
     void otkaziAranzman(Aranzman aranzman);
 
     String getStatusNaziv();
+
+    boolean jeOtkazan();
 }

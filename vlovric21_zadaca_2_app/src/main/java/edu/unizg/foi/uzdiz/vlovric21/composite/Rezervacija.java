@@ -92,4 +92,8 @@ public class Rezervacija implements AranzmanKomponenta{
     public void setAranzman(Aranzman aranzman) {
         this.aranzman = aranzman;
     }
+
+    public boolean jeOtkazana(){
+        return status.jeOtkazana();
+    }
 }

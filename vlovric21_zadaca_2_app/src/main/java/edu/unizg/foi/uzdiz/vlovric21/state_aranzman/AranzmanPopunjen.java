@@ -8,7 +8,7 @@ import edu.unizg.foi.uzdiz.vlovric21.state_rezervacija.RezervacijaOtkazana;
 public class AranzmanPopunjen implements AranzmanStatus{
     @Override
     public String dodajRezervaciju(Aranzman aranzman, Rezervacija rezervacija) {
-        if(rezervacija.getStatus().equals(new RezervacijaOtkazana().getStatusNaziv())){
+        if(rezervacija.jeOtkazana()){
             aranzman.dodajDijete(rezervacija);
             return "";
         }
@@ -30,5 +30,10 @@ public class AranzmanPopunjen implements AranzmanStatus{
     @Override
     public String getStatusNaziv() {
         return "POPUNJEN";
+    }
+
+    @Override
+    public boolean jeOtkazan() {
+        return false;
     }
 }

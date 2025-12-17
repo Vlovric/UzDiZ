@@ -15,4 +15,9 @@ public class RezervacijaOdgodena implements RezervacijaStatus{
     public String getStatusNaziv() {
         return "ODGODENA";
     }
+
+    @Override
+    public boolean jeOtkazana() {
+        return false;
+    }
 }

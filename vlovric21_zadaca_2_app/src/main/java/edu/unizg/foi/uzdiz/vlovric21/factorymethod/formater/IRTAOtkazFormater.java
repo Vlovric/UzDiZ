@@ -34,7 +34,7 @@ public class IRTAOtkazFormater extends Formater {
             String formatiraniDatumVrijeme = datumFormater.formatirajDatumVrijemeIspis(dt);
 
             String datumOtkaza = "";
-            if(Objects.equals(r.getStatus(), new RezervacijaOtkazana().getStatusNaziv())){
+            if(r.jeOtkazana()){
                 LocalDateTime dtOtkaza = r.getVrijemeOtkaza();
                 datumOtkaza = dtOtkaza != null ? datumFormater.formatirajDatumVrijemeIspis(dtOtkaza) : "";
             }

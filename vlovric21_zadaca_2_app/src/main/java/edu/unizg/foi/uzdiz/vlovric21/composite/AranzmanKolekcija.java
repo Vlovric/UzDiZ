@@ -56,7 +56,7 @@ public class AranzmanKolekcija implements AranzmanKomponenta {
         List<Rezervacija> rezervacije = new ArrayList<>();
         for(AranzmanKomponenta k : aranzman.dohvatiDjecu()){
             if(k instanceof Rezervacija r){
-                if(!r.getStatus().equals(new RezervacijaOtkazana().getStatusNaziv())){
+                if(!r.jeOtkazana()){
                     r.setStatus(new RezervacijaNova());
                 }
                 rezervacije.add(r);
@@ -200,7 +200,7 @@ public class AranzmanKolekcija implements AranzmanKomponenta {
         for(Rezervacija r : sveRezervacije){
             int noviId = RepozitorijPodataka.getInstance().getIdRezervacije();
             r.setId(noviId);
-            if(!r.getStatus().equals(new RezervacijaOtkazana().getStatusNaziv())){
+            if(!r.jeOtkazana()){
                 r.setStatus(new RezervacijaNova());
             }
             Aranzman aranzman = r.getAranzman();

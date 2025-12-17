@@ -139,7 +139,7 @@ public class Aranzman implements AranzmanKomponenta{
     public Rezervacija dohvatiRezervacijuPunoImeNeOtkazanu(String ime, String prezime){
         String punoIme = ime + " " + prezime;
         for(AranzmanKomponenta k : djeca){
-            if(k instanceof Rezervacija r && r.getPunoIme().equals(punoIme) && !r.getStatus().equals(new RezervacijaOtkazana().getStatusNaziv())){
+            if(k instanceof Rezervacija r && r.getPunoIme().equals(punoIme) && !r.jeOtkazana()){
                 return r;
             }
         }
@@ -290,5 +290,9 @@ public class Aranzman implements AranzmanKomponenta{
 
     public void setStatus(AranzmanStatus status) {
         this.status = status;
+    }
+
+    public boolean jeOtkazan(){
+        return status.jeOtkazan();
     }
 }
