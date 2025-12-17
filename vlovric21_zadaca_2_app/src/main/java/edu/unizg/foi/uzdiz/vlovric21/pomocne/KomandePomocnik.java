@@ -9,7 +9,9 @@ import edu.unizg.foi.uzdiz.vlovric21.singleton.RepozitorijPodataka;
 import edu.unizg.foi.uzdiz.vlovric21.state_aranzman.AranzmanOtkazan;
 import edu.unizg.foi.uzdiz.vlovric21.state_rezervacija.*;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -103,22 +105,39 @@ public class KomandePomocnik {
             prikaziOtkazane = true;
         }else{
             String temp = vrste;
+            Set<Character> iskoristeni = new HashSet<>();
 
             while(!temp.isEmpty()){
                 if(temp.startsWith("PA")){
+                    if(!iskoristeni.add('P')){
+                        System.out.println("Neispravni parametri za komandu.");
+                        return;
+                    }
                     statusi.add(new RezervacijaPrimljena().getStatusNaziv());
                     statusi.add(new RezervacijaAktivna().getStatusNaziv());
                     temp = temp.substring(2);
 
                 }else if(temp.startsWith("Č")){
+                    if(!iskoristeni.add('C')){
+                        System.out.println("Neispravni parametri za komandu.");
+                        return;
+                    }
                     statusi.add(new RezervacijaNaCekanju().getStatusNaziv());
                     temp = temp.substring(1);
 
                 } else if(temp.startsWith("OD")){
+                    if(!iskoristeni.add('D')){
+                        System.out.println("Neispravni parametri za komandu.");
+                        return;
+                    }
                     statusi.add(new RezervacijaOdgodena().getStatusNaziv());
                     temp = temp.substring(2);
 
                 }else if(temp.startsWith("O")){
+                    if(!iskoristeni.add('O')){
+                        System.out.println("Neispravni parametri za komandu.");
+                        return;
+                    }
                     statusi.add(new RezervacijaOtkazana().getStatusNaziv());
                     prikaziOtkazane = true;
                     temp = temp.substring(1);
