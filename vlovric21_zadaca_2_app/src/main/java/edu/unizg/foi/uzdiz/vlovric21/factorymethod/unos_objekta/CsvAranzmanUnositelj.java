@@ -17,7 +17,6 @@ public class CsvAranzmanUnositelj extends CsvObjectUnositelj {
             System.out.println("Aranžman s oznakom " + oznaka + " već postoji.");
             return false;
         }
-        //TODO mogu jos validirat stvari ko min max, datume i sl.
         return true;
     }
 
