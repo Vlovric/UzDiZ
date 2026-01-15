@@ -5,6 +5,8 @@ public class ArgumentParser {
     private String rezervacijeDatoteka;
 
     public boolean parsirajArgumente(String[] args){
+        boolean jdr = false;
+        boolean jta = false;
 
         for(int i=0; i< args.length; i++){
             String arg = args[i];
@@ -22,6 +24,18 @@ public class ArgumentParser {
                     }
                     rezervacijeDatoteka = args[i+1];
                     i++;
+                    break;
+                case "--jdr":
+                    if(jta){
+                        return false;
+                    }
+                    jdr = true;
+                    break;
+                case "--jta":
+                    if(jdr){
+                        return false;
+                    }
+                    jta = true;
                     break;
                 default:
                     return false;
