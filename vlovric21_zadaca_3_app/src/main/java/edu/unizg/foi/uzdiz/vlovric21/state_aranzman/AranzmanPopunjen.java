@@ -3,6 +3,7 @@ package edu.unizg.foi.uzdiz.vlovric21.state_aranzman;
 import edu.unizg.foi.uzdiz.vlovric21.composite.Aranzman;
 import edu.unizg.foi.uzdiz.vlovric21.composite.AranzmanKomponenta;
 import edu.unizg.foi.uzdiz.vlovric21.composite.Rezervacija;
+import edu.unizg.foi.uzdiz.vlovric21.singleton.RepozitorijPodataka;
 import edu.unizg.foi.uzdiz.vlovric21.state_rezervacija.RezervacijaNaCekanju;
 import edu.unizg.foi.uzdiz.vlovric21.state_rezervacija.RezervacijaOtkazana;
 
@@ -15,6 +16,9 @@ public class AranzmanPopunjen implements AranzmanStatus{
     public String dodajRezervaciju(Aranzman aranzman, Rezervacija rezervacija) {
         if(rezervacija.jeOtkazana()){
             aranzman.dodajDijete(rezervacija);
+            return "";
+        }
+        if(RepozitorijPodataka.getInstance().getRezervacijaUpravitelj().upravljajRezervacijom(aranzman, rezervacija)){
             return "";
         }
         rezervacija.setStatus(new RezervacijaNaCekanju());
