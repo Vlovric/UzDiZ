@@ -12,6 +12,8 @@ import edu.unizg.foi.uzdiz.vlovric21.pomocne.DatumFormater;
 import edu.unizg.foi.uzdiz.vlovric21.state_rezervacija.RezervacijaAktivna;
 import edu.unizg.foi.uzdiz.vlovric21.state_rezervacija.RezervacijaNova;
 import edu.unizg.foi.uzdiz.vlovric21.state_rezervacija.RezervacijaOtkazana;
+import edu.unizg.foi.uzdiz.vlovric21.strategy_null_object.NistaRezervacijaUpravitelj;
+import edu.unizg.foi.uzdiz.vlovric21.strategy_null_object.RezervacijaUpravitelj;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -24,6 +26,7 @@ public class RepozitorijPodataka {
     private static boolean podnozje = false;
 
     private AranzmanKolekcija aranzmanKolekcija = new AranzmanKolekcija();
+    private RezervacijaUpravitelj rezervacijaUpravitelj = new NistaRezervacijaUpravitelj();
 
     private DatumFormater datumFormater = new DatumFormater();
 
@@ -158,6 +161,14 @@ public class RepozitorijPodataka {
 
     public void setAranzmanKolekcija(AranzmanKolekcija aranzmanKolekcija) {
         this.aranzmanKolekcija = aranzmanKolekcija;
+    }
+
+    public RezervacijaUpravitelj getRezervacijaUpravitelj() {
+        return rezervacijaUpravitelj;
+    }
+
+    public void setRezervacijaUpravitelj(RezervacijaUpravitelj rezervacijaUpravitelj) {
+        this.rezervacijaUpravitelj = rezervacijaUpravitelj;
     }
 
     public void setIdBrojacRezervacija(){

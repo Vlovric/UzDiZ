@@ -1,12 +1,16 @@
 package edu.unizg.foi.uzdiz.vlovric21.parser;
 
+import edu.unizg.foi.uzdiz.vlovric21.singleton.RepozitorijPodataka;
+import edu.unizg.foi.uzdiz.vlovric21.strategy_null_object.JdrRezervacijaUpravitelj;
+import edu.unizg.foi.uzdiz.vlovric21.strategy_null_object.VdrRezervacijaUpravitelj;
+
 public class ArgumentParser {
     private String aranzmaniDatoteka;
     private String rezervacijeDatoteka;
 
     public boolean parsirajArgumente(String[] args){
         boolean jdr = false;
-        boolean jta = false;
+        boolean vdr = false;
 
         for(int i=0; i< args.length; i++){
             String arg = args[i];
@@ -26,20 +30,27 @@ public class ArgumentParser {
                     i++;
                     break;
                 case "--jdr":
-                    if(jta){
+                    if(vdr){
                         return false;
                     }
                     jdr = true;
                     break;
-                case "--jta":
+                case "--vdr":
                     if(jdr){
                         return false;
                     }
-                    jta = true;
+                    vdr = true;
                     break;
                 default:
                     return false;
             }
+        }
+        RepozitorijPodataka repozitorij = RepozitorijPodataka.getInstance();
+        if(jdr){
+             repozitorij.setRezervacijaUpravitelj(new JdrRezervacijaUpravitelj());
+        }
+        if(vdr){
+            repozitorij.setRezervacijaUpravitelj(new VdrRezervacijaUpravitelj());
         }
         return true;
     }
