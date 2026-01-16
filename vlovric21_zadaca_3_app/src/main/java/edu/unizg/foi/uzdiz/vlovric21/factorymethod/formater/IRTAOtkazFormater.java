@@ -11,6 +11,13 @@ import java.util.Objects;
 
 public class IRTAOtkazFormater extends Formater {
     private DatumFormater datumFormater = new DatumFormater();
+    private String naslovTablice = "Pregled rezervacija za aranžman";
+
+    public IRTAOtkazFormater() {}
+
+    public IRTAOtkazFormater(String naslov){
+        this.naslovTablice = naslov;
+    }
 
     @Override
     public void formatiraj(Object obj){
@@ -25,7 +32,7 @@ public class IRTAOtkazFormater extends Formater {
 
         int sirinaTablice = izracunajSirinuTablice(zaglavljeFormat);
 
-        ispisiNaslovTablice("Pregled rezervacija za aranžman", sirinaTablice);
+        ispisiNaslovTablice(naslovTablice, sirinaTablice);
 
         ispisiZaglavlje(zaglavljeFormat, sirinaTablice, "Ime", "Prezime", "Datum i vrijeme", "Vrsta", "Datum i vrijeme otkaza");
 

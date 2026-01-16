@@ -1,9 +1,11 @@
 package edu.unizg.foi.uzdiz.vlovric21.composite;
 
+import edu.unizg.foi.uzdiz.vlovric21.visitor.PptarElement;
+
 import java.util.Collections;
 import java.util.List;
 
-public interface AranzmanKomponenta {
+public interface AranzmanKomponenta extends PptarElement {
 
     default void dodajDijete(AranzmanKomponenta komponenta){
         throw new UnsupportedOperationException("Nije podrzano dodavanje djece.");

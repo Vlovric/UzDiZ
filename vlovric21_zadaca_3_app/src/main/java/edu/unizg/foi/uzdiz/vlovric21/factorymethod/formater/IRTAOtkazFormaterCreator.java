@@ -4,8 +4,18 @@ import edu.unizg.foi.uzdiz.vlovric21.decorator.PodnozjeRezervacijaFormatDecorato
 
 public class IRTAOtkazFormaterCreator extends FormaterCreator {
 
+    private final String naslov;
+
+    public IRTAOtkazFormaterCreator(){
+        this.naslov = null;
+    }
+
+    public IRTAOtkazFormaterCreator(String naslov){
+        this.naslov = naslov;
+    }
+
     @Override
     protected Formater stvoriFormater() {
-        return new PodnozjeRezervacijaFormatDecorator(new IRTAOtkazFormater());
+        return naslov == null ? new PodnozjeRezervacijaFormatDecorator(new IRTAOtkazFormater()) : new PodnozjeRezervacijaFormatDecorator(new IRTAOtkazFormater(naslov));
     }
 }

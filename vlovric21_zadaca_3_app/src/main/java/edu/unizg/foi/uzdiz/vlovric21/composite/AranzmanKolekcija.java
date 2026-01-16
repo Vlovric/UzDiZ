@@ -5,6 +5,7 @@ import edu.unizg.foi.uzdiz.vlovric21.singleton.RepozitorijPodataka;
 import edu.unizg.foi.uzdiz.vlovric21.state_rezervacija.RezervacijaAktivna;
 import edu.unizg.foi.uzdiz.vlovric21.state_rezervacija.RezervacijaNova;
 import edu.unizg.foi.uzdiz.vlovric21.state_rezervacija.RezervacijaOtkazana;
+import edu.unizg.foi.uzdiz.vlovric21.visitor.PptarVisitor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -16,6 +17,10 @@ public class AranzmanKolekcija implements AranzmanKomponenta {
 
     private final List<Aranzman> djeca = new ArrayList<>();
     private List<Integer> aranzmaniKronologija = new ArrayList<>();
+
+    @Override
+    public void prihvati(PptarVisitor visitor){
+    }
 
     @Override
     public void dodajDijete(AranzmanKomponenta komponenta){
@@ -44,7 +49,6 @@ public class AranzmanKolekcija implements AranzmanKomponenta {
         }
         return rezultat;
     }
-
 
     public void ukloniSvuDjecu(){
         djeca.clear();

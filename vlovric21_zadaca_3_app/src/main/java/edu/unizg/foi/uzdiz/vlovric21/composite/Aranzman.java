@@ -3,6 +3,8 @@ package edu.unizg.foi.uzdiz.vlovric21.composite;
 import edu.unizg.foi.uzdiz.vlovric21.state_aranzman.*;
 import edu.unizg.foi.uzdiz.vlovric21.state_rezervacija.RezervacijaOtkazana;
 import edu.unizg.foi.uzdiz.vlovric21.state_rezervacija.RezervacijaStatus;
+import edu.unizg.foi.uzdiz.vlovric21.visitor.PptarElement;
+import edu.unizg.foi.uzdiz.vlovric21.visitor.PptarVisitor;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -49,6 +51,14 @@ public class Aranzman implements AranzmanKomponenta{
         this.cijena = cijena;
         this.minBrojPutnika = minBrojPutnika;
         this.maxBrojPutnika = maxBrojPutnika;
+    }
+
+    @Override
+    public void prihvati(PptarVisitor visitor){
+        visitor.posjeti(this);
+        for(AranzmanKomponenta k : djeca){
+            k.prihvati(visitor);
+        }
     }
 
     @Override

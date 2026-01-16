@@ -2,6 +2,7 @@ package edu.unizg.foi.uzdiz.vlovric21.composite;
 
 import edu.unizg.foi.uzdiz.vlovric21.singleton.RepozitorijPodataka;
 import edu.unizg.foi.uzdiz.vlovric21.state_rezervacija.RezervacijaStatus;
+import edu.unizg.foi.uzdiz.vlovric21.visitor.PptarVisitor;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -24,6 +25,11 @@ public class Rezervacija implements AranzmanKomponenta{
         this.prezime = prezime;
         this.oznakaAranzmana = oznakaAranzmana;
         this.datumIVrijeme = datumIVrijeme;
+    }
+
+    @Override
+    public void prihvati(PptarVisitor visitor){
+        visitor.posjeti(this);
     }
 
     @Override
