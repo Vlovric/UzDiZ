@@ -33,34 +33,8 @@ public class AranzmanUPripremi implements AranzmanStatus {
             return "";
         }
 
-        int neKronoloskoPreklapanje = repozitorij.postojiNeKronoloskiAktivnaRezervacijaPreklapanjeKorisnik(aranzman, rezervacija);
-        if (neKronoloskoPreklapanje != -1) {
-            repozitorij.dodajAranzmanKronologija(neKronoloskoPreklapanje);
-        }
-        boolean postojiPrimljenaKorisnika = aranzman.postojiRezervacijaKorisnikaSaStatusom(rezervacija.getPunoIme(), new RezervacijaPrimljena());
-        boolean postojiAktivnaPreklapanje = repozitorij.postojiKronoloskiAktivnaRezervacijaPreklapanjeKorisnik(aranzman, rezervacija);
-
-        if (postojiPrimljenaKorisnika || postojiAktivnaPreklapanje) {
-            rezervacija.setStatus(new RezervacijaOdgodena());
-            aranzman.dodajDijete(rezervacija);
+        if(repozitorij.getRezervacijaUpravitelj().upravljajRezervacijom(aranzman, rezervacija)){
             return "";
-        }
-
-        List<Rezervacija> rezervacijePostojece = aranzman.dohvatiRezervacijeSaStatusom(new RezervacijaPrimljena());
-
-        for (Rezervacija r : rezervacijePostojece) {
-            neKronoloskoPreklapanje = repozitorij.postojiNeKronoloskiAktivnaRezervacijaPreklapanjeKorisnik(aranzman, r);
-            if (neKronoloskoPreklapanje != -1) {
-                repozitorij.dodajAranzmanKronologija(neKronoloskoPreklapanje);
-            }
-            boolean postojiPrimljenaKorisnikaPostojece = aranzman.postojiViseRezervacijaKorisnikaStatusom(r.getPunoIme(), new RezervacijaPrimljena());
-            if (postojiPrimljenaKorisnikaPostojece) {
-                r.setStatus(new RezervacijaOdgodena());
-            }
-            boolean postojiAktivnaPreklapanjePostojece = repozitorij.postojiKronoloskiAktivnaRezervacijaPreklapanjeKorisnik(aranzman, r);
-            if (postojiAktivnaPreklapanjePostojece) {
-                r.setStatus(new RezervacijaOdgodena());
-            }
         }
 
         rezervacija.setStatus(new RezervacijaPrimljena());
@@ -71,7 +45,7 @@ public class AranzmanUPripremi implements AranzmanStatus {
             return "";
         }
 
-        rezervacijePostojece = aranzman.dohvatiRezervacijeSaStatusom(new RezervacijaPrimljena());
+        List<Rezervacija> rezervacijePostojece = aranzman.dohvatiRezervacijeSaStatusom(new RezervacijaPrimljena());
         for (Rezervacija r : rezervacijePostojece) {
             r.setStatus(new RezervacijaAktivna());
         }

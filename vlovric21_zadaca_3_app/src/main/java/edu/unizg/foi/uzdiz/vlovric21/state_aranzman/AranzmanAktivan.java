@@ -21,19 +21,10 @@ public class AranzmanAktivan implements AranzmanStatus{
             return "";
         }
 
-        RepozitorijPodataka repozitorij = RepozitorijPodataka.getInstance();
-        int neKronoloskoPreklapanje = repozitorij.postojiNeKronoloskiAktivnaRezervacijaPreklapanjeKorisnik(aranzman, rezervacija);
-        if(neKronoloskoPreklapanje != -1){
-            repozitorij.dodajAranzmanKronologija(neKronoloskoPreklapanje);
-        }
-        boolean postojiAktivnaKorisnika = aranzman.postojiRezervacijaKorisnikaSaStatusom(rezervacija.getPunoIme(), new RezervacijaAktivna());
-        boolean postojiAktivnaPreklapanje = repozitorij.postojiKronoloskiAktivnaRezervacijaPreklapanjeKorisnik(aranzman, rezervacija);
-
-        if(postojiAktivnaKorisnika || postojiAktivnaPreklapanje){
-            rezervacija.setStatus(new RezervacijaOdgodena());
-            aranzman.dodajDijete(rezervacija);
+        if(RepozitorijPodataka.getInstance().getRezervacijaUpravitelj().upravljajRezervacijom(aranzman, rezervacija)){
             return "";
         }
+
         rezervacija.setStatus(new RezervacijaAktivna());
         aranzman.dodajDijete(rezervacija);
 
