@@ -6,6 +6,6 @@ import edu.unizg.foi.uzdiz.vlovric21.composite.Rezervacija;
 public class NistaRezervacijaUpravitelj implements RezervacijaUpravitelj{
     @Override
     public Boolean upravljajRezervacijom(Aranzman aranzman, Rezervacija rezervacija) {
-        return true;
+        return false;
     }
 }

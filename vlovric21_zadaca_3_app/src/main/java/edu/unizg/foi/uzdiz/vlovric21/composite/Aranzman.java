@@ -140,6 +140,16 @@ public class Aranzman implements AranzmanKomponenta{
         return null;
     }
 
+    public int dohvatiBrojRezervacijaKorisnika(String punoIme){
+        int count = 0;
+        for(Rezervacija r : dohvatiSveRezervacije()){
+            if(r.getPunoIme().equals(punoIme) && !r.jeOtkazana()){
+                count++;
+            }
+        }
+        return count;
+    }
+
     public void postaviUPripremi(){
         this.status = new AranzmanUPripremi();
     }

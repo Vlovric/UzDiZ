@@ -26,25 +26,6 @@ public class JdrRezervacijaUpravitelj implements RezervacijaUpravitelj {
         return false;
     }
 
-    private Boolean upravljajAktivnim(Aranzman aranzman, Rezervacija rezervacija){
-        RepozitorijPodataka repozitorij = RepozitorijPodataka.getInstance();
-
-        int neKronoloskoPreklapanje = repozitorij.postojiNeKronoloskiAktivnaRezervacijaPreklapanjeKorisnik(aranzman, rezervacija);
-        if(neKronoloskoPreklapanje != -1){
-            repozitorij.dodajAranzmanKronologija(neKronoloskoPreklapanje);
-        }
-        boolean postojiAktivnaKorisnika = aranzman.postojiRezervacijaKorisnikaSaStatusom(rezervacija.getPunoIme(), new RezervacijaAktivna());
-        boolean postojiAktivnaPreklapanje = repozitorij.postojiKronoloskiAktivnaRezervacijaPreklapanjeKorisnik(aranzman, rezervacija);
-
-        if(postojiAktivnaKorisnika || postojiAktivnaPreklapanje){
-            rezervacija.setStatus(new RezervacijaOdgodena());
-            aranzman.dodajDijete(rezervacija);
-            return true;
-        }
-
-        return false;
-    }
-
     private Boolean upravljajUPripremi(Aranzman aranzman, Rezervacija rezervacija){
         RepozitorijPodataka repozitorij = RepozitorijPodataka.getInstance();
 
@@ -76,6 +57,25 @@ public class JdrRezervacijaUpravitelj implements RezervacijaUpravitelj {
             if (postojiAktivnaPreklapanjePostojece) {
                 r.setStatus(new RezervacijaOdgodena());
             }
+        }
+
+        return false;
+    }
+
+    private Boolean upravljajAktivnim(Aranzman aranzman, Rezervacija rezervacija){
+        RepozitorijPodataka repozitorij = RepozitorijPodataka.getInstance();
+
+        int neKronoloskoPreklapanje = repozitorij.postojiNeKronoloskiAktivnaRezervacijaPreklapanjeKorisnik(aranzman, rezervacija);
+        if(neKronoloskoPreklapanje != -1){
+            repozitorij.dodajAranzmanKronologija(neKronoloskoPreklapanje);
+        }
+        boolean postojiAktivnaKorisnika = aranzman.postojiRezervacijaKorisnikaSaStatusom(rezervacija.getPunoIme(), new RezervacijaAktivna());
+        boolean postojiAktivnaPreklapanje = repozitorij.postojiKronoloskiAktivnaRezervacijaPreklapanjeKorisnik(aranzman, rezervacija);
+
+        if(postojiAktivnaKorisnika || postojiAktivnaPreklapanje){
+            rezervacija.setStatus(new RezervacijaOdgodena());
+            aranzman.dodajDijete(rezervacija);
+            return true;
         }
 
         return false;
