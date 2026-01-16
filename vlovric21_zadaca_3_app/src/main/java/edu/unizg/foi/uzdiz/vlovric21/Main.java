@@ -81,6 +81,9 @@ public class Main {
                 case "POD":
                     komandePomocnik.dodavanjePodnozjaPOD();
                     break;
+                case "PPTAR":
+                    komandePomocnik.pretrazivanjePodatakaPPTAR(unos);
+                    break;
                 case "Q":
                     return;
                 default:

@@ -323,4 +323,21 @@ public class KomandePomocnik {
             System.out.println("Podnožje je uključeno.");
         }
     }
+
+    public void pretrazivanjePodatakaPPTAR(String unos){
+        String uzorak = "^PPTAR\\s+([AR])\\s+(.+)$";
+
+        Pattern regex = Pattern.compile(uzorak);
+        Matcher matcher = provjeriRegex(regex, unos);
+        if(matcher == null){
+            return;
+        }
+
+        String opcija = matcher.group(1);
+        String pojam = matcher.group(2);
+
+
+
+
+    }
 }
