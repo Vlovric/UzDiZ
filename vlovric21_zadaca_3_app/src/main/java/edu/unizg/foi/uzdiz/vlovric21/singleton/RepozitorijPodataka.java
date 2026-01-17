@@ -81,6 +81,39 @@ public class RepozitorijPodataka {
         return vstarCommand.izvrsi();
     }
 
+    public String pretplatiKorisnikaNaAranzman(String ime, String prezime, int oznaka){
+        Aranzman aranzman = aranzmanKolekcija.dohvatiAranzmanPoOznaci(oznaka);
+        if(aranzman == null){
+            return "Ne postoji aranžman s oznakom " + oznaka;
+        }
+        return aranzman.dodajPretplatnika(ime + " " + prezime);
+    }
+
+    public String ukloniPretplatuKorisnikaSaAranzmana(String punoIme, int oznaka){
+        Aranzman aranzman = aranzmanKolekcija.dohvatiAranzmanPoOznaci(oznaka);
+        if(aranzman == null){
+            return "Ne postoji aranžman s oznakom " + oznaka;
+        }
+
+        boolean rezultat = aranzman.ukloniPretplatnika(punoIme);
+
+        if(rezultat){
+            return "Ukida se pretplata osobe " + punoIme + " za informacije o turističkom aranžmanu s oznakom " + oznaka + " te njegovim rezervacijama";
+        }
+        return "Osoba " + punoIme + " nije pretplaćena na informacije o turističkom aranžmanu s oznakom " + oznaka;
+    }
+
+    public String ukloniSvePretplateSaAranzmana(int oznaka){
+        Aranzman aranzman = aranzmanKolekcija.dohvatiAranzmanPoOznaci(oznaka);
+        if(aranzman == null){
+            return "Ne postoji aranžman s oznakom " + oznaka;
+        }
+
+        aranzman.ukloniSvePretplatnike();
+
+        return "Ukidaju se sve pretplate za informacije o turističkom aranžmanu s oznakom " + oznaka + " te njegovim rezervacijama";
+    }
+
     public boolean postojiKronoloskiAktivnaRezervacijaPreklapanjeKorisnik(Aranzman aranzman, Rezervacija rezervacija){
         return aranzmanKolekcija.postojiKronoloskiAktivnaRezervacijaPreklapanjeKorisnik(aranzman, rezervacija);
     }
@@ -94,6 +127,7 @@ public class RepozitorijPodataka {
         if(!rezultat.isEmpty()){
             return rezultat;
         }
+        getAranzmanPoOznaci(oznaka).obavijesti("Aranžman i sve njegove rezervacije su otkazane");
         return "Otkazan aranžman " + oznaka + " i sve njegove rezervacije.";
     }
 
@@ -141,17 +175,26 @@ public class RepozitorijPodataka {
         rezervacija.setVrijemeOtkaza(LocalDateTime.now());
         String rezultat = rezervacija.otkazi();
         if(rezultat.isEmpty()) {
+            getAranzmanPoOznaci(oznaka).obavijesti("Osoba " + ime + " " + prezime + " je otkazao/la svoju rezervaciju.");
             return "Rezervacija uspješno otkazana.";
         }
         return rezultat;
     }
 
     public void obrisiSveAranzmane(){
+        for(AranzmanKomponenta k : aranzmanKolekcija.dohvatiDjecu()){
+            Aranzman a = (Aranzman) k;
+            a.obavijesti("Aranžman i sve njegove rezervacije su obrisane");
+        }
         aranzmanKolekcija.ukloniSvuDjecu();
         aranzmanKolekcija = new AranzmanKolekcija();
     }
 
     public void obrisiSveRezervacije(){
+        for(AranzmanKomponenta k : aranzmanKolekcija.dohvatiDjecu()){
+            Aranzman a = (Aranzman) k;
+            a.obavijesti("Sve rezervacije su obrisane");
+        }
         aranzmanKolekcija.obrisiSveRezervacije();
         setIdBrojacRezervacija();
     }

@@ -219,6 +219,9 @@ public class KomandePomocnik {
 
         Rezervacija novaRezervacija = new Rezervacija(ime, prezime, oznaka, datumIVrijeme);
         String rezultat = repozitorij.dodajRezervaciju(novaRezervacija);
+        if(rezultat.contains("Rezervacija uspješno dodana")){
+            repozitorij.getAranzmanPoOznaci(oznaka).obavijesti("Osoba " + ime + " " + prezime + " je dodao/la rezervaciju");
+        }
         System.out.println(rezultat);
     }
 
@@ -395,6 +398,47 @@ public class KomandePomocnik {
         int oznaka = Integer.parseInt(matcher.group(1));
         String rezultat = repozitorij.vratiStanjeAranzmana(oznaka);
         System.out.println(rezultat);
+    }
+
+    public void pretplataPTAR(String unos){
+        String uzorak = "^PTAR\\s+([A-ZČĆĐŠŽa-zčćđšž]+)\\s+([A-ZČĆĐŠŽa-zčćđšž]+)\\s+(\\d+)$";
+
+        Pattern regex = Pattern.compile(uzorak);
+        Matcher matcher = provjeriRegex(regex, unos);
+        if(matcher == null){
+            return;
+        }
+
+        String ime = matcher.group(1);
+        String prezime = matcher.group(2);
+        int oznaka = Integer.parseInt(matcher.group(3));
+
+        String rezultat = repozitorij.pretplatiKorisnikaNaAranzman(ime, prezime, oznaka);
+        System.out.println(rezultat);
+    }
+
+    public void ukidanjePretplateUPTAR(String unos){
+        String uzorak = "^UPTAR\\s+(?:([A-ZČĆĐŠŽa-zčćđšž]+)\\s+([A-ZČĆĐŠŽa-zčćđšž]+)\\s+)?(\\d+)$";
+
+        Pattern regex = Pattern.compile(uzorak);
+        Matcher matcher = provjeriRegex(regex, unos);
+        if(matcher == null){
+            return;
+        }
+
+        String ime = matcher.group(1);
+        String prezime = matcher.group(2);
+        int oznaka = Integer.parseInt(matcher.group(3));
+
+        if(ime == null || prezime == null){
+            String punoIme = ime + " " + prezime;
+            String rezultat = repozitorij.ukloniPretplatuKorisnikaSaAranzmana(punoIme, oznaka);
+            System.out.println(rezultat);
+        }else{
+            String rezultat = repozitorij.ukloniSvePretplateSaAranzmana(oznaka);
+            System.out.println(rezultat);
+        }
+
     }
 
 }

@@ -90,6 +90,12 @@ public class Main {
                 case "VSTAR":
                     komandePomocnik.vratiStanjeAranzmanaVSTAR(unos);
                     break;
+                case "PTAR":
+                    komandePomocnik.pretplataPTAR(unos);
+                    break;
+                case "UPTAR":
+                    komandePomocnik.ukidanjePretplateUPTAR(unos);
+                    break;
                 case "Q":
                     return;
                 default:

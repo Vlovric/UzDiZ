@@ -34,6 +34,8 @@ public class Aranzman implements AranzmanKomponenta{
 
     private final List<AranzmanKomponenta> djeca = new ArrayList<>();
 
+    private List<String> pretplate = new ArrayList<>();
+
     public Aranzman(){}
     public Aranzman(
             int oznaka,
@@ -88,6 +90,7 @@ public class Aranzman implements AranzmanKomponenta{
 
     public void vratiStanje(AranzmanMemento memento){
         this.djeca.clear();
+        this.pretplate.clear();
         
         Aranzman spremljeniAranzman = memento.getAranzman();
         this.oznaka = spremljeniAranzman.oznaka;
@@ -109,6 +112,33 @@ public class Aranzman implements AranzmanKomponenta{
         this.status = spremljeniAranzman.status;
         
         this.djeca.addAll(memento.getRezervacije());
+        this.pretplate.addAll(memento.getAranzman().pretplate);
+    }
+
+    public String dodajPretplatnika(String punoIme){
+        if(!pretplate.contains(punoIme)){
+            pretplate.add(punoIme);
+            return punoIme + " se pretplatio/la za informacije o turističkom aranžmanu s oznakom " + this.oznaka + " te njegovim rezervacijama";
+        }
+        return punoIme + " je već pretplaćen/a za informacije o turističkom aranžmanu s oznakom " + this.oznaka + "te njegovim rezervacijama";
+    }
+
+    public boolean ukloniPretplatnika(String punoIme){
+        return pretplate.remove(punoIme);
+    }
+
+    public void ukloniSvePretplatnike(){
+        pretplate.clear();
+    }
+
+    public void obavijesti(String poruka){
+        System.out.println();
+        for(String ime : pretplate){
+            System.out.println("Obavijest za korisnika: " + ime);
+            System.out.println("Oznaka aranžmana: " + this.oznaka);
+            System.out.println("Poruka: " + poruka);
+            System.out.println();
+        }
     }
 
     @Override
