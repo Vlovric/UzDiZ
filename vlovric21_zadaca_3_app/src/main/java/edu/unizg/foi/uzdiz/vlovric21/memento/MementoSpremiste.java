@@ -7,7 +7,7 @@ public class MementoSpremiste {
     private final Map<Integer, AranzmanMemento> spremljenaStanja = new HashMap<>();
 
     public void dodajMemento(AranzmanMemento memento){
-        spremljenaStanja.put(memento.getOznaka(), memento);
+        spremljenaStanja.put(memento.getAranzman().getOznaka(), memento);
     }
 
     public AranzmanMemento dohvatiMemento(int oznaka){

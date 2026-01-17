@@ -54,6 +54,25 @@ public class Aranzman implements AranzmanKomponenta{
         this.minBrojPutnika = minBrojPutnika;
         this.maxBrojPutnika = maxBrojPutnika;
     }
+    public Aranzman(Aranzman drugi){
+        this.oznaka = drugi.oznaka;
+        this.naziv = drugi.naziv;
+        this.program = drugi.program;
+        this.pocetniDatum = drugi.pocetniDatum;
+        this.zavrsniDatum = drugi.zavrsniDatum;
+        this.vrijemeKretanja = drugi.vrijemeKretanja;
+        this.vrijemePovratka = drugi.vrijemePovratka;
+        this.cijena = drugi.cijena;
+        this.minBrojPutnika = drugi.minBrojPutnika;
+        this.maxBrojPutnika = drugi.maxBrojPutnika;
+        this.brojNocenja = drugi.brojNocenja;
+        this.doplataZaJednokrevetnuSobu = drugi.doplataZaJednokrevetnuSobu;
+        this.prijevoz = drugi.prijevoz;
+        this.brojDorucka = drugi.brojDorucka;
+        this.brojRuckova = drugi.brojRuckova;
+        this.brojVecera = drugi.brojVecera;
+        this.status = drugi.status;
+    }
 
     @Override
     public void prihvati(PptarVisitor visitor){
@@ -64,11 +83,31 @@ public class Aranzman implements AranzmanKomponenta{
     }
 
     public AranzmanMemento spremiStanje(){
-        return new AranzmanMemento(oznaka, dohvatiSveRezervacije());
+        return new AranzmanMemento(this, dohvatiSveRezervacije());
     }
 
     public void vratiStanje(AranzmanMemento memento){
         this.djeca.clear();
+        
+        Aranzman spremljeniAranzman = memento.getAranzman();
+        this.oznaka = spremljeniAranzman.oznaka;
+        this.naziv = spremljeniAranzman.naziv;
+        this.program = spremljeniAranzman.program;
+        this.pocetniDatum = spremljeniAranzman.pocetniDatum;
+        this.zavrsniDatum = spremljeniAranzman.zavrsniDatum;
+        this.vrijemeKretanja = spremljeniAranzman.vrijemeKretanja;
+        this.vrijemePovratka = spremljeniAranzman.vrijemePovratka;
+        this.cijena = spremljeniAranzman.cijena;
+        this.minBrojPutnika = spremljeniAranzman.minBrojPutnika;
+        this.maxBrojPutnika = spremljeniAranzman.maxBrojPutnika;
+        this.brojNocenja = spremljeniAranzman.brojNocenja;
+        this.doplataZaJednokrevetnuSobu = spremljeniAranzman.doplataZaJednokrevetnuSobu;
+        this.prijevoz = spremljeniAranzman.prijevoz;
+        this.brojDorucka = spremljeniAranzman.brojDorucka;
+        this.brojRuckova = spremljeniAranzman.brojRuckova;
+        this.brojVecera = spremljeniAranzman.brojVecera;
+        this.status = spremljeniAranzman.status;
+        
         this.djeca.addAll(memento.getRezervacije());
     }
 

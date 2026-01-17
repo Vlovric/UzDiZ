@@ -7,11 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AranzmanMemento {
-    private final int oznaka;
+    private final Aranzman aranzman;
     private final List<Rezervacija> rezervacije;
 
-    public AranzmanMemento(int oznaka, List<Rezervacija> rezervacije){
-        this.oznaka = oznaka;
+    public AranzmanMemento(Aranzman aranzman, List<Rezervacija> rezervacije){
+        this.aranzman = new Aranzman(aranzman);
         this.rezervacije = new ArrayList<>();
 
         for(Rezervacija r : rezervacije){
@@ -19,8 +19,8 @@ public class AranzmanMemento {
         }
     }
 
-    public int getOznaka() {
-        return oznaka;
+    public Aranzman getAranzman() {
+        return aranzman;
     }
 
     public List<Rezervacija> getRezervacije() {
