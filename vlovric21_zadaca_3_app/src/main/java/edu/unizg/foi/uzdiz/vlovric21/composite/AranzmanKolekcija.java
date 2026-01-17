@@ -120,7 +120,7 @@ public class AranzmanKolekcija implements AranzmanKomponenta {
         }
     }
 
-    private void popraviKronologiju(){
+    public void popraviKronologiju(){
         List<Integer> kopijaKronologije = new ArrayList<>(aranzmaniKronologija);
         aranzmaniKronologija.clear();
 

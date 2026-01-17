@@ -369,4 +369,32 @@ public class KomandePomocnik {
         }
     }
 
+    public void spremiStanjeAranzmanaPSTAR(String unos){
+        String uzorak = "^PSTAR\\s+(\\d+)$";
+
+        Pattern regex = Pattern.compile(uzorak);
+        Matcher matcher = provjeriRegex(regex, unos);
+        if(matcher == null){
+            return;
+        }
+
+        int oznaka = Integer.parseInt(matcher.group(1));
+        String rezultat = repozitorij.spremiStanjeAranzmana(oznaka);
+        System.out.println(rezultat);
+    }
+
+    public void vratiStanjeAranzmanaVSTAR(String unos){
+        String uzorak = "^VSTAR\\s+(\\d+)$";
+
+        Pattern regex = Pattern.compile(uzorak);
+        Matcher matcher = provjeriRegex(regex, unos);
+        if(matcher == null){
+            return;
+        }
+
+        int oznaka = Integer.parseInt(matcher.group(1));
+        String rezultat = repozitorij.vratiStanjeAranzmana(oznaka);
+        System.out.println(rezultat);
+    }
+
 }

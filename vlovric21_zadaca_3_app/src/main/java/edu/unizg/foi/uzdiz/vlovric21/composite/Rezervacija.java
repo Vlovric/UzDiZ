@@ -26,6 +26,16 @@ public class Rezervacija implements AranzmanKomponenta{
         this.oznakaAranzmana = oznakaAranzmana;
         this.datumIVrijeme = datumIVrijeme;
     }
+    public Rezervacija(Rezervacija druga){
+        this.id = druga.id;
+        this.ime = druga.ime;
+        this.prezime = druga.prezime;
+        this.oznakaAranzmana = druga.oznakaAranzmana;
+        this.datumIVrijeme = druga.datumIVrijeme;
+        this.status = druga.status;
+        this.vrijemeOtkaza = druga.vrijemeOtkaza;
+        this.aranzman = druga.aranzman;
+    }
 
     @Override
     public void prihvati(PptarVisitor visitor){

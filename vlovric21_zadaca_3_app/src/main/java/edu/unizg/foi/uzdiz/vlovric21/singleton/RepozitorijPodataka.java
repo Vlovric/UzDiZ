@@ -1,5 +1,7 @@
 package edu.unizg.foi.uzdiz.vlovric21.singleton;
 
+import edu.unizg.foi.uzdiz.vlovric21.command.PstarCommand;
+import edu.unizg.foi.uzdiz.vlovric21.command.VstarCommand;
 import edu.unizg.foi.uzdiz.vlovric21.composite.Aranzman;
 import edu.unizg.foi.uzdiz.vlovric21.composite.AranzmanKolekcija;
 import edu.unizg.foi.uzdiz.vlovric21.composite.AranzmanKomponenta;
@@ -8,6 +10,7 @@ import edu.unizg.foi.uzdiz.vlovric21.facade.CsvParsiranjeFacade;
 import edu.unizg.foi.uzdiz.vlovric21.factorymethod.unos_objekta.CsvAranzmanUnositeljCreator;
 import edu.unizg.foi.uzdiz.vlovric21.factorymethod.unos_objekta.CsvObjectCreator;
 import edu.unizg.foi.uzdiz.vlovric21.factorymethod.unos_objekta.CsvRezervacijaUnositeljCreator;
+import edu.unizg.foi.uzdiz.vlovric21.memento.MementoSpremiste;
 import edu.unizg.foi.uzdiz.vlovric21.pomocne.DatumFormater;
 import edu.unizg.foi.uzdiz.vlovric21.state_rezervacija.RezervacijaAktivna;
 import edu.unizg.foi.uzdiz.vlovric21.state_rezervacija.RezervacijaNova;
@@ -27,6 +30,7 @@ public class RepozitorijPodataka {
 
     private AranzmanKolekcija aranzmanKolekcija = new AranzmanKolekcija();
     private RezervacijaUpravitelj rezervacijaUpravitelj = new NistaRezervacijaUpravitelj();
+    private MementoSpremiste mementoSpremiste = new MementoSpremiste();
 
     private DatumFormater datumFormater = new DatumFormater();
 
@@ -57,6 +61,24 @@ public class RepozitorijPodataka {
         rezervacija.setId(id);
         rezervacija.setStatus(new RezervacijaNova());
         return aranzmanKolekcija.dodajRezervaciju(rezervacija);
+    }
+
+    public String spremiStanjeAranzmana(int oznaka){
+        Aranzman aranzman = aranzmanKolekcija.dohvatiAranzmanPoOznaci(oznaka);
+        if(aranzman == null){
+            return "Ne postoji aranžman s oznakom " + oznaka;
+        }
+        PstarCommand pstarCommand = new PstarCommand(aranzman, mementoSpremiste);
+        return pstarCommand.izvrsi();
+    }
+
+    public String vratiStanjeAranzmana(int oznaka){
+        Aranzman aranzman = aranzmanKolekcija.dohvatiAranzmanPoOznaci(oznaka);
+        if(aranzman == null){
+            return "Ne postoji aranžman s oznakom " + oznaka;
+        }
+        VstarCommand vstarCommand = new VstarCommand(aranzman, mementoSpremiste);
+        return vstarCommand.izvrsi();
     }
 
     public boolean postojiKronoloskiAktivnaRezervacijaPreklapanjeKorisnik(Aranzman aranzman, Rezervacija rezervacija){
@@ -169,6 +191,14 @@ public class RepozitorijPodataka {
 
     public void setRezervacijaUpravitelj(RezervacijaUpravitelj rezervacijaUpravitelj) {
         this.rezervacijaUpravitelj = rezervacijaUpravitelj;
+    }
+
+    public MementoSpremiste getMementoSpremiste() {
+        return mementoSpremiste;
+    }
+
+    public void setMementoSpremiste(MementoSpremiste mementoSpremiste) {
+        this.mementoSpremiste = mementoSpremiste;
     }
 
     public void setIdBrojacRezervacija(){

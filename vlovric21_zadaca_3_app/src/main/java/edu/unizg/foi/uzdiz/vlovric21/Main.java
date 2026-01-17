@@ -84,6 +84,12 @@ public class Main {
                 case "PPTAR":
                     komandePomocnik.pretrazivanjePodatakaPPTAR(unos);
                     break;
+                case "PSTAR":
+                    komandePomocnik.spremiStanjeAranzmanaPSTAR(unos);
+                    break;
+                case "VSTAR":
+                    komandePomocnik.vratiStanjeAranzmanaVSTAR(unos);
+                    break;
                 case "Q":
                     return;
                 default:

@@ -1,5 +1,7 @@
 package edu.unizg.foi.uzdiz.vlovric21.composite;
 
+import edu.unizg.foi.uzdiz.vlovric21.memento.AranzmanMemento;
+import edu.unizg.foi.uzdiz.vlovric21.singleton.RepozitorijPodataka;
 import edu.unizg.foi.uzdiz.vlovric21.state_aranzman.*;
 import edu.unizg.foi.uzdiz.vlovric21.state_rezervacija.RezervacijaOtkazana;
 import edu.unizg.foi.uzdiz.vlovric21.state_rezervacija.RezervacijaStatus;
@@ -59,6 +61,15 @@ public class Aranzman implements AranzmanKomponenta{
         for(AranzmanKomponenta k : djeca){
             k.prihvati(visitor);
         }
+    }
+
+    public AranzmanMemento spremiStanje(){
+        return new AranzmanMemento(oznaka, dohvatiSveRezervacije());
+    }
+
+    public void vratiStanje(AranzmanMemento memento){
+        this.djeca.clear();
+        this.djeca.addAll(memento.getRezervacije());
     }
 
     @Override
