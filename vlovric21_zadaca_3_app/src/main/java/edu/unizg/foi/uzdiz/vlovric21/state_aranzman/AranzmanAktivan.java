@@ -21,7 +21,7 @@ public class AranzmanAktivan implements AranzmanStatus{
             return "";
         }
 
-        if(RepozitorijPodataka.getInstance().getRezervacijaUpravitelj().upravljajRezervacijom(aranzman, rezervacija)){
+        if(RepozitorijPodataka.getInstance().upravljajRezervacijom(aranzman, rezervacija)){
             return "";
         }
 

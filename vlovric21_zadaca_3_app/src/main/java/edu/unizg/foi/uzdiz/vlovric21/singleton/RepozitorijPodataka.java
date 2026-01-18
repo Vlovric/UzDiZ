@@ -112,6 +112,10 @@ public class RepozitorijPodataka {
         return "Ukidaju se sve pretplate za informacije o turističkom aranžmanu s oznakom " + oznaka + " te njegovim rezervacijama";
     }
 
+    public boolean upravljajRezervacijom(Aranzman aranzman, Rezervacija rezervacija){
+        return rezervacijaUpravitelj.upravljajRezervacijom(aranzman, rezervacija);
+    }
+
     public boolean postojiKronoloskiAktivnaRezervacijaPreklapanjeKorisnik(Aranzman aranzman, Rezervacija rezervacija){
         return aranzmanKolekcija.postojiKronoloskiAktivnaRezervacijaPreklapanjeKorisnik(aranzman, rezervacija);
     }

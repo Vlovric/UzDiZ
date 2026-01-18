@@ -18,7 +18,7 @@ public class AranzmanPopunjen implements AranzmanStatus{
             aranzman.dodajDijete(rezervacija);
             return "";
         }
-        if(RepozitorijPodataka.getInstance().getRezervacijaUpravitelj().upravljajRezervacijom(aranzman, rezervacija)){
+        if(RepozitorijPodataka.getInstance().upravljajRezervacijom(aranzman, rezervacija)){
             return "";
         }
         rezervacija.setStatus(new RezervacijaNaCekanju());

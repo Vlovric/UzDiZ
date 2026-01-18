@@ -33,7 +33,7 @@ public class AranzmanUPripremi implements AranzmanStatus {
             return "";
         }
 
-        if(repozitorij.getRezervacijaUpravitelj().upravljajRezervacijom(aranzman, rezervacija)){
+        if(repozitorij.upravljajRezervacijom(aranzman, rezervacija)){
             return "";
         }
 
