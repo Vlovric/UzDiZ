@@ -1,6 +1,10 @@
 package edu.unizg.foi.uzdiz.vlovric21.pomocne;
 
 import edu.unizg.foi.uzdiz.vlovric21.composite.AranzmanKomponenta;
+import edu.unizg.foi.uzdiz.vlovric21.cor.AutentifikacijaHandler;
+import edu.unizg.foi.uzdiz.vlovric21.cor.BrisanjeHandler;
+import edu.unizg.foi.uzdiz.vlovric21.cor.IzvrsiBrisanjeHandler;
+import edu.unizg.foi.uzdiz.vlovric21.cor.PohranaHandler;
 import edu.unizg.foi.uzdiz.vlovric21.factorymethod.formater.FormaterCreator;
 import edu.unizg.foi.uzdiz.vlovric21.factorymethod.formater.FormaterFactory;
 import edu.unizg.foi.uzdiz.vlovric21.factorymethod.formater.FormaterTip;
@@ -269,13 +273,15 @@ public class KomandePomocnik {
         }
 
         String opcija = matcher.group(1);
-        if(opcija.equals("A")){
-            repozitorij.obrisiSveAranzmane();
-            System.out.println("Obrisani su svi aranžmani i njihove rezervacije.");
-        }else{
-            repozitorij.obrisiSveRezervacije();
-            System.out.println("Obrisane su sve rezervacije.");
-        }
+
+        BrisanjeHandler autentifikacijaHandler = new AutentifikacijaHandler();
+        BrisanjeHandler pohranaHandler = new PohranaHandler();
+        BrisanjeHandler izvrsiBrisanjeHandler = new IzvrsiBrisanjeHandler();
+
+        autentifikacijaHandler.postaviSljedeci(pohranaHandler);
+        pohranaHandler.postaviSljedeci(izvrsiBrisanjeHandler);
+
+        autentifikacijaHandler.odradiZahtjev(opcija);
     }
 
     public void ucitavanjePodatakaUP(String unos){
