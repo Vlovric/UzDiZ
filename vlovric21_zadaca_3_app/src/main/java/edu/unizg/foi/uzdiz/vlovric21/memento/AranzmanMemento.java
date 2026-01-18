@@ -12,6 +12,8 @@ public class AranzmanMemento {
 
     public AranzmanMemento(Aranzman aranzman, List<Rezervacija> rezervacije){
         this.aranzman = new Aranzman(aranzman);
+        this.aranzman.setPretplate(new ArrayList<>(aranzman.getPretplate()));
+
         this.rezervacije = new ArrayList<>();
 
         for(Rezervacija r : rezervacije){

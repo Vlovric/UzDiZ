@@ -111,7 +111,11 @@ public class Aranzman implements AranzmanKomponenta{
         this.brojVecera = spremljeniAranzman.brojVecera;
         this.status = spremljeniAranzman.status;
         
-        this.djeca.addAll(memento.getRezervacije());
+        for(Rezervacija r : memento.getRezervacije()){
+            Rezervacija rezervacija = new Rezervacija(r);
+            rezervacija.setAranzman(this);
+            this.djeca.add(rezervacija);
+        }
         this.pretplate.addAll(memento.getAranzman().pretplate);
     }
 
@@ -388,5 +392,13 @@ public class Aranzman implements AranzmanKomponenta{
 
     public boolean jeOtkazan(){
         return status.jeOtkazan();
+    }
+
+    public void setPretplate(List<String> pretplate){
+        this.pretplate = pretplate;
+    }
+
+    public List<String> getPretplate(){
+        return pretplate;
     }
 }

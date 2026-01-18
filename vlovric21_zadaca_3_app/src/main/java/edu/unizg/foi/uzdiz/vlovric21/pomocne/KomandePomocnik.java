@@ -430,7 +430,7 @@ public class KomandePomocnik {
         String prezime = matcher.group(2);
         int oznaka = Integer.parseInt(matcher.group(3));
 
-        if(ime == null || prezime == null){
+        if(ime != null || prezime != null){
             String punoIme = ime + " " + prezime;
             String rezultat = repozitorij.ukloniPretplatuKorisnikaSaAranzmana(punoIme, oznaka);
             System.out.println(rezultat);
