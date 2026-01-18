@@ -74,10 +74,8 @@ public class RepozitorijPodataka {
 
     public String vratiStanjeAranzmana(int oznaka){
         Aranzman aranzman = aranzmanKolekcija.dohvatiAranzmanPoOznaci(oznaka);
-        if(aranzman == null){
-            return "Ne postoji aranžman s oznakom " + oznaka;
-        }
-        VstarCommand vstarCommand = new VstarCommand(aranzman, mementoSpremiste);
+
+        VstarCommand vstarCommand = new VstarCommand(aranzman, mementoSpremiste, oznaka);
         return vstarCommand.izvrsi();
     }
 

@@ -74,6 +74,7 @@ public class Aranzman implements AranzmanKomponenta{
         this.brojRuckova = drugi.brojRuckova;
         this.brojVecera = drugi.brojVecera;
         this.status = drugi.status;
+        this.pretplate = drugi.pretplate;
     }
 
     @Override
@@ -110,7 +111,7 @@ public class Aranzman implements AranzmanKomponenta{
         this.brojRuckova = spremljeniAranzman.brojRuckova;
         this.brojVecera = spremljeniAranzman.brojVecera;
         this.status = spremljeniAranzman.status;
-        
+
         for(Rezervacija r : memento.getRezervacije()){
             Rezervacija rezervacija = new Rezervacija(r);
             rezervacija.setAranzman(this);
@@ -400,5 +401,10 @@ public class Aranzman implements AranzmanKomponenta{
 
     public List<String> getPretplate(){
         return pretplate;
+    }
+
+    public void setRezervacije(List<Rezervacija> rezervacije){
+        djeca.clear();
+        djeca.addAll(rezervacije);
     }
 }
