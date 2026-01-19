@@ -177,7 +177,7 @@ public class RepozitorijPodataka {
         rezervacija.setVrijemeOtkaza(LocalDateTime.now());
         String rezultat = rezervacija.otkazi();
         if(rezultat.isEmpty()) {
-            getAranzmanPoOznaci(oznaka).obavijesti("Osoba " + ime + " " + prezime + " je otkazao/la svoju rezervaciju.");
+            getAranzmanPoOznaci(oznaka).obavijesti("Osoba " + ime.charAt(0) + ". " + prezime.charAt(0) + ". je otkazao/la svoju rezervaciju.");
             return "Rezervacija uspješno otkazana.";
         }
         return rezultat;

@@ -224,7 +224,7 @@ public class KomandePomocnik {
         Rezervacija novaRezervacija = new Rezervacija(ime, prezime, oznaka, datumIVrijeme);
         String rezultat = repozitorij.dodajRezervaciju(novaRezervacija);
         if(rezultat.contains("Rezervacija uspješno dodana")){
-            repozitorij.getAranzmanPoOznaci(oznaka).obavijesti("Osoba " + ime + " " + prezime + " je dodao/la rezervaciju");
+            repozitorij.getAranzmanPoOznaci(oznaka).obavijesti("Osoba " + ime.charAt(0) + ". " + prezime.charAt(0) + ". je dodao/la rezervaciju");
         }
         System.out.println(rezultat);
     }
@@ -264,7 +264,7 @@ public class KomandePomocnik {
     }
 
     public void brisanjePodatakaBP(String unos){
-        String uzorak = "^BP\\s+([AR])$";
+        String uzorak = "^BP\\s+([AR])(?:\\s+(-a))?$";
 
         Pattern regex = Pattern.compile(uzorak);
         Matcher matcher = provjeriRegex(regex, unos);
@@ -273,15 +273,21 @@ public class KomandePomocnik {
         }
 
         String opcija = matcher.group(1);
+        String autorizacija = matcher.group(2);
 
-        BrisanjeHandler autentifikacijaHandler = new AutentifikacijaHandler();
-        BrisanjeHandler pohranaHandler = new PohranaHandler();
-        BrisanjeHandler izvrsiBrisanjeHandler = new IzvrsiBrisanjeHandler();
+        if(autorizacija != null){
+            BrisanjeHandler autentifikacijaHandler = new AutentifikacijaHandler();
+            BrisanjeHandler pohranaHandler = new PohranaHandler();
+            BrisanjeHandler izvrsiBrisanjeHandler = new IzvrsiBrisanjeHandler();
 
-        autentifikacijaHandler.postaviSljedeci(pohranaHandler);
-        pohranaHandler.postaviSljedeci(izvrsiBrisanjeHandler);
+            autentifikacijaHandler.postaviSljedeci(pohranaHandler);
+            pohranaHandler.postaviSljedeci(izvrsiBrisanjeHandler);
 
-        autentifikacijaHandler.odradiZahtjev(opcija);
+            autentifikacijaHandler.odradiZahtjev(opcija);
+        }else{
+            BrisanjeHandler izvrsiBrisanjeHandler = new IzvrsiBrisanjeHandler();
+            izvrsiBrisanjeHandler.odradiZahtjev(opcija);
+        }
     }
 
     public void ucitavanjePodatakaUP(String unos){
